@@ -172,7 +172,7 @@ class DelistingRequest:
 if __name__ == "__main__":
     request = DelistingRequest(
         data_subject_name="[Pseudonymised]",
-        urls=["https://example.com/article-about-person"],
+        urls=["https://news-archive.oriondatavault.corp/2019/employee-dispute-filing"],
         grounds=["Art. 17(1)(a) — Data no longer necessary for original purpose"],
         search_engines=[SearchEngine.GOOGLE, SearchEngine.BING],
     )

@@ -264,7 +264,8 @@ RIA REGISTER — Orion Data Vault Corp (Extract)
 │              │                          │            │ (anonymize    │              │             │
 │              │                          │            │ at 3 months)  │              │             │
 ├──────────────┼──────────────────────────┼────────────┼───────────────┼──────────────┼─────────────┤
-│ RIA-2026-019 │ [New processing activity] │ 2026-03-14 │ [TBD —        │ In progress  │ TBD         │
-│              │                          │            │ assessment]   │              │             │
+│ RIA-2026-019 │ Vendor loyalty programme   │ 2026-03-14 │ 24 months     │ In progress  │ 2028-03-14  │
+│              │ analytics                │            │ (review at    │              │             │
+│              │                          │            │ 12 months)    │              │             │
 └──────────────┴──────────────────────────┴────────────┴───────────────┴──────────────┴─────────────┘
 ```

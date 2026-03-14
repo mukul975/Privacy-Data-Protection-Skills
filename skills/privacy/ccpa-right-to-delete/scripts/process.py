@@ -207,7 +207,7 @@ class DeletionRequest:
             "service_providers_directed": self.service_provider_directives,
             "third_parties_notified": self.third_party_notifications,
             "consumer_rights": {
-                "appeal": "Contact privacy@oriondatavault.example.com",
+                "appeal": "Contact privacy@oriondatavault.corp or call +1-888-555-0147",
                 "cppa_complaint": "California Privacy Protection Agency — cppa.ca.gov",
                 "other_rights": "Right to know, right to opt-out remain available",
             },

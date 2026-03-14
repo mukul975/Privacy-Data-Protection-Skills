@@ -1,6 +1,6 @@
 # RoPA-DPIA Cross-Reference Register — Helix Biotech Solutions GmbH
 
-**Last Updated**: [YYYY-MM-DD]
+**Last Updated**: 2025-02-28
 **Maintained By**: Dr. Elena Voss, DPO
 
 ---
@@ -33,8 +33,11 @@
 
 | Date | Source | Event | Affected Records | Action Taken | Completed By |
 |------|--------|-------|-----------------|-------------|-------------|
-| [YYYY-MM-DD] | RoPA | [RPA-XXX field changed] | [DPIA-XXX] | [DPIA review triggered/completed] | [Name] |
-| [YYYY-MM-DD] | DPIA | [DPIA-XXX outcome] | [RPA-XXX] | [RoPA field updated] | [Name] |
+| 2025-01-15 | RoPA | RPA-002 retention period extended from 10 to 15 years per updated Arzneimittelgesetz requirement | DPIA-2024-ONC-04 | DPIA Section 7 (retention proportionality) reviewed and re-approved. No change to risk assessment. | Dr. Elena Voss |
+| 2025-01-28 | DPIA | DPIA-2025-PERF-001 identified additional mitigation: anonymise scores after 12 months | RPA-004 | RoPA retention period field updated to reflect 12-month anonymisation schedule | Sophie Krause |
+| 2024-11-20 | RoPA | RPA-005 CCTV coverage extended to parking garage (new camera installation) | DPIA-2024-CCTV-001 | DPIA scope section updated. Risk level unchanged — same technical and organisational measures apply. Re-approved by DPO. | Dr. Elena Voss |
+| 2024-09-05 | DPIA | DPIA-2024-ONC-04 annual review completed, no changes to risk profile | RPA-002 | RoPA record marked as reviewed, next review date updated to 2025-09-05 | Sophie Krause |
+| 2024-06-15 | DPIA | DPIA-2024-CCTV-001 initially approved with condition: signage must be installed within 30 days | RPA-005 | RoPA security measures field updated to include signage reference (CCTV-SIGN-2024-001) | Thomas Wehner |
 
 ---
 

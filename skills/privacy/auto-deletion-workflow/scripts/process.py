@@ -230,7 +230,7 @@ def generate_deletion_metrics(jobs: list[DeletionJob]) -> dict:
 
 
 if __name__ == "__main__":
-    ds_hash = hashlib.sha256(b"test-data-subject@example.com").hexdigest()[:16]
+    ds_hash = hashlib.sha256(b"ds-20251201-orion-crm-4827").hexdigest()[:16]
     job = DeletionJob(
         trigger=DeletionTrigger.RETENTION_EXPIRY,
         data_subject_hash=f"DS-HASH-{ds_hash}",

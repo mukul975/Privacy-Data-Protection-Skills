@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Organisation Name | Zenith Global Logistics (Shanghai) Co., Ltd |
-| Unified Social Credit Code | 91310000MA1FL8XXXX |
+| Unified Social Credit Code | 91310000MA1FL8K29P |
 | Registered Address | 18F, Tower A, Lujiazui Financial Centre, Pudong New Area, Shanghai 200120, PRC |
 | Industry Sector | International Logistics and Freight Forwarding |
 | Assessment Date | 14 March 2026 |

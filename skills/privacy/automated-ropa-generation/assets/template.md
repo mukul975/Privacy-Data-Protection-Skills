@@ -1,8 +1,8 @@
 # Automated RoPA Generation — IT System Inventory Input Template
 
 **Organisation**: Helix Biotech Solutions GmbH
-**Scan Date**: [YYYY-MM-DD]
-**Prepared By**: [Name, Title]
+**Scan Date**: 2025-02-01
+**Prepared By**: Marcus Steiner, VP Cloud Operations
 
 ---
 
@@ -91,14 +91,14 @@
 
 | Metric | Value |
 |--------|-------|
-| Total applications discovered | [Number] |
-| Total cloud services enumerated | [Number] |
-| Total databases scanned | [Number] |
-| Total PII columns detected | [Number] |
-| Special category columns detected | [Number] |
-| Potential international transfers flagged | [Number] |
-| Draft RoPA entries generated | [Number] |
-| Entries requiring human review | [Number] (should be 100%) |
+| Total applications discovered | 7 |
+| Total cloud services enumerated | 10 |
+| Total databases scanned | 2 |
+| Total PII columns detected | 43 |
+| Special category columns detected | 7 |
+| Potential international transfers flagged | 4 (CloudFront global, GA4 US, Salesforce US, ADP US) |
+| Draft RoPA entries generated | 12 |
+| Entries requiring human review | 12 (100% — all draft entries require DPO and processing owner sign-off) |
 
 ---
 

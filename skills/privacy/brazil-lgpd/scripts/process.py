@@ -663,7 +663,7 @@ if __name__ == "__main__":
     dsr = create_dsr_request(
         request_type="access",
         data_subject_name="João Silva",
-        data_subject_email="joao.silva@example.com.br",
+        data_subject_email="joao.silva@zenithglobal.com.br",
         description="Request for access to all personal data processed by Zenith Global Enterprises",
     )
     print(json.dumps(dsr, indent=2))

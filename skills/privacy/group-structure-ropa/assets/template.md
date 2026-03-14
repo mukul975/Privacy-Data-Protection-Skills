@@ -2,7 +2,7 @@
 
 **Group Name**: Helix Biotech Holdings SE
 **Group DPO**: Dr. Elena Voss, dpo@helix-biotech.eu
-**Last Updated**: [YYYY-MM-DD]
+**Last Updated**: 2025-02-15
 
 ---
 
@@ -54,7 +54,38 @@
 | DE-RPA-004 | Customer CRM | B2B customers | None | No |
 | DE-RPA-005 | Pharmacovigilance | Patients, HCPs | Health | Yes (DPIA-2024-PV-001) |
 
-*[Repeat for each entity]*
+### Helix Biotech Solutions Ltd (United Kingdom)
+
+| Record ID | Processing Activity | Data Subjects | Special Category | DPIA |
+|-----------|---------------------|---------------|-----------------|------|
+| UK-RPA-001 | Employee payroll | Employees | None | No |
+| UK-RPA-002 | Clinical trial data management | Trial participants | Health, genetic | Yes (DPIA-2024-CT-UK-002) |
+| UK-RPA-003 | NHS contract management | NHS Trust contacts | None | No |
+| UK-RPA-004 | Patient registry | Patients | Health | Yes (DPIA-2024-REG-UK-001) |
+
+### Helix Biotech Solutions Inc. (United States)
+
+| Record ID | Processing Activity | Data Subjects | Special Category | DPIA |
+|-----------|---------------------|---------------|-----------------|------|
+| US-RPA-001 | Employee HR records | Employees | None (US — no Art. 9 equivalent) | N/A |
+| US-RPA-002 | Pharmacovigilance processing | Patients, HCPs | PHI (HIPAA) | N/A (US entity) |
+| US-RPA-003 | FDA regulatory submissions | Trial participants | Health, genetic | N/A (US entity) |
+
+### Helix Shared Services B.V. (Netherlands)
+
+| Record ID | Processing Activity | Data Subjects | Special Category | DPIA |
+|-----------|---------------------|---------------|-----------------|------|
+| NL-RPP-001 | Group payroll processing (processor) | Employees of GmbH and Ltd | Church tax (GmbH only) | No |
+| NL-RPP-002 | Group IT hosting (processor) | All group data subjects | Yes (via clinical data) | No (controller DPIAs cover) |
+| NL-RPA-001 | Own employee records | B.V. employees | None | No |
+
+### Helix Biotech Diagnostics S.A.S. (France) — Integration In Progress
+
+| Record ID | Processing Activity | Data Subjects | Special Category | DPIA |
+|-----------|---------------------|---------------|-----------------|------|
+| FR-RPA-001 | Employee payroll | Employees | Mutuelle (health) | No |
+| FR-RPA-002 | Diagnostic service customer management | Patients | Health (diagnostic results) | Yes (DPIA-2024-DIAG-FR-001) |
+| FR-RPA-003 | Supplier management | Supplier contacts | None | No |
 
 ---
 
