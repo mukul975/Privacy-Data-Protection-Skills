@@ -1,5 +1,5 @@
 ---
-name: managing-apac-cross-border-transfers
+name: apac-transfers
 description: >-
   Guides management of cross-border data transfers under Asia-Pacific regulatory
   frameworks including APEC CBPR, ASEAN Model Contractual Clauses, Japan APPI

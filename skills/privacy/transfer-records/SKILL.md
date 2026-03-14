@@ -1,5 +1,5 @@
 ---
-name: managing-transfer-records-documentation
+name: transfer-records
 description: >-
   Guides maintenance of cross-border transfer registers, audit trails, and
   compliance documentation under GDPR Art. 30 and Art. 46, EDPB record-keeping
