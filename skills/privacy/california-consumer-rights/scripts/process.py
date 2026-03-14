@@ -290,7 +290,7 @@ if __name__ == "__main__":
         channel=RequestChannel.WEB_PORTAL,
         received_date="2026-03-01T10:30:00+00:00",
         consumer_name="Jane Doe",
-        consumer_email="jane.doe@example.com",
+        consumer_email="jane.doe@libertycommerce.com",
     )
 
     print("=== Consumer Rights Request ===")

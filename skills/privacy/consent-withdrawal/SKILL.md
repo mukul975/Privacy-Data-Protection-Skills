@@ -75,7 +75,7 @@ TRIGGER: User clicks withdrawal toggle for a specific purpose
   │
   ├─► Step 2: API Call
   │     PUT /api/v1/consent/preferences/{subject_id}
-  │     Body: { decisions: [{ purpose_id: "pur_xxx", decision: "withdrawn", mechanism: "toggle_switch" }] }
+  │     Body: { decisions: [{ purpose_id: "pur_analytics_01", decision: "withdrawn", mechanism: "toggle_switch" }] }
   │
   ├─► Step 3: Backend Processing (within 100ms)
   │     ├─ Create ConsentDecision record (decision: "withdrawn")

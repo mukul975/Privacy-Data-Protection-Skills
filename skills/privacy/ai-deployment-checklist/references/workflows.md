@@ -1,91 +1,84 @@
 # AI System Pre-Deployment Privacy Checklist — Workflows
 
-## Workflow 1: Pre-Deployment Compliance Gate Execution
+## Workflow 1: Pre-Deployment Privacy Gate Review
 
 ### Trigger
-- AI system development reaches deployment-ready stage
-- Model version promoted to staging environment
-- Product owner requests production deployment
+- AI system development reaches pre-production readiness
+- Existing model updated with new training data or architecture changes
+- Deployment target changes (new jurisdiction, new user population)
 
 ### Steps
-1. **Initiate Gate Review**: ML Engineering Lead creates deployment request ticket referencing system ID, model version, and target deployment date
-2. **Gate 1 — Legal Basis and DPIA**: Privacy Engineer verifies lawful basis documentation, DPIA completion, and risk mitigation status for all personal data processing
-3. **Gate 2 — Transparency**: Privacy Engineer confirms privacy notices updated with AI processing details, logic descriptions, and significance disclosures
-4. **Gate 3 — Data Subject Rights**: Privacy Engineer validates access, explanation, human intervention, contestation, rectification, and erasure processes
-5. **Gate 4 — Data Quality and Bias**: ML Engineer confirms training data documentation, bias testing results, fairness metrics, and data quality verification
-6. **Gate 5 — Security**: Information Security Officer verifies encryption, access controls, audit logging, adversarial robustness, and model versioning
-7. **Gate 6 — Monitoring**: ML Engineer confirms production monitoring dashboards, drift detection, bias monitoring, incident response plan, and retention enforcement
-8. **Gate 7 — EU AI Act (if high-risk)**: Legal Counsel verifies Annex III classification, technical documentation, risk management system, conformity assessment, and EU database registration
-9. **Sign-Off Collection**: Each gate owner records approval or blocker status
-10. **DPO Final Review**: DPO reviews all gate outcomes and provides final approval or conditional approval with required remediations
+1. **Initiate Gate Review**: ML Engineering Lead submits deployment request with system ID, model version, and target environment
+2. **Gate 1 — Legal Basis and DPIA**: Privacy Counsel verifies lawful basis documentation; DPO confirms DPIA completion and risk mitigation status
+3. **Gate 2 — Transparency**: Product team confirms privacy notice updated with AI processing details; meaningful logic explanation documented
+4. **Gate 3 — Data Subject Rights**: Engineering confirms access, explanation, contestation, rectification, and erasure processes are operational
+5. **Gate 4 — Data Quality and Bias**: ML team presents bias testing report; Responsible AI Lead reviews fairness metrics against thresholds (disparate impact ratio >= 0.8)
+6. **Gate 5 — Security Controls**: InfoSec confirms encryption, access controls, audit logging, adversarial robustness testing, and model versioning
+7. **Gate 6 — Monitoring Setup**: ML Ops confirms performance dashboards, drift detection, bias monitoring, incident response plan, and retention automation
+8. **Gate 7 — AI Act (if applicable)**: For high-risk systems, verify risk classification, Annex IV documentation, conformity assessment, EU Declaration, and database registration
+9. **Sign-Off Collation**: Collect approvals from ML Lead, DPO, InfoSec, Product Owner, and Legal (for high-risk)
+10. **Deployment Decision**: All gates passed → approve deployment; any gate blocked → return to remediation
 
 ### Output
-- Completed pre-deployment compliance checklist with all sign-offs
-- Deployment authorization or blocker list
-- Conditional approval remediation plan (if applicable)
+- Completed deployment checklist with evidence references
+- Sign-off record with dates
+- Deployment approval or block notice with remediation requirements
 
-## Workflow 2: DPIA for AI System Deployment
+## Workflow 2: Gate Failure Remediation
 
 ### Trigger
-- New AI system processing personal data reaches design phase
-- Existing AI system undergoes significant model architecture change
-- New data category added to an existing AI system
+- Any gate in the pre-deployment review returns a "Blocked" status
 
 ### Steps
-1. **Screening**: Determine if DPIA is required (Art. 35(3) criteria: systematic evaluation/profiling, large-scale special categories, systematic monitoring)
-2. **System Description**: Document the AI system purpose, data flows, processing operations, and recipients
-3. **Necessity Assessment**: Evaluate whether processing is necessary and proportionate (Art. 35(7)(b))
-4. **Risk Identification**: Identify risks to data subjects from AI processing (discrimination, loss of autonomy, profiling effects)
-5. **Risk Evaluation**: Score each risk by severity and likelihood using Cerebrum AI Labs risk matrix
-6. **Mitigation Measures**: Define technical and organisational measures for each high/critical risk
-7. **Residual Risk Assessment**: Evaluate remaining risk after mitigations; if high, trigger Art. 36 prior consultation
-8. **DPO Consultation**: DPO reviews and provides opinion on the DPIA per Art. 35(2)
-9. **Approval**: Data controller approves DPIA and accepts residual risk
-10. **Integration**: DPIA outcomes feed into deployment checklist Gate 1
+1. **Issue Identification**: Gate reviewer documents specific deficiency and required remediation
+2. **Remediation Assignment**: ML Engineering Lead assigns remediation to responsible team with deadline
+3. **Fix Implementation**: Responsible team addresses deficiency (e.g., completes DPIA, updates privacy notice, runs additional bias tests)
+4. **Evidence Submission**: Team submits evidence of remediation (updated document, test report, configuration change)
+5. **Re-Review**: Original gate reviewer re-evaluates the specific gate
+6. **Escalation**: If remediation cannot be completed within deployment timeline, escalate to Chief Privacy Officer for risk acceptance or deployment delay decision
 
 ### Output
-- Signed DPIA document
-- Risk treatment plan
-- Prior consultation record (if applicable)
+- Remediation record with actions taken
+- Updated gate status
+- Escalation record (if applicable)
 
-## Workflow 3: Post-Deployment Monitoring Setup
+## Workflow 3: Post-Deployment Monitoring Activation
 
 ### Trigger
-- AI system passes all pre-deployment gates and receives deployment authorization
-- AI system deployed to production environment
+- AI system deployed to production after all gates passed
 
 ### Steps
-1. **Performance Monitoring**: Deploy accuracy, precision, recall, F1, and latency dashboards in Cerebrum AI Labs monitoring platform
-2. **Drift Detection**: Configure data drift (input distribution shift) and concept drift (target distribution shift) alerts with statistical thresholds
-3. **Bias Monitoring**: Set up continuous fairness metric tracking (disparate impact ratio, equalised odds, demographic parity) across protected attributes
-4. **Incident Response Integration**: Connect AI monitoring alerts to Cerebrum AI Labs incident response workflow with escalation paths for privacy incidents
-5. **Retraining Triggers**: Define automatic model retraining triggers based on drift detection thresholds and scheduled quarterly retraining cycle
-6. **Retention Automation**: Configure automated deletion of inference logs (90 days operational, 6 months audit) and training data per retention schedule
-7. **Audit Trail**: Verify all model invocations logged with timestamp, input hash, output, requesting user, and decision outcome
-8. **Monitoring Review Schedule**: Set quarterly review calendar for monitoring configuration adequacy
+1. **Monitoring Activation**: Confirm all monitoring dashboards are receiving live data (accuracy, latency, error rates, drift metrics)
+2. **Bias Monitoring Baseline**: Capture initial production fairness metrics as baseline for drift detection
+3. **Incident Response Readiness**: Verify incident response contacts are updated and on-call rotation includes AI incident expertise
+4. **Retention Automation**: Confirm automated deletion schedules are active for inference logs and temporary data
+5. **30-Day Post-Deployment Review**: Schedule review to assess initial production performance against pre-deployment benchmarks
+6. **Ongoing Cadence**: Establish quarterly privacy review cadence for the deployed system
 
 ### Output
-- Monitoring dashboard URLs and alert configurations
-- Drift detection threshold documentation
-- Retention automation configuration
-- Post-deployment monitoring sign-off
+- Monitoring activation confirmation
+- 30-day review scheduled
+- Quarterly review calendar entry
 
-## Workflow 4: Deployment Blocker Resolution
+## Workflow 4: Model Update Re-Certification
 
 ### Trigger
-- One or more pre-deployment gates result in "Blocked" status
-- DPO final review identifies outstanding compliance gap
+- Model retrained on new data
+- Model architecture changed (fine-tuning, distillation, prompt engineering updates)
+- Deployment scope expanded (new geography, new user segment, new use case)
 
 ### Steps
-1. **Blocker Documentation**: Gate owner documents specific non-compliance finding with evidence
-2. **Remediation Plan**: ML Engineering Lead creates remediation plan with specific actions, owners, and deadlines
-3. **Remediation Execution**: Assigned owners implement required fixes (update DPIA, add transparency disclosures, run additional bias tests, implement security controls)
-4. **Verification**: Gate owner re-evaluates the specific blocked item and confirms remediation
-5. **Re-submission**: ML Engineering Lead re-submits deployment request with remediation evidence
-6. **Expedited Review**: DPO conducts targeted review of previously blocked items only
-7. **Updated Sign-Off**: All gate owners confirm no new blockers introduced by remediation
+1. **Change Classification**: ML Engineering Lead classifies update as minor (parameter update, performance patch), moderate (new training data, feature changes), or major (new architecture, new use case, new jurisdiction)
+2. **Gate Re-Run**:
+   - Minor: Re-run Gates 4-6 (bias, security, monitoring)
+   - Moderate: Re-run Gates 1-6 (full review except AI Act gate unless classification changes)
+   - Major: Re-run all Gates 1-7 (full review including AI Act reassessment)
+3. **DPIA Update**: If processing changes materially, update DPIA sections affected
+4. **Sign-Off**: Collect approvals from roles required for the change classification level
+5. **Deployment**: Deploy updated model with updated documentation
 
 ### Output
-- Updated compliance checklist with resolved blockers
-- Remediation evidence package
-- Revised deployment authorization
+- Change classification record
+- Updated checklist (partial or full based on classification)
+- Updated DPIA (if applicable)
+- Re-certification sign-off

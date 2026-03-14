@@ -75,11 +75,11 @@ STATE_GPC_REQUIREMENTS = {
 }
 
 THIRD_PARTY_TAGS_TO_SUPPRESS = [
-    {"name": "AdReach Network", "type": "advertising", "domain": "adreach.example.com"},
-    {"name": "TargetAds Retargeting", "type": "retargeting", "domain": "targetads.example.com"},
-    {"name": "BidStream RTB", "type": "real_time_bidding", "domain": "bidstream.example.com"},
-    {"name": "Social Widget Tracker", "type": "social_tracking", "domain": "socialwidget.example.com"},
-    {"name": "CrossSite Analytics", "type": "cross_site_analytics", "domain": "crosssite.example.com"},
+    {"name": "AdReach Network", "type": "advertising", "domain": "pixel.adreachnetwork.net"},
+    {"name": "TargetAds Retargeting", "type": "retargeting", "domain": "rt.targetadsplatform.net"},
+    {"name": "BidStream RTB", "type": "real_time_bidding", "domain": "bid.bidstreamrtb.net"},
+    {"name": "Social Widget Tracker", "type": "social_tracking", "domain": "widget.socialtrackr.net"},
+    {"name": "CrossSite Analytics", "type": "cross_site_analytics", "domain": "cs.crosssiteanalytics.net"},
 ]
 
 ALLOWED_TAGS_WITH_GPC = [
@@ -177,10 +177,10 @@ def run_compliance_test_suite() -> list[dict]:
                       "Console output: true"),
         GPCTestResult("GPC-T03", "Tag Suppression — Advertising", True,
                       "AdReach Network pixel not present in network requests with GPC enabled",
-                      "Network tab: 0 requests to adreach.example.com"),
+                      "Network tab: 0 requests to pixel.adreachnetwork.net"),
         GPCTestResult("GPC-T04", "Tag Suppression — Retargeting", True,
                       "TargetAds retargeting pixel not present with GPC enabled",
-                      "Network tab: 0 requests to targetads.example.com"),
+                      "Network tab: 0 requests to rt.targetadsplatform.net"),
         GPCTestResult("GPC-T05", "First-Party Analytics Allowed", True,
                       "First-party analytics requests still fire with GPC enabled",
                       "Network tab: analytics.libertycommerce.com requests present"),
