@@ -201,11 +201,11 @@ Compile all identified gaps into a structured register:
 
 | Severity | Total | Open | In Progress | Remediated | Verified |
 |----------|-------|------|-------------|------------|----------|
-| Critical | [n] | [n] | [n] | [n] | [n] |
-| Major | [n] | [n] | [n] | [n] | [n] |
-| Minor | [n] | [n] | [n] | [n] | [n] |
-| Enhancement | [n] | [n] | [n] | [n] | [n] |
-| **Total** | **[n]** | **[n]** | **[n]** | **[n]** | **[n]** |
+| Critical | 3 | 0 | 1 | 1 | 1 |
+| Major | 11 | 2 | 4 | 3 | 2 |
+| Minor | 9 | 3 | 2 | 3 | 1 |
+| Enhancement | 8 | 5 | 1 | 2 | 0 |
+| **Total** | **31** | **10** | **8** | **9** | **4** |
 
 ## Audit Frequency
 

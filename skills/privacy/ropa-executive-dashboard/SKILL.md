@@ -115,11 +115,11 @@ The RoPA is a compliance document, but its data also serves as a strategic manag
 
 | Metric | Status | Value | Threshold |
 |--------|--------|-------|-----------|
-| Completeness score | [Green/Amber/Red] | [XX]% | Green >=95, Amber >=85, Red <85 |
-| Staleness rate | [Green/Amber/Red] | [XX]% | Green <=5, Amber <=15, Red >15 |
-| DPA coverage | [Green/Amber/Red] | [XX]% | Green = 100, Amber >=90, Red <90 |
-| Transfer coverage | [Green/Amber/Red] | [XX]% | Green = 100, Amber >=90, Red <90 |
-| DPIA linkage | [Green/Amber/Red] | [XX]% | Green = 100, Amber >=80, Red <80 |
+| Completeness score | Green | 96.2% | Green >=95, Amber >=85, Red <85 |
+| Staleness rate | Amber | 7.8% | Green <=5, Amber <=15, Red >15 |
+| DPA coverage | Green | 100% | Green = 100, Amber >=90, Red <90 |
+| Transfer coverage | Green | 100% | Green = 100, Amber >=90, Red <90 |
+| DPIA linkage | Green | 100% | Green = 100, Amber >=80, Red <80 |
 
 ## Executive Report Structure
 

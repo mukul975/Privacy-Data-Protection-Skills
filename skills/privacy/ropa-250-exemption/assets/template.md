@@ -3,8 +3,8 @@
 **Organisation**: Helix Biotech Diagnostics S.A.S.
 **Country**: France
 **Employee Count**: 45
-**Assessment Date**: [YYYY-MM-DD]
-**Assessed By**: [Name, Title]
+**Assessment Date**: 2025-02-10
+**Assessed By**: Pierre Laurent, Privacy Lead
 **Supervisory Authority**: CNIL
 
 ---
@@ -118,9 +118,9 @@
 
 | Role | Name | Date | Signature |
 |------|------|------|-----------|
-| Assessor | [Name] | [YYYY-MM-DD] | _________ |
-| DPO | [Name] | [YYYY-MM-DD] | _________ |
-| Managing Director | [Name] | [YYYY-MM-DD] | _________ |
+| Assessor | Pierre Laurent | 2025-02-10 | P. Laurent |
+| DPO | Dr. Elena Voss | 2025-02-12 | E. Voss |
+| Managing Director | Jean-Marc Dupont | 2025-02-14 | J-M. Dupont |
 
 ---
 
