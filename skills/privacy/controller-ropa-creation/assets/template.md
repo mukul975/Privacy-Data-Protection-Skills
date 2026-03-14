@@ -1,13 +1,13 @@
-# Controller RoPA Entry Template — Helix Biotech Solutions GmbH
+# Controller RoPA Entry — Helix Biotech Solutions GmbH
 
-**Record ID**: RPA-[XXX]
-**Processing Activity**: [Descriptive name of the processing activity]
-**Department**: [Business unit or department]
-**Processing Owner**: [Name, Title]
-**Date Created**: [YYYY-MM-DD]
-**Last Reviewed**: [YYYY-MM-DD]
-**Next Review Due**: [YYYY-MM-DD]
-**Record Status**: [Draft | Under Review | Approved | Requires Update]
+**Record ID**: RPA-2025-PAY-001
+**Processing Activity**: Employee Payroll Processing
+**Department**: Human Resources
+**Processing Owner**: Julia Richter, HR Director
+**Date Created**: 2024-03-15
+**Last Reviewed**: 2025-01-20
+**Next Review Due**: 2026-01-20
+**Record Status**: Approved
 
 ---
 
@@ -20,8 +20,8 @@
 | **Registration** | HRB 267891, Amtsgericht Munich |
 | **Contact email** | privacy@helix-biotech.eu |
 | **DPO** | Dr. Elena Voss, dpo@helix-biotech.eu, +49 89 7654 3210 |
-| **Joint controller(s)** | [Name and contact of joint controller, or "None"] |
-| **Art. 26 arrangement ref** | [Reference number, or "N/A"] |
+| **Joint controller(s)** | None |
+| **Art. 26 arrangement ref** | N/A |
 | **EU representative (Art. 27)** | Not applicable (established in EEA) |
 
 ---
@@ -30,17 +30,17 @@
 
 | # | Purpose | Lawful Basis (Art. 6(1)) | Art. 9(2) Condition (if applicable) |
 |---|---------|-------------------------|-------------------------------------|
-| 1 | [Specific, explicit purpose statement] | [e.g., Art. 6(1)(b) — contract performance] | [e.g., Art. 9(2)(a) — explicit consent, or N/A] |
-| 2 | [Second purpose, if applicable] | [Lawful basis] | [Art. 9 condition, or N/A] |
+| 1 | Calculation and disbursement of monthly employee salaries, including statutory deductions for income tax and social insurance | Art. 6(1)(b) — performance of employment contract | N/A |
+| 2 | Reporting salary data to Finanzamt Munich and Deutsche Rentenversicherung for tax and pension compliance | Art. 6(1)(c) — legal obligation (EStG Section 41a, SGB IV Section 28a) | N/A |
 
-**Privacy notice reference**: [Link or reference to the Art. 13/14 notice covering this processing]
+**Privacy notice reference**: PN-EMP-2024-001 (Employee Privacy Notice, distributed at onboarding via SAP SuccessFactors)
 
 ---
 
 ## Art. 30(1)(c) — Categories of Data Subjects
 
-- [ ] Employees (permanent)
-- [ ] Employees (fixed-term)
+- [x] Employees (permanent)
+- [x] Employees (fixed-term)
 - [ ] Contractors / consultants
 - [ ] Job applicants
 - [ ] Clinical trial participants
@@ -50,7 +50,6 @@
 - [ ] Suppliers / vendor contacts
 - [ ] Website visitors
 - [ ] Shareholders / investors
-- [ ] Other: [specify]
 
 ---
 
@@ -58,36 +57,35 @@
 
 ### Standard Personal Data
 
-- [ ] Name (full name, title)
-- [ ] Contact details (email, phone, postal address)
-- [ ] Date of birth / age
-- [ ] National identification numbers (tax ID, social security)
-- [ ] Financial data (bank account, salary, payment records)
-- [ ] Employment data (employee ID, role, department, work history)
+- [x] Name (full name, title)
+- [x] Contact details (email, phone, postal address)
+- [x] Date of birth / age
+- [x] National identification numbers (tax ID, social security)
+- [x] Financial data (bank account, salary, payment records)
+- [x] Employment data (employee ID, role, department, work history)
 - [ ] Authentication data (username, password hash)
 - [ ] Device and technical data (IP address, browser, OS)
 - [ ] Location data (GPS, IP-derived location)
 - [ ] Image / video data (photo ID, CCTV)
-- [ ] Other: [specify]
 
 ### Special Category Data (Art. 9(1))
 
 - [ ] Racial or ethnic origin
 - [ ] Political opinions
-- [ ] Religious or philosophical beliefs
+- [x] Religious or philosophical beliefs (church tax indicator for Kirchensteuer processing)
 - [ ] Trade union membership
 - [ ] Genetic data
 - [ ] Biometric data (for identification purposes)
-- [ ] Health data
+- [x] Health data (disability status for Schwerbehindertenabgabe calculation under SGB IX)
 - [ ] Data concerning sex life or sexual orientation
 - [ ] None
 
 ### Criminal Conviction Data (Art. 10)
 
 - [ ] Criminal conviction or offence data
-- [ ] None
+- [x] None
 
-**If special category or criminal data is processed, document the additional legal basis**: [Art. 9(2) or Art. 10 basis with specific reference]
+**Additional legal basis for special categories**: Art. 9(2)(b) — processing necessary for obligations under employment and social security law (SGB IX Section 154, KiStG)
 
 ---
 
@@ -95,10 +93,13 @@
 
 | Recipient | Type | Purpose of Disclosure | Agreement Reference |
 |-----------|------|-----------------------|---------------------|
-| [Recipient name] | Processor / Joint controller / Other controller / Public authority | [Why data is shared with this recipient] | [DPA ref / Art. 26 ref / Legal basis for disclosure] |
-| [Recipient name] | [Type] | [Purpose] | [Reference] |
+| SAP SE (SAP SuccessFactors) | Processor | Cloud payroll processing platform hosting and computation | DPA-2023-SAP-001 (signed 2023-06-15) |
+| Finanzamt Munich | Public authority | Statutory tax reporting under EStG Section 41a | Legal obligation — no DPA required |
+| Deutsche Rentenversicherung Bund | Public authority | Social insurance contribution reporting under SGB IV Section 28a | Legal obligation — no DPA required |
+| Commerzbank AG | Processor | Salary payment execution via SEPA credit transfer | DPA-2024-CBK-003 (signed 2024-02-10) |
+| KPMG AG Wirtschaftspruefungsgesellschaft | Processor | External payroll audit for annual financial statements | DPA-2024-KPM-001 (signed 2024-04-01) |
 
-**Internal recipients**: [List departments or roles with access, e.g., "HR Payroll team (4 named users), Finance accounts payable (2 named users)"]
+**Internal recipients**: HR Payroll team (3 named users: J. Richter, M. Bauer, S. Krause), Finance Controlling team (2 named users: T. Fischer, K. Schneider)
 
 ---
 
@@ -106,9 +107,7 @@
 
 | Destination Country | Recipient Entity | Data Categories Transferred | Transfer Mechanism | TIA Reference |
 |--------------------|------------------|---------------------------|-------------------|---------------|
-| [Country] | [Entity name] | [What data is transferred] | [Adequacy / SCCs Module X / BCRs / Art. 49 derogation] | [TIA-YYYY-XXX-NNN] |
-
-**If no international transfers**: No personal data is transferred outside the European Economic Area for this processing activity.
+| United States | SAP America, Inc. (sub-processor of SAP SE) | Encrypted payroll backup replicas | EU-US Data Privacy Framework (SAP Inc. DPF certification, effective 2023-10-12) | TIA-2023-SAP-US-001 |
 
 ---
 
@@ -116,8 +115,10 @@
 
 | Data Category | Retention Period | Legal Basis for Retention | Deletion / Anonymisation Method |
 |---------------|-----------------|--------------------------|-------------------------------|
-| [Data category] | [Specific duration from specific trigger, e.g., "7 years from end of financial year"] | [Legal reference, e.g., "Section 257 HGB"] | [Method, e.g., "Automated deletion via SAP archiving job"] |
-| [Data category] | [Duration] | [Legal reference or "proportionality assessment"] | [Method] |
+| Payroll records (salary slips, tax certificates) | 6 years from end of financial year of creation | Section 257(4) HGB, Section 147(3) AO | Automated deletion via SAP archiving job, verified by quarterly reconciliation |
+| Bank account details | Duration of employment + 3 months post-termination | Proportionality assessment (final salary payments, corrections) | Manual deletion by HR Payroll team, logged in SAP change history |
+| Tax identification numbers | 6 years from end of financial year of last tax certificate | Section 147(3) AO | Automated deletion via SAP archiving job |
+| Disability status records | Duration of employment + 3 years for potential claims (Section 15(4) AGG) | Proportionality assessment for discrimination claims | Manual deletion by HR, documented in retention schedule log |
 
 ---
 
@@ -125,22 +126,22 @@
 
 ### Technical Measures
 
-- **Encryption at rest**: [e.g., AES-256 for database storage]
-- **Encryption in transit**: [e.g., TLS 1.3 for all data transmission]
-- **Access control**: [e.g., RBAC with named-user accounts, quarterly access reviews]
-- **Authentication**: [e.g., MFA required for all system access]
-- **Network security**: [e.g., network segmentation, firewall, IDS/IPS]
-- **Backup**: [e.g., daily encrypted backups, 30-day retention, quarterly restore testing]
-- **Monitoring**: [e.g., EDR on endpoints, SIEM for security event correlation]
-- **Testing**: [e.g., annual penetration testing by independent assessor]
+- **Encryption at rest**: AES-256 for SAP SuccessFactors database storage; per-tenant encryption keys managed by SAP Key Management Service
+- **Encryption in transit**: TLS 1.3 for all data transmission between Helix Biotech and SAP SuccessFactors; SFTP with PGP encryption for Finanzamt ELSTER submissions
+- **Access control**: Role-based access control (RBAC) with named-user accounts; quarterly access reviews conducted by DPO office; principle of least privilege enforced
+- **Authentication**: Multi-factor authentication (MFA) required for all SAP SuccessFactors access; hardware security keys for administrative accounts
+- **Network security**: Network segmentation between HR systems and general corporate LAN; firewall rules restricting SAP SuccessFactors IP ranges
+- **Backup**: Daily encrypted backups with 30-day retention; quarterly restore testing documented in IT operations log
+- **Monitoring**: SAP SuccessFactors audit log with 2-year retention; SIEM integration via Splunk for anomaly detection on payroll data access
+- **Testing**: Annual penetration testing of SAP SuccessFactors integration by SySS GmbH; latest report: PT-2024-HB-042 (2024-11-15)
 
 ### Organisational Measures
 
-- **Training**: [e.g., mandatory annual data protection training, role-specific training for high-risk processing]
-- **Policies**: [e.g., data classification policy, acceptable use policy, clean desk policy]
-- **Personnel**: [e.g., background checks for staff with access to special category data, confidentiality agreements]
-- **Incident response**: [e.g., incident response procedure with 4-hour initial assessment SLA]
-- **Certification**: [e.g., ISO 27001:2022 certified (certificate ref: IS 782341)]
+- **Training**: Mandatory annual data protection training for all employees; role-specific payroll data handling training for HR Payroll team (completed 2025-01-10)
+- **Policies**: Data classification policy (POL-DC-001), acceptable use policy (POL-AU-002), clean desk policy (POL-CD-003)
+- **Personnel**: Background checks for all HR staff with payroll access; confidentiality agreements signed at onboarding (template: CONF-HR-2023)
+- **Incident response**: Incident response procedure (IRP-2024-001) with 4-hour initial assessment SLA; DPO notification within 8 hours of confirmed personal data breach
+- **Certification**: ISO 27001:2022 certified (certificate ref: IS 782341, issued by TUeV Sued, valid until 2026-09-30)
 
 ---
 
@@ -148,10 +149,10 @@
 
 | Question | Answer |
 |----------|--------|
-| Does this processing require a DPIA under Art. 35? | [Yes / No] |
-| If yes, DPIA reference | [DPIA-YYYY-XXX-NNN] |
-| DPIA approval date | [YYYY-MM-DD] |
-| If no, justification | [Brief reason, e.g., "Processing does not meet any Art. 35(3) criteria or supervisory authority blacklist criteria"] |
+| Does this processing require a DPIA under Art. 35? | No |
+| If yes, DPIA reference | N/A |
+| DPIA approval date | N/A |
+| If no, justification | Standard payroll processing for 320 employees does not meet Art. 35(3) criteria or BfDI DPIA blacklist criteria. Processing is not large-scale, does not involve systematic monitoring, and does not use new technologies. Disability status processing is limited to statutory calculations and does not involve profiling. |
 
 ---
 
@@ -159,10 +160,10 @@
 
 | Role | Name | Date | Signature |
 |------|------|------|-----------|
-| Processing Owner | [Name] | [YYYY-MM-DD] | _________ |
-| Data Protection Officer | Dr. Elena Voss | [YYYY-MM-DD] | _________ |
-| IT Security (if applicable) | [Name] | [YYYY-MM-DD] | _________ |
+| Processing Owner | Julia Richter | 2025-01-20 | J. Richter |
+| Data Protection Officer | Dr. Elena Voss | 2025-01-22 | E. Voss |
+| IT Security | Thomas Wehner | 2025-01-22 | T. Wehner |
 
 ---
 
-*This template conforms to GDPR Article 30(1) requirements. Maintain this record in electronic form per Art. 30(3) and make available to the supervisory authority on request per Art. 30(4).*
+*This record conforms to GDPR Article 30(1) requirements. Maintained in electronic form per Art. 30(3) and available to the supervisory authority on request per Art. 30(4).*

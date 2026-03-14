@@ -1,5 +1,5 @@
 ---
-name: managing-consent-for-transfers
+name: consent-for-transfers
 description: >-
   Guide for obtaining explicit consent for international data transfers under GDPR
   Article 49(1)(a). Covers informed consent requirements including risks of transfers

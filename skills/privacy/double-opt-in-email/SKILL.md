@@ -1,5 +1,5 @@
 ---
-name: implementing-double-opt-in-email
+name: double-opt-in-email
 description: >-
   Implementation guide for ePrivacy Directive compliant double opt-in email consent.
   Covers confirmation email workflow design, token expiration handling, record-keeping

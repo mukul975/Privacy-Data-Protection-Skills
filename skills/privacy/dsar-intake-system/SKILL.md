@@ -1,5 +1,5 @@
 ---
-name: building-universal-dsar-intake-system
+name: dsar-intake-system
 description: >-
   Builds a multi-channel DSAR intake system supporting web form, email, phone,
   and in-person requests with identity verification tiers, automated routing

@@ -1,5 +1,5 @@
 ---
-name: building-consent-record-keeping
+name: consent-record-keeping
 description: >-
   Guide for building a consent record-keeping system to demonstrate valid consent
   per GDPR Article 7(1). Covers required fields including timestamp, version, purpose,

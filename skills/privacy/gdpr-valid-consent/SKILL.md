@@ -1,5 +1,5 @@
 ---
-name: implementing-gdpr-valid-consent
+name: gdpr-valid-consent
 description: >-
   Guide for implementing GDPR-valid consent under Article 7 conditions and Article 4(11)
   definition. Covers five core requirements: freely given, specific, informed, unambiguous,

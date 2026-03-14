@@ -1,5 +1,5 @@
 ---
-name: assessing-legitimate-interest-vs-consent
+name: legit-interest-vs-consent
 description: >-
   Decision framework for choosing between consent and legitimate interest as the
   lawful basis for processing. Covers power imbalance indicators, conditionality

@@ -1,5 +1,5 @@
 ---
-name: auditing-cookie-consent-ab-testing
+name: cookie-consent-ab-audit
 description: >-
   Methodology for auditing A/B testing of consent banners to ensure compliance with
   equal ease of acceptance and rejection. Covers CNIL enforcement patterns including

@@ -1,5 +1,5 @@
 ---
-name: building-consent-preference-center
+name: consent-pref-center
 description: >-
   Technical architecture guide for building a multi-purpose consent preference center.
   Covers per-purpose granularity, easy withdrawal under Article 7(3), version history,

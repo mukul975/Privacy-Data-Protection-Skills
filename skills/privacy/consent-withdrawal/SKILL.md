@@ -1,5 +1,5 @@
 ---
-name: implementing-consent-withdrawal
+name: consent-withdrawal
 description: >-
   Implementation guide for GDPR Article 7(3) consent withdrawal mechanisms. Covers the
   equal ease requirement ensuring withdrawal is as easy as giving consent, one-click

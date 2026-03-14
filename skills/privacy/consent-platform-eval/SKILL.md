@@ -1,5 +1,5 @@
 ---
-name: evaluating-consent-management-platforms
+name: consent-platform-eval
 description: >-
   Framework for evaluating and selecting Consent Management Platforms (CMPs). Covers
   TCF v2.2 certification requirements, Global Privacy Control support, multi-regulation

@@ -1,5 +1,5 @@
 ---
-name: implementing-cnil-compliant-cookies
+name: cnil-compliant-cookies
 description: >-
   Implementation guide for CNIL cookie guidelines compliance. References the EUR 150M
   Google fine and EUR 60M Meta fine. Covers equal prominence accept/reject buttons,

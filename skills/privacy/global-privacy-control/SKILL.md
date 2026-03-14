@@ -1,5 +1,5 @@
 ---
-name: implementing-global-privacy-control
+name: global-privacy-control
 description: >-
   Implementation guide for Global Privacy Control (GPC) automated opt-out signal
   per CPRA Section 1798.135(e). Covers Sec-GPC HTTP header detection, JavaScript
