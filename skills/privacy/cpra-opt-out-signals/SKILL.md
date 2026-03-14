@@ -1,5 +1,5 @@
 ---
-name: implementing-cpra-opt-out-preference
+name: cpra-opt-out-signals
 description: >-
   Implements CPRA Section 1798.135 opt-out preference signal handling, covering
   Global Privacy Control (GPC) technical detection, automated signal honoring,

@@ -1,5 +1,5 @@
 ---
-name: providing-indirect-collection-information
+name: indirect-collection-notice
 description: >-
   Provides GDPR Article 14 information for personal data obtained from sources
   other than the data subject, covering timing requirements (within reasonable

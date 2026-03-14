@@ -1,5 +1,5 @@
 ---
-name: responding-to-regulatory-complaints
+name: regulatory-complaints
 description: >-
   Manages responses to regulatory complaints lodged with supervisory authorities
   under GDPR Article 77, covering internal escalation procedures, DPA response

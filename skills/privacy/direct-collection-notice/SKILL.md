@@ -1,5 +1,5 @@
 ---
-name: providing-direct-collection-information
+name: direct-collection-notice
 description: >-
   Provides GDPR Article 13 information at the point of direct data collection,
   covering all required elements under Art. 13(1)(a)-(f) and Art. 13(2)(a)-(g),

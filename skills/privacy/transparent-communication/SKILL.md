@@ -1,5 +1,5 @@
 ---
-name: implementing-transparent-communication
+name: transparent-communication
 description: >-
   Implements GDPR Article 12 transparent information and communication requirements,
   covering concise, intelligible, and plain language obligations, response timelines,

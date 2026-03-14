@@ -1,5 +1,5 @@
 ---
-name: managing-ccpa-consumer-requests
+name: ccpa-consumer-requests
 description: >-
   Manages California Consumer Privacy Act (CCPA) consumer rights requests under
   Civil Code sections 1798.100-125, covering the right to know, right to delete,
