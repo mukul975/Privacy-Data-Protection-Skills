@@ -27,7 +27,7 @@ Automated PII detection is a foundational capability for privacy engineering, en
 | Entity Type | Examples | Detection Method | Risk Level |
 |------------|---------|-----------------|------------|
 | PERSON_NAME | "John Smith", "Maria Garcia" | NER model | High |
-| EMAIL_ADDRESS | "user@example.com" | Regex pattern | High |
+| EMAIL_ADDRESS | "j.smith@cipherengineeringlabs.com" | Regex pattern | High |
 | PHONE_NUMBER | "+1-555-0123", "(555) 012-3456" | Regex + validation | High |
 | SSN | "123-45-6789" | Regex + checksum | Critical |
 | PASSPORT_NUMBER | "AB1234567" | Regex per country format | Critical |

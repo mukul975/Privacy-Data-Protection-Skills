@@ -1,24 +1,21 @@
 # HIPAA BAA Management — Standards and References
 
 ## Primary Legal Sources
-
-### Code of Federal Regulations
-- **45 CFR §160.103** — Definition of "business associate" and related terms
-- **45 CFR §164.502(e)** — Uses and disclosures of PHI: business associate requirement
-- **45 CFR §164.504(e)** — Requirements for BAA provisions
-- **45 CFR §164.308(b)** — Administrative safeguard: BA contracts and other arrangements
-- **45 CFR §164.314** — Organizational requirements for BAA and group health plans
-
-### Statutes
-- **HITECH Act §13401** — Business associate direct compliance with Security Rule
-- **HITECH Act §13404** — Application of HIPAA requirements and penalties to business associates
-- **HITECH Act §13408** — Business associate subcontractor obligations
-
-### Federal Register
-- **78 FR 5566** — Omnibus Rule: BA direct liability, subcontractor requirements, breach notification chain
+- **45 CFR §160.103** — Definition of business associate
+- **45 CFR §164.502(e)** — Requirement for covered entities to have BAAs
+- **45 CFR §164.504(e)** — Required BAA provisions
+- **45 CFR §164.314(a)** — Organizational requirements for BA contracts
+- **HITECH Act §13401** — Business associate direct liability for Security Rule and certain Privacy Rule provisions
+- **HITECH Act §13404** — Application of HIPAA to business associates and subcontractors
+- **78 FR 5566** — Omnibus Rule extending HIPAA to business associates and subcontractors (January 25, 2013)
 
 ## OCR Guidance
-- **OCR Guidance on Business Associate Relationships** — FAQ series at hhs.gov/hipaa/for-professionals/privacy/guidance/business-associates
-- **OCR Conduit Exception Guidance** — clarification on entities that are not business associates
-- **OCR Sample BAA Provisions** — model language from OCR published guidance
-- **OCR BA Enforcement Actions** — enforcement history demonstrating BA compliance expectations
+- **OCR Business Associate Guidance** — published at hhs.gov/hipaa/for-professionals/privacy/guidance/business-associates
+- **OCR FAQ on Business Associates** — clarifications on BA definition, conduit exception, and BAA requirements
+- **OCR Sample BAA Provisions** — published at hhs.gov/hipaa/for-professionals/covered-entities/sample-business-associate-agreement-provisions
+- **OCR Guidance on Cloud Computing** — applying BA requirements to cloud service providers
+
+## Industry References
+- **ABA Health Law Section** — Model Business Associate Agreement with commentary
+- **AHLA (American Health Law Association)** — BAA drafting guidance and updates for Omnibus Rule compliance
+- **HITRUST Third Party Assurance Program** — framework for assessing BA security posture

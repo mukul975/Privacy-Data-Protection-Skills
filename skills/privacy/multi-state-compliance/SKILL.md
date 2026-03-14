@@ -1,185 +1,196 @@
 ---
 name: multi-state-compliance
 description: >-
-  Multi-state harmonized privacy compliance program architecture. Common
-  requirements matrix across all US state privacy laws, state-specific
-  deltas, unified privacy program design, consumer rights harmonization,
-  and operational efficiency for organizations subject to multiple states.
+  Multi-state harmonized privacy compliance program. Common requirements
+  matrix across all US state privacy laws, state-specific deltas, unified
+  privacy program architecture, and implementation strategy for operating
+  across California, Virginia, Colorado, Connecticut, Texas, Oregon,
+  Montana, and Kentucky.
 license: Apache-2.0
 metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
   subdomain: us-state-privacy-laws
-  tags: "multi-state, harmonized-compliance, privacy-program, state-matrix, unified-privacy"
+  tags: "multi-state, harmonized-compliance, common-requirements, state-deltas, unified-program"
 ---
 
 # Multi-State Harmonized Compliance Program
 
 ## Overview
 
-As of 2026, nineteen US states have enacted comprehensive consumer privacy laws. Organizations operating across multiple states face a complex patchwork of requirements with overlapping but not identical provisions. A harmonized multi-state compliance program identifies common requirements, maps state-specific differences, and implements a unified architecture that satisfies the most restrictive standard while maintaining state-specific handling where required.
+As of 2026, over 20 US states have enacted comprehensive consumer privacy legislation. Organizations operating nationwide face a complex patchwork of requirements with significant overlap but important state-specific variations. A harmonized multi-state compliance program identifies the common baseline, maps state-specific deltas, and implements a unified privacy architecture that satisfies all applicable laws.
+
+This skill covers the eight major enacted and effective state privacy laws: CCPA/CPRA (California), VCDPA (Virginia), CPA (Colorado), CTDPA (Connecticut), TDPSA (Texas), OCPA (Oregon), MTDPA (Montana), and KPPA (Kentucky).
 
 ## Common Requirements Matrix
 
-### Consumer Rights (Available in All Comprehensive State Laws)
+### Consumer Rights — Universal Baseline
 
-| Right | CA | VA | CO | CT | TX | OR | MT | KY | Harmonized Standard |
-|-------|----|----|----|----|----|----|----|----|---------------------|
-| Access/Know | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Provide all categories + specific pieces |
-| Correct | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Correct upon verified request |
-| Delete | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Cascading deletion to SPs/processors |
-| Portability | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Machine-readable format (JSON) |
-| Opt-out: sale | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | "Do Not Sell" link + GPC |
-| Opt-out: targeted ads | N/A | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Privacy choices page |
-| Opt-out: profiling | N/A | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Profiling opt-out mechanism |
-| Limit sensitive PI | Yes | N/A | N/A | N/A | N/A | N/A | N/A | N/A | California-specific mechanism |
-| Third-party list | N/A | N/A | N/A | N/A | N/A | Yes | N/A | N/A | Oregon-specific disclosure |
+All eight laws provide these core rights:
 
-### Response Timelines
+| Right | CA | VA | CO | CT | TX | OR | MT | KY |
+|-------|----|----|----|----|----|----|----|----|
+| Access/Know | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Correct | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Delete | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Portability | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Opt-out: targeted ads | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Opt-out: sale | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Opt-out: profiling | No* | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Limit sensitive PI | Yes | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
+| Third-party list | No | No | No | No | No | Yes | No | No |
+| Appeal | No | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
 
-| State | Initial Response | Extension | Max Total | Appeal Response |
-|-------|-----------------|-----------|-----------|-----------------|
-| California | 45 days | +45 days | 90 days | N/A (no appeal right) |
-| Virginia | 45 days | +45 days | 90 days | 60 days |
-| Colorado | 45 days | +45 days | 90 days | 45 days |
-| Connecticut | 45 days | +45 days | 90 days | 60 days |
-| Texas | 45 days | +45 days | 90 days | 60 days |
-| Oregon | 45 days | +45 days | 90 days | 45 days |
-| Montana | 45 days | +15 days | **60 days** | 60 days |
-| Kentucky | 45 days | +45 days | 90 days | 60 days |
-| **Harmonized** | **45 days** | **+15 days** | **60 days** | **45 days** |
+*California provides opt-out of automated decision-making under pending CPPA regulations.
 
-**Harmonized standard:** Comply with Montana's shorter timeline (60 days max) to satisfy all states simultaneously.
+### Controller Obligations — Universal Baseline
 
-### Sensitive Data
-
-| State | Approach | Unique Categories |
-|-------|----------|-------------------|
-| California | Post-collection limit right | Government IDs, account credentials |
-| Virginia | Opt-in consent | Standard set |
-| Colorado | Opt-in consent | Standard set |
-| Connecticut | Opt-in consent (no dark patterns) | Standard set |
-| Texas | Opt-in consent | Standard set |
-| Oregon | Opt-in consent | Transgender/nonbinary status |
-| Montana | Opt-in consent | Standard set |
-| Kentucky | Opt-in consent | Standard set |
-| **Harmonized** | **Opt-in consent + limit right** | **Include all unique categories** |
-
-**Harmonized standard:** Implement opt-in consent (most restrictive) for all sensitive data categories across all states, plus the California-specific limit mechanism.
-
-### Universal Opt-Out Mechanism
-
-| State | Required | Effective Date |
-|-------|----------|---------------|
-| California | Yes | January 1, 2023 |
-| Colorado | Yes | July 1, 2024 |
-| Connecticut | Yes | January 1, 2025 |
-| Montana | Yes | October 1, 2025 |
-| Oregon | Not required | N/A |
-| Virginia | Not required | N/A |
-| Texas | Not required | N/A |
-| Kentucky | Not required | N/A |
-| **Harmonized** | **Yes (implement for all)** | **Now** |
+| Obligation | All States |
+|-----------|-----------|
+| Privacy notice/policy | Required |
+| Data minimization | Required |
+| Purpose limitation | Required |
+| Data security | Required |
+| Non-discrimination | Required |
+| Response timeline | 45 days (all states) |
 
 ## State-Specific Deltas
 
-### California Only
-- "Do Not Sell or Share My Personal Information" link (§1798.135(a)(1))
-- "Limit the Use of My Sensitive Personal Information" link (§1798.135(a)(2))
-- Financial incentive program disclosures (§1798.125(b))
-- Annual metrics reporting for 10M+ consumer businesses (CPPA Regs §7101)
-- Private right of action for data breaches (§1798.150)
-- CPPA as enforcement agency (not just AG)
+### California (CCPA/CPRA) — Unique Requirements
+- **Revenue threshold**: $25M alternative threshold (no other state has this)
+- **Sensitive PI limit right**: Post-collection limit mechanism (other states require pre-collection consent)
+- **CPPA enforcement**: Dedicated privacy agency (only state with one)
+- **Private right of action**: For data breach claims (only state with any private right of action)
+- **Annual metrics**: Required for businesses processing 10M+ consumers
+- **Data processing agreements**: Explicit statutory requirement
+- **No cure period**: Eliminated by CPRA
 
-### Connecticut Only
-- Explicit dark pattern prohibition in consent (§42-515(8))
-- Bona fide loyalty program exemption (§42-517(c))
+### Virginia (VCDPA) — Unique Requirements
+- **50% revenue threshold**: Higher revenue percentage requirement than most states
 
-### Texas Only
-- No revenue/consumer threshold (applies to all non-SBA small businesses)
-- Data broker registration with Secretary of State (§541.202)
-- CUBI biometric identifier provisions (§503.001)
+### Colorado (CPA) — Unique Requirements
+- **AG rulemaking**: Most detailed implementing regulations (4 CCR 904-3)
+- **Universal opt-out**: First mandated (effective July 2024)
+- **Profiling opt-out scope**: Broadest definition covering 7+ decision categories
+- **$20,000 penalties**: Higher per-violation penalties under Consumer Protection Act
 
-### Oregon Only
-- Specific third-party disclosure right (§646A.578(1)(f))
-- Enhanced de-identified data requirements (§646A.586)
-- Employee data partial exemption (§646A.572(4))
-- Nonprofit applicability
-- Transgender/nonbinary status as sensitive data
-- 14-day cure period (shortest)
+### Connecticut (CTDPA) — Unique Requirements
+- **Dark pattern prohibition**: Explicit statutory definition and prohibition
+- **Loyalty program exemption**: Bona fide loyalty programs exempt from sale opt-out
+- **25% revenue threshold**: Lower than Virginia's 50%
 
-### Montana Only
-- 50,000 consumer threshold (lowest)
-- 15-day extension only (60 days max)
-- Air carrier exemption
+### Texas (TDPSA) — Unique Requirements
+- **No revenue/consumer threshold**: Applies to all non-SBA-small businesses
+- **Data broker registration**: Secretary of State registration requirement
+- **CUBI interaction**: Separate biometric data law (up to $25,000/violation)
+- **Broadest applicability**: Largest state population, lowest effective threshold
+
+### Oregon (OCPA) — Unique Requirements
+- **Nonprofit coverage**: Applies to nonprofit organizations
+- **Third-party list right**: Specific entity names, not just categories
+- **De-identified data**: Most detailed compliance requirements
+- **Employee data partial exemption**: Unique treatment of employee data
+- **Transgender/nonbinary status**: Explicit sensitive data category
+- **14-day cure period**: Shortest cure period among states
+
+### Montana (MTDPA) — Unique Requirements
+- **50,000 consumer threshold**: Lowest consumer count threshold
+- **15-day extension only**: Shorter extension than most states' 45 days
+- **Air carrier exemption**: Unique industry exemption
+
+### Kentucky (KPPA) — Unique Requirements
+- **January 2026 effective date**: Most recently effective among this group
+- **50% revenue threshold**: Matches Virginia
 
 ## Unified Privacy Program Architecture
 
-### Layer 1: Foundation (Common Requirements)
+### Tier 1: Common Baseline (Apply Everywhere)
 
-All state laws share these requirements:
-1. **Privacy notice**: Categories, purposes, rights, third parties, contact
-2. **Data minimization**: Adequate, relevant, reasonably necessary
-3. **Data security**: Appropriate technical and organizational measures
-4. **Consumer rights**: Access, correct, delete, portability, opt-out
-5. **Processor contracts**: Written agreements with specified terms
-6. **Data protection assessments**: For targeted advertising, sale, profiling, sensitive data
+These requirements are common across all states and form the foundation:
 
-### Layer 2: Enhanced Standards (Most Restrictive)
+1. **Privacy notice** with categories of PI, purposes, rights, third parties, contact info
+2. **Consumer rights portal** supporting access, correct, delete, portability, opt-out
+3. **45-day response SLA** with tracking and metrics
+4. **Data minimization** and purpose limitation controls
+5. **Reasonable data security** measures
+6. **Non-discrimination** protections
 
-Apply the most restrictive standard across all applicable states:
-- **Sensitive data**: Opt-in consent before processing (Virginia model) + California limit right
-- **Response timeline**: 45 days + 15 days max extension (Montana standard)
-- **Universal opt-out**: Implement for all consumers (California/Colorado/Connecticut standard)
-- **Dark pattern prohibition**: Apply Connecticut's explicit standard to all consent interfaces
-- **De-identified data**: Apply Oregon's enhanced standards
+### Tier 2: High-Water Mark (Apply to Satisfy Strictest Requirement)
 
-### Layer 3: State-Specific Modules
+Where state requirements differ, apply the strictest standard universally:
 
-Implement state-specific requirements as modular additions:
-- California: Limit link, metrics reporting, financial incentive disclosures
-- Texas: SBA assessment, data broker registration check
-- Oregon: Third-party specific list, employee data partial exemption, nonprofit assessment
-- Connecticut: Loyalty program exemption assessment
+| Area | Strictest Standard | Source State |
+|------|--------------------|-------------|
+| Sensitive data consent | Opt-in consent before collection | VA, CO, CT, TX, OR, MT, KY |
+| Dark pattern prohibition | Consent via dark patterns invalid | CT (explicit), all (implicit) |
+| Response extension | 15-day extension only | MT (strictest) or accept state-by-state |
+| Universal opt-out | Honor GPC signals | CA, CO, CT, MT |
+| Profiling opt-out | Include 7+ decision categories | CO (broadest scope) |
+| De-identified data | Full compliance program | OR (most detailed) |
+| Privacy notice retention periods | Include per-category retention | CA (CPRA requirement) |
 
-### Layer 4: Monitoring and Adaptation
+### Tier 3: State-Specific (Apply Only Where Required)
 
-- Track new state privacy laws (legislatures active January-June annually)
-- Monitor AG enforcement actions for compliance interpretation
-- Update common requirements matrix as new laws take effect
-- Maintain state-specific delta documentation
+| Requirement | State(s) | Implementation |
+|-------------|----------|---------------|
+| "Do Not Sell or Share" link | CA | Homepage footer |
+| "Limit Sensitive PI" link | CA | Adjacent to opt-out link |
+| Specific third-party list | OR | Additional disclosure in Oregon responses |
+| Data broker registration | TX | Secretary of State registration (if applicable) |
+| Annual metrics disclosure | CA (10M+) | Privacy notice metrics section |
+| Loyalty program exemption | CT | Program-specific terms |
+| Nonprofit compliance | OR | Full program for Oregon nonprofit operations |
 
-## Implementation for Liberty Commerce Inc.
+### Implementation Strategy for Liberty Commerce Inc.
 
-### Unified Consumer Rights Portal
+**Approach: High-Water Mark with State-Specific Overlays**
 
-Liberty Commerce Inc. operates a single privacy portal at privacy.libertycommerce.com that:
-- Detects consumer location based on account address or self-selection
-- Presents all applicable rights for the consumer's state
-- Applies the most restrictive standard for overlapping requirements
-- Routes state-specific requests to appropriate workflows
-- Tracks all requests against the shortest applicable deadline
+Liberty Commerce Inc. implements a unified privacy program at the highest common standard, with state-specific modules activated based on the consumer's state of residence.
 
-### Unified Privacy Notice
+```
+Consumer Request Received
+  │
+  ├─► Determine Consumer's State
+  │
+  ├─► Apply Tier 1 Common Baseline
+  │     (Same for all states)
+  │
+  ├─► Apply Tier 2 High-Water Mark
+  │     (Strictest standard, applied universally)
+  │
+  └─► Apply Tier 3 State-Specific Module
+        ├─ California module: CPRA-specific disclosures, sensitive PI limit
+        ├─ Oregon module: Third-party specific list
+        ├─ Texas module: Data broker check
+        └─ Connecticut module: Loyalty program exemption assessment
+```
 
-A single California Privacy Notice (most comprehensive) serves as the base, with state-specific supplements:
-- California section: CCPA/CPRA-specific disclosures, limit link, financial incentives
-- Multi-state section: Consumer rights available in all states
-- State-specific supplements: Oregon third-party list right, Texas data broker status
+## Harmonized Privacy Notice Template
 
-### Unified Opt-Out Implementation
+A multi-state privacy notice should include these sections to satisfy all eight laws:
 
-A single "Your Privacy Choices" mechanism that:
-- Honors GPC signals for all states (California, Colorado, Connecticut, Montana)
-- Provides opt-out of sale and targeted advertising (all states)
-- Provides opt-out of profiling (all states with profiling opt-out)
-- Provides California-specific limit of sensitive PI
-- Maintains state-specific records for compliance documentation
+1. **Categories of PI/personal data collected** (all states)
+2. **Categories of sensitive PI/sensitive data collected** (all states)
+3. **Purposes for each category** (all states)
+4. **Retention period or criteria per category** (CA required; best practice all)
+5. **Sources of PI** (CA required; best practice all)
+6. **Categories of third parties receiving PI** (all states)
+7. **Whether PI is sold or shared** (all states)
+8. **Whether targeted advertising is conducted** (all non-CA states)
+9. **Whether profiling is conducted** (all non-CA states)
+10. **Consumer rights and how to exercise** (all states)
+11. **Appeal process** (VA, CO, CT, TX, OR, MT, KY)
+12. **Contact information** (all states)
+13. **"Do Not Sell or Share" link** (CA)
+14. **"Limit Sensitive PI" link** (CA)
+15. **Universal opt-out disclosure** (CA, CO, CT, MT)
+16. **Last updated date** (CA required; best practice all)
+17. **Annual metrics** (CA, if 10M+ consumers)
 
 ## Key Regulatory References
 
-- IAPP State Privacy Law Comparison Chart (updated quarterly)
-- NIST Privacy Framework v1.0 (baseline program architecture)
-- FTC Dark Patterns Report (September 2022) — applicable to Connecticut CTDPA
-- Global Privacy Control Specification v1.0 — universal opt-out implementation
+- IAPP US State Comprehensive Privacy Law Comparison Chart (updated quarterly)
+- CPPA Regulations 11 CCR §7001-7102
+- Colorado AG Regulations 4 CCR 904-3
+- Global Privacy Control Specification v1.0

@@ -5,97 +5,97 @@
 ### Process Flow
 
 ```
-START: New ML model development requiring training data
+START: ML team requests use of dataset for model training
   │
-  ├─► Step 1: Data Requirements Definition
-  │     - Data scientist defines required features and labels
-  │     - Identify candidate data sources (internal systems, third-party, public)
-  │     - Estimate required volume and representativeness
-  │     Output: Training data requirements specification
+  ├─► Step 1: Personal Data Screening
+  │     - Scan dataset for PII using automated discovery tools
+  │     - Classify each data element per personal-data-test framework
+  │     - Identify Art. 9 special category data (direct or inferred)
+  │     - Identify Art. 10 criminal data
+  │     Output: Dataset personal data classification report
   │
-  ├─► Step 2: Personal Data Classification
-  │     - Scan candidate data for PII (auto-data-discovery)
-  │     - Classify each feature as personal/non-personal
-  │     - Identify Art. 9 special category features (direct and proxy)
-  │     - Identify Art. 10 criminal data features
-  │     Output: Feature-level privacy classification
+  ├─► Step 2: Purpose Compatibility Assessment
+  │     - Document the original purpose for which data was collected
+  │     - Document the proposed ML training purpose
+  │     - Assess compatibility under Art. 6(4) factors:
+  │       (a) link between original and training purpose
+  │       (b) context of collection and data subject expectations
+  │       (c) nature of the data (sensitivity)
+  │       (d) consequences for data subjects
+  │       (e) safeguards (pseudonymisation, access controls)
+  │     - If not compatible: establish new lawful basis
+  │     Output: Purpose compatibility assessment
   │
-  ├─► Step 3: Lawful Basis Assessment
-  │     For each personal data feature:
-  │     3a. Was ML training included in the original collection purpose?
-  │     3b. If not: is training compatible under Art. 6(4) compatibility test?
-  │     3c. What lawful basis applies? (consent, legitimate interests, etc.)
-  │     3d. For Art. 9 data: what Art. 9(2) condition applies?
-  │     3e. For bias monitoring under EU AI Act Art. 10(5): document necessity
-  │     Output: Lawful basis assessment per feature
+  ├─► Step 3: Lawful Basis Establishment
+  │     - For compatible purpose: rely on original lawful basis
+  │     - For new purpose: most likely Art. 6(1)(f) legitimate interests
+  │       → Conduct and document Legitimate Interest Assessment (LIA)
+  │     - For special category data: establish Art. 9(2) condition
+  │       → Typically Art. 9(2)(j) research with Art. 89(1) safeguards
+  │       → Or Art. 9(2)(g) substantial public interest for bias detection
+  │     Output: Documented lawful basis
   │
-  ├─► Step 4: Bias Risk Assessment
-  │     - Identify protected characteristics in training features
-  │     - Identify proxy features correlated with protected characteristics
-  │     - Assess label/outcome distribution across demographic groups
-  │     - Calculate preliminary fairness metrics on historical data
-  │     Output: Bias risk assessment report
+  ├─► Step 4: Bias and Proxy Variable Assessment
+  │     - Scan all features for proxy correlation with protected characteristics
+  │     - Calculate demographic representation statistics
+  │     - Flag proxy variables (correlation > 0.3 with protected characteristic)
+  │     - Document in data card bias assessment section
+  │     Output: Bias assessment report
   │
-  ├─► Step 5: Data Minimisation Review
-  │     - For each personal data feature: is it necessary for model performance?
-  │     - Can the feature be anonymised or pseudonymised without significant
-  │       accuracy loss?
-  │     - Can synthetic data substitute for personal data?
-  │     - Remove unnecessary features; apply pseudonymisation where possible
-  │     Output: Minimised feature set
+  ├─► Step 5: De-identification Assessment
+  │     - Can the training objective be achieved with anonymised data?
+  │       YES → Apply anonymisation, verify per pseudo-vs-anon-data framework
+  │       NO  → Apply pseudonymisation as minimum safeguard
+  │     - Can synthetic data substitute for real data?
+  │       YES → Generate synthetic data, validate model performance
+  │       NO  → Document why real data is necessary
+  │     Output: De-identification strategy and assessment
   │
   ├─► Step 6: Data Card Creation
   │     - Complete all required data card fields
-  │     - Document provenance for each data source
-  │     - Record consent status and lawful basis
-  │     - Record bias assessment findings
-  │     - Record quality metrics
+  │     - Include provenance chain from original collection to training set
+  │     - Include bias assessment results
+  │     - Include de-identification assessment
   │     Output: Completed data card
   │
   ├─► Step 7: DPIA (if required)
-  │     Triggers: personal data at scale, automated profiling, Art. 9 data
-  │     - Conduct DPIA per conducting-gdpr-dpia skill
-  │     - Document residual risks and mitigations
-  │     Output: Completed DPIA
+  │     - High-risk AI system (AI Act Annex III)? → DPIA required
+  │     - Automated decision-making with legal/significant effects? → DPIA required
+  │     - Large-scale special category processing? → DPIA required
+  │     - If DPIA required: conduct per conducting-gdpr-dpia skill
+  │     Output: DPIA reference (or documented assessment that DPIA not required)
   │
-  └─► Step 8: DPO Approval
-        - DPO reviews classification, lawful basis, bias assessment, and DPIA
-        - Approval/rejection with conditions
-        - If approved: training may proceed under documented conditions
-        Output: DPO approval record
+  └─► Step 8: Approval and Access Provisioning
+        - DPO reviews classification, lawful basis, data card, and DPIA
+        - ML team lead signs acceptance of data handling conditions
+        - Access provisioned to approved training environment only
+        - Audit logging enabled for all training data access
+        Output: Approved dataset with data card and access controls
 ```
 
-## Workflow 2: Post-Training Data Subject Rights Fulfilment
+## Workflow 2: Ongoing Training Data Governance
 
 ### Process Flow
 
 ```
-START: Data subject exercises rights related to ML training data
+Quarterly Review Cycle
   │
-  ├─► RIGHT TO ACCESS (Art. 15)
-  │     - Confirm whether data subject's data was used in training
-  │     - Provide: categories of training data, purpose, lawful basis
-  │     - Provide: information about automated decision-making (Art. 22)
-  │     - Note: obligation is to provide information about the data, not
-  │       to explain the model (but meaningful information about logic required)
+  ├─► Review training data inventory
+  │     - Are all active training datasets registered with data cards?
+  │     - Have any datasets been modified since last review?
+  │     - Are retention periods being observed?
   │
-  ├─► RIGHT TO ERASURE (Art. 17)
-  │     - Remove data subject's records from training dataset
-  │     - Assess whether the trained model must be retrained:
-  │       • If model memorised individual records → retraining required
-  │       • If model only learned aggregate patterns → retraining may not
-  │         be required (document proportionality assessment)
-  │     - If retraining required: schedule retraining, document timeline
-  │     - If machine unlearning technique available: apply and validate
-  │     - Delete data from training data store and all copies
+  ├─► Bias monitoring
+  │     - Re-run disparate impact analysis on deployed models
+  │     - Compare with training data bias assessment
+  │     - Flag models with degraded fairness metrics
   │
-  ├─► RIGHT TO RECTIFICATION (Art. 16)
-  │     - Correct data subject's records in training dataset
-  │     - Assess impact on model accuracy
-  │     - Schedule retraining if correction is material
+  ├─► Consent/lawful basis review
+  │     - Any changes to consent scope or withdrawal rates?
+  │     - Any regulatory guidance affecting lawful basis assessment?
   │
-  └─► RIGHT TO OBJECT (Art. 21)
-        - If processing based on legitimate interests: assess objection
-        - If compelling grounds exist for continued processing: document
-        - If no compelling grounds: remove data and retrain if necessary
+  └─► Retention enforcement
+        - Delete training data past retention date
+        - Document model weights that may embed personal data
+        - Assess whether model retraining requires fresh consent
 ```

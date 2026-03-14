@@ -1,11 +1,11 @@
 ---
 name: ropa-executive-dashboard
 description: >-
-  Builds RoPA reporting and visualization dashboards including processing
-  activity counts, risk heatmaps, compliance scores, trend analysis, and
-  supervisory authority readiness indicators. Activate for RoPA dashboard,
-  executive reporting, compliance metrics, risk heatmap, trend analysis,
-  board reporting, KPI visualization.
+  Creates executive reporting and visualization from RoPA data including
+  processing activity counts, risk heatmaps, compliance scores, trend
+  analysis, and supervisory authority readiness indicators. Activate for
+  RoPA dashboard, executive reporting, risk heatmap, compliance score,
+  trend analysis, board reporting, KPI.
 license: Apache-2.0
 metadata:
   author: mukul975
@@ -19,197 +19,180 @@ metadata:
 
 ## Overview
 
-Privacy governance requires not just maintaining records but communicating their status to decision-makers. The DPO must report to senior management and the board under Art. 38(3), and processing records form the evidentiary backbone of this reporting. This skill provides the methodology, metrics, and visualisation approaches for building an executive RoPA dashboard that communicates compliance posture, risk exposure, and supervisory authority readiness in business-relevant terms.
+The RoPA is a compliance document, but its data also serves as a strategic management tool. Aggregated RoPA data reveals the organisation's processing landscape, risk concentrations, compliance posture, and trends over time. This skill defines the metrics, visualisations, and reporting structures that transform raw RoPA data into executive-level insights for board reporting, DPO annual reports, and supervisory authority readiness assessments.
 
-## Dashboard Architecture
+## Dashboard Metrics Framework
 
-### Audience-Specific Views
+### Tier 1: Compliance Metrics (Supervisory Authority Readiness)
 
-| Audience | Information Need | Dashboard View |
-|----------|-----------------|----------------|
-| Board / Audit Committee | High-level compliance posture, trend direction, material risks | Executive summary (1 page) |
-| DPO / Privacy Team | Operational metrics, gap details, remediation tracking | Operational dashboard (detailed) |
-| Processing Owners | Their entries' status, pending reviews, action items | My processing activities |
-| CISO | Security measures coverage, encryption status, access controls | Security overlay |
-| Supervisory Authority | Readiness score, export-ready records, response time capability | SA readiness indicator |
+| Metric | Definition | Target | Data Source |
+|--------|-----------|--------|-------------|
+| RoPA completeness score | Percentage of entries meeting all Art. 30 mandatory fields with quality scoring | >=95% | Completeness audit engine |
+| Staleness rate | Percentage of entries not reviewed within 12 months | <=5% | Last reviewed date field |
+| DPA coverage | Percentage of processor recipients with documented Art. 28 DPAs | 100% | Recipient and DPA fields |
+| Transfer mechanism coverage | Percentage of international transfers with documented safeguard mechanisms | 100% | Transfer field |
+| DPIA linkage completeness | Percentage of high-risk entries linked to approved DPIAs | 100% | DPIA reference field |
+| Purpose specificity | Percentage of entries with purposes free of vague terms | >=95% | Purpose field text analysis |
+| Retention concreteness | Percentage of entries with concrete retention periods | >=95% | Retention field text analysis |
 
-## Key Performance Indicators (KPIs)
+### Tier 2: Risk Metrics
 
-### Tier 1: Compliance Health (Board-Level)
+| Metric | Definition | Calculation | Significance |
+|--------|-----------|-------------|-------------|
+| Special category processing count | Number of entries involving Art. 9 data | Count of entries where special_category != "None" | Higher count = greater regulatory risk |
+| High-risk processing ratio | Ratio of DPIA-required entries to total entries | DPIA-required / Total | Indicates processing risk concentration |
+| International transfer count | Total number of documented cross-border transfers | Sum of all transfer entries | Each transfer is a potential enforcement point |
+| Third-country transfer risk score | Weighted count of transfers by destination risk | Transfers to non-adequate countries weighted 3x, adequacy countries 1x | Highlights transfer risk concentration |
+| Processor dependency count | Number of unique external processors | Distinct count of processor recipients | Higher count = greater supply chain risk |
+| Average entry age | Mean days since last review across all entries | Sum of days since review / Total entries | Indicates overall currency of records |
 
-| KPI | Calculation | Target | Red Threshold |
-|-----|-------------|--------|---------------|
-| **Overall Completeness Score** | Weighted average of all entry scores (Tier 1 + 2 + 3) | >= 95% | < 80% |
-| **Mandatory Field Compliance** | % of entries with all 7 Art. 30(1) fields populated | 100% | < 90% |
-| **Review Currency Rate** | % of entries reviewed within past 12 months | >= 95% | < 80% |
-| **DPIA Linkage Rate** | % of high-risk entries with linked, approved DPIA | 100% | < 100% |
-| **Critical Gap Count** | Number of entries with missing mandatory fields | 0 | > 0 |
+### Tier 3: Operational Metrics
 
-### Tier 2: Operational Metrics (DPO-Level)
+| Metric | Definition | Target |
+|--------|-----------|--------|
+| Total processing activities | Count of active RoPA entries | Tracked over time for growth trends |
+| Entries per department | Distribution of entries across business units | Balanced coverage expected |
+| New entries (quarter) | Entries created in the current quarter | Indicates processing activity discovery rate |
+| Archived entries (quarter) | Entries archived in the current quarter | Indicates decommissioning activity |
+| Change velocity | Number of RoPA changes per quarter | Stable trend expected; spikes indicate organisational change |
+| Remediation closure rate | Percentage of audit findings remediated within deadline | >=90% |
+| Processing owner response rate | Percentage of review requests responded to within 14 days | >=95% |
 
-| KPI | Calculation | Target | Alert Threshold |
-|-----|-------------|--------|-----------------|
-| **Total Processing Activities** | Count of active RoPA entries | N/A (informational) | Significant change (>10% quarterly) |
-| **New Activities This Quarter** | Count of entries created in current quarter | N/A | > 5 (may indicate rapid change requiring attention) |
-| **Archived Activities This Quarter** | Count of entries archived | N/A | > 3 (verify archival was intentional) |
-| **Average Days Since Last Review** | Mean days since last_reviewed_date across all entries | < 180 | > 270 |
-| **Overdue Reviews** | Count of entries past next_review_date | 0 | > 0 |
-| **DPA Coverage Rate** | % of processor recipients with documented DPA reference | 100% | < 95% |
-| **International Transfer Documentation Rate** | % of transfers with documented safeguard mechanism | 100% | < 100% |
-| **Special Category Processing Count** | Number of entries involving Art. 9 data | N/A | Any increase triggers review |
-| **Remediation Closure Rate** | % of audit findings remediated within deadline | >= 90% | < 75% |
+## Visualisation Specifications
 
-### Tier 3: Risk Indicators (Combined)
+### 1. Risk Heatmap: Processing Activities by Risk Level and Department
 
-| Indicator | Signal |
-|-----------|--------|
-| **Entries without assigned owner** | Accountability gap — no one responsible for maintaining record |
-| **Entries referencing terminated employees as owners** | Stale ownership — reassignment needed |
-| **DPAs expiring within 90 days** | Contract risk — renewal needed before expiry |
-| **Entries with vague purpose descriptions** | Regulatory risk — vulnerable to SA challenge |
-| **Entries with vague retention periods** | Storage limitation risk — potential breach of Art. 5(1)(e) |
-| **High-risk entries without DPIA** | Art. 35 non-compliance risk |
-| **Transfers without TIA** | Schrems II compliance risk |
+**Axes**: X = Department (HR, Clinical, Marketing, Finance, IT, Facilities, Sales), Y = Risk Level (Low, Medium, High, Critical)
 
-## Visualisation Components
+**Cell content**: Count of processing activities in each cell. Colour intensity proportional to count.
 
-### 1. Compliance Score Gauge
+**Risk level determination**:
+- **Critical**: DPIA required + special category data + international transfers to non-adequate countries
+- **High**: DPIA required OR special category data
+- **Medium**: International transfers OR large recipient list (>5 processors)
+- **Low**: Standard processing with no risk indicators
 
-A single gauge showing the overall completeness score (0-100%), colour-coded:
-- Green (95-100%): Supervisory authority ready
-- Amber (80-94%): Acceptable with improvements needed
-- Red (<80%): Requires urgent attention
+**Example heatmap for Helix Biotech Solutions:**
 
-### 2. Risk Heatmap
+| Department | Low | Medium | High | Critical |
+|-----------|-----|--------|------|----------|
+| Human Resources | 3 | 2 | 1 | 0 |
+| Clinical Operations | 0 | 1 | 2 | 3 |
+| Digital Marketing | 2 | 2 | 0 | 0 |
+| Finance | 4 | 1 | 0 | 0 |
+| IT | 3 | 2 | 0 | 0 |
+| Facilities | 1 | 0 | 1 | 0 |
+| Sales | 3 | 1 | 0 | 0 |
 
-A matrix visualisation showing risk concentration across departments and processing types:
+### 2. Compliance Score Gauge
 
-|  | Employee Data | Customer Data | Clinical Data | Financial Data | Marketing Data |
-|--|-------------|--------------|--------------|---------------|---------------|
-| **HR** | Medium | — | — | Medium | — |
-| **Clinical Ops** | — | — | **High** | — | — |
-| **Sales** | — | Low | — | Low | Low |
-| **Finance** | Low | Low | — | Medium | — |
-| **Marketing** | — | Low | — | — | Medium |
-| **IT** | Low | Low | Low | Low | Low |
+**Type**: Radial gauge (speedometer style)
+**Range**: 0-100%
+**Zones**: Red (0-50), Amber (50-70), Yellow (70-85), Green (85-95), Dark Green (95-100)
+**Current value**: Overall completeness score from the audit engine
+**Comparison**: Previous quarter score shown as reference marker
 
-Risk levels based on:
-- **High**: Special category data + large scale + international transfers
-- **Medium**: Special category data OR large scale OR international transfers
-- **Low**: Standard personal data, domestic processing, limited scale
+### 3. Trend Analysis: Processing Activity Growth Over Time
 
-### 3. Review Currency Timeline
+**Type**: Line chart
+**X-axis**: Quarters (8 quarters rolling)
+**Y-axis**: Count of active processing activities
+**Lines**: Total entries, new entries added, entries archived
+**Purpose**: Shows whether the organisation is actively discovering and recording processing or whether the RoPA is stagnating
 
-A bar chart showing the distribution of entries by months since last review:
+### 4. International Transfer Map
 
-```
-0-3 months:   ████████████████████  25 entries (53%)
-3-6 months:   ████████████          15 entries (32%)
-6-9 months:   ████                   5 entries (11%)
-9-12 months:  ██                     2 entries (4%)
->12 months:   ░                      0 entries (0%)  ← TARGET
-```
+**Type**: Geographic flow map
+**Base**: World map with EEA highlighted
+**Flows**: Arrows from organisation location to each transfer destination country
+**Arrow width**: Proportional to number of transfers to that country
+**Colour**: Green = adequacy decision, Blue = SCCs, Purple = BCRs, Red = no mechanism documented
 
-### 4. Processing Activity Trend
+### 5. Supervisory Authority Readiness Indicator
 
-A line chart showing processing activity count over time:
+**Type**: Traffic light indicator per metric
+**Metrics displayed**: Each Tier 1 compliance metric with Green/Amber/Red status
 
-```
-        Q1 2025    Q2 2025    Q3 2025    Q4 2025    Q1 2026
-Active:    42         44         45         47         49
-New:        3          2          3          4          3
-Archived:   1          0          2          2          1
-```
+| Metric | Status | Value | Threshold |
+|--------|--------|-------|-----------|
+| Completeness score | [Green/Amber/Red] | [XX]% | Green >=95, Amber >=85, Red <85 |
+| Staleness rate | [Green/Amber/Red] | [XX]% | Green <=5, Amber <=15, Red >15 |
+| DPA coverage | [Green/Amber/Red] | [XX]% | Green = 100, Amber >=90, Red <90 |
+| Transfer coverage | [Green/Amber/Red] | [XX]% | Green = 100, Amber >=90, Red <90 |
+| DPIA linkage | [Green/Amber/Red] | [XX]% | Green = 100, Amber >=80, Red <80 |
 
-### 5. Department Completeness Comparison
+## Executive Report Structure
 
-A horizontal bar chart showing per-department average completeness scores:
+### Quarterly RoPA Report to Data Protection Steering Committee
 
-```
-Clinical Ops:  ████████████████████████████░  96%
-Finance:       ████████████████████████████   94%
-HR:            ██████████████████████████░░   91%
-IT:            ████████████████████████░░░░   88%
-Sales:         ████████████████████████░░░░   87%
-Marketing:     ██████████████████████░░░░░░   82%
-Facilities:    ████████████████████░░░░░░░░   78%
-```
+**Page 1: Executive Summary**
+- Overall compliance score (gauge)
+- Key changes since last quarter
+- Top 3 risks
+- Top 3 remediation priorities
 
-### 6. Transfer Map
+**Page 2: Compliance Dashboard**
+- Tier 1 compliance metrics table
+- SA readiness traffic lights
+- Trend chart (4-quarter rolling)
 
-A geographic visualisation showing international data transfer destinations with transfer mechanism indicators:
+**Page 3: Risk Landscape**
+- Risk heatmap by department
+- Special category processing summary
+- International transfer map
+- Processor dependency chart
 
-| Destination | Transfer Count | Mechanism | Status |
-|------------|---------------|-----------|--------|
-| United States | 4 transfers | 3x DPF, 1x SCCs | All documented |
-| United Kingdom | 2 transfers | UK adequacy | All documented |
-| India | 1 transfer | SCCs Module 2 | TIA current |
-| Switzerland | 1 transfer | Swiss adequacy | All documented |
+**Page 4: Operational Metrics**
+- Processing activity count and trend
+- Change velocity chart
+- Remediation closure rate
+- Review response rate
 
-### 7. Supervisory Authority Readiness Panel
+**Page 5: Findings and Actions**
+- Open audit findings by severity
+- Remediation progress tracker
+- Upcoming review deadlines
+- Recommendations
 
-| Readiness Metric | Status |
-|-----------------|--------|
-| All mandatory fields populated | Yes / No |
-| All entries reviewed within 12 months | Yes / No |
-| Export available in SA template format | Yes / No |
-| Response time for Art. 30(4) request | < 48 hours / > 48 hours |
-| All DPIAs for high-risk processing are approved | Yes / No |
-| All international transfers documented | Yes / No |
-| Overall readiness | READY / NOT READY |
+### Annual DPO Report to the Board
 
-## Reporting Cadence
+The annual DPO report required under Art. 38(3) should include a RoPA section covering:
 
-| Report | Audience | Frequency | Content |
-|--------|----------|-----------|---------|
-| Executive dashboard snapshot | Board / Audit Committee | Quarterly | KPIs, trend, top risks |
-| Operational dashboard | DPO, Privacy team | Monthly | Full metrics, gap details, remediation progress |
-| Processing owner status | Individual owners | Monthly | Their entries' status, action items |
-| SA readiness assessment | DPO | Annually + on demand | Full readiness evaluation |
-| Annual DPO report to board | Board | Annually | Comprehensive privacy programme report including RoPA section |
+1. **Processing landscape overview**: Total activities, departments covered, year-over-year growth.
+2. **Compliance posture**: Annual completeness score, comparison to previous year, SA readiness status.
+3. **Risk summary**: High-risk processing activities, DPIA coverage, international transfer overview.
+4. **Significant changes**: New processing activities, decommissioned activities, major regulatory changes.
+5. **Audit outcomes**: Summary of annual completeness audit findings and remediation status.
+6. **Recommendations**: Investment needs (tool upgrades, staffing), process improvements, regulatory preparation.
+
+## KPI Definitions
+
+### Primary KPIs (Report to Board)
+
+| KPI | Definition | Target | Frequency |
+|-----|-----------|--------|-----------|
+| RoPA Compliance Index | Weighted average of all Tier 1 metrics | >=95% | Quarterly |
+| Time to Record New Processing | Days from processing activity identification to RoPA entry approval | <=10 business days | Monthly |
+| Audit Finding Closure Rate | Percentage of findings closed within deadline | >=90% | Quarterly |
+| SA Readiness Score | Composite of compliance metrics indicating ability to respond to SA request within 48 hours | Green | Quarterly |
+
+### Secondary KPIs (Report to DPO/Steering Committee)
+
+| KPI | Definition | Target | Frequency |
+|-----|-----------|--------|-----------|
+| Review Response Rate | Percentage of annual review requests completed on time | >=95% | Annually |
+| Change Management Integration | Percentage of IT change requests that complete privacy impact screening | >=98% | Monthly |
+| Automated Discovery Coverage | Percentage of IT systems covered by automated RoPA scanning | >=80% | Quarterly |
+| Cross-Reference Integrity | Percentage of RoPA-DPIA cross-references that are valid | 100% | Quarterly |
 
 ## Data Sources for Dashboard
 
-| Dashboard Element | Data Source | Update Frequency |
-|------------------|------------|------------------|
-| Completeness scores | RoPA validation script output | Monthly |
-| Review currency | last_reviewed_date field from RoPA | Real-time (from platform) |
-| Processing activity counts | RoPA register | Real-time |
-| Risk heatmap | Combination of data categories, scale, transfers | Quarterly recalculation |
-| DPA status | Vendor management / DPA register | Monthly sync |
-| DPIA linkage | DPIA register cross-reference | Monthly |
-| Remediation tracking | Audit findings register | Weekly |
-
-## Implementation for Helix Biotech Solutions
-
-### Dashboard Report — Q1 2026
-
-**Organisation**: Helix Biotech Solutions GmbH
-**Report Period**: Q1 2026 (January — March)
-**Prepared By**: Dr. Elena Voss, DPO
-
-#### Executive Summary
-
-| KPI | Value | Trend | Status |
-|-----|-------|-------|--------|
-| Overall Completeness Score | 93.2% | +2.1% from Q4 2025 | Amber (target: 95%) |
-| Total Processing Activities | 49 | +2 from Q4 2025 | Informational |
-| Mandatory Field Compliance | 98% (48/49) | Stable | Amber (1 entry incomplete) |
-| Review Currency Rate | 96% (47/49) | +4% from Q4 2025 | Green |
-| DPIA Linkage Rate | 100% (5/5 high-risk) | Stable | Green |
-| Critical Gap Count | 1 | -1 from Q4 2025 | Amber (target: 0) |
-| DPA Coverage Rate | 97% | +3% from Q4 2025 | Amber |
-| Overdue Reviews | 2 | -3 from Q4 2025 | Amber |
-
-#### Key Actions This Quarter
-
-1. **Resolved**: 3 overdue reviews completed (RPA-019, RPA-031, RPA-038).
-2. **New**: 2 new processing activities recorded (RPA-048: Genomic analysis, RPA-049: Salesforce CRM).
-3. **Remediation**: 4 of 5 Major audit findings from Q4 2025 audit remediated. 1 remaining (RPA-023 retention — deadline 2026-03-21).
-4. **Remaining critical gap**: RPA-049 (new Salesforce CRM) — retention period field awaiting finalisation by Sales Operations. Deadline: 2026-04-15.
-
-#### Recommendations
-
-1. Achieve 100% mandatory field compliance by addressing RPA-049 retention gap before Q2.
-2. Conduct targeted review of Marketing department entries (lowest completeness at 82%).
-3. Prepare for annual full completeness audit in Q2 2026.
+| Metric | Primary Source | Refresh Frequency |
+|--------|---------------|-------------------|
+| Completeness scores | Completeness audit script output | Monthly (automated), Annually (manual) |
+| Staleness data | RoPA last_reviewed_date field | Real-time |
+| Risk indicators | DPIA reference, special category, transfer fields | Real-time |
+| Trend data | Historical RoPA snapshots (stored quarterly) | Quarterly |
+| Remediation data | Audit finding tracker | Weekly |
+| Change velocity | RoPA change log | Real-time |
+| Processing owner response | Review workflow system | Per review cycle |

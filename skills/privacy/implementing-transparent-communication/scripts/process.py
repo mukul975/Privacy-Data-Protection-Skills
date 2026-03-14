@@ -12,6 +12,7 @@ import json
 import re
 import math
 from datetime import datetime
+from typing import Optional
 
 
 # Art. 13 required elements (direct collection)
@@ -188,8 +189,6 @@ def assess_response_timeline(
     extension_date: Optional[str] = None,
 ) -> dict:
     """Assess whether a response was delivered within Art. 12(3) timelines."""
-    from typing import Optional
-
     req = datetime.strptime(request_date, "%Y-%m-%d")
     resp = datetime.strptime(response_date, "%Y-%m-%d")
     days_taken = (resp - req).days

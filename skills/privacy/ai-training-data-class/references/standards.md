@@ -4,53 +4,48 @@
 
 ### GDPR — Regulation (EU) 2016/679
 
-- **Article 5(1)(b)**: Purpose limitation — personal data collected for specified purposes shall not be further processed in a manner incompatible with those purposes. Further processing for scientific research purposes in accordance with Art. 89(1) shall not be considered incompatible (but ML training for commercial purposes is generally not scientific research).
-- **Article 6(4)**: Compatibility test for new purposes — factors include link between original and new purpose, context, nature of the data, consequences for data subjects, and existence of appropriate safeguards including encryption or pseudonymisation.
-- **Article 9**: Special category prohibitions and exceptions apply to training data containing protected attributes or from which protected attributes can be inferred.
-- **Article 22**: Right not to be subject to solely automated decision-making producing legal or significant effects — applies to ML model outputs.
-- **Article 35**: DPIA required for systematic and extensive evaluation of personal aspects based on automated processing (Art. 35(3)(a)) — ML model development triggers this.
+- **Article 5(1)(b)**: Purpose limitation — training data collected for one purpose may not be used for ML training without compatible purpose assessment per Art. 6(4) or new lawful basis.
+- **Article 5(1)(c)**: Data minimisation — training datasets must contain only personal data necessary for the model objective.
+- **Article 9**: Special category data in training datasets requires Art. 9(2) condition, even if the model's purpose is not to process special category data.
+- **Article 22**: Automated individual decision-making, including profiling — models producing legal or significant effects on individuals require human oversight, contestability, and transparency.
+- **Article 35**: DPIA required for systematic evaluation of personal aspects through automated processing, including profiling.
 
 ### EU AI Act — Regulation (EU) 2024/1689
 
-- **Article 10(1)**: High-risk AI systems shall be developed on the basis of training, validation, and testing datasets that meet quality criteria.
-- **Article 10(2)**: Training datasets shall be subject to appropriate data governance practices covering design choices, data collection processes, preparation (annotation, labelling, cleaning, enrichment), formulation of assumptions, prior assessment of availability/suitability/biases, identification of gaps or shortcomings.
-- **Article 10(3)**: Training datasets shall be relevant, sufficiently representative, and to the best extent possible free of errors and complete.
-- **Article 10(5)**: Processing of special categories under Art. 9 GDPR is permitted "to the extent that is strictly necessary for the purposes of ensuring bias monitoring, detection and correction" with appropriate safeguards, including technical limitations on re-use, pseudonymisation, encryption, and temporal limits.
-- **Annex IV(2)(d)**: Technical documentation must include information about training data, including data provenance, data collection, labelling procedures, and cleaning methods.
+- **Article 10(1)**: High-risk AI systems which make use of techniques involving the training of AI models with data shall be developed on the basis of training, validation and testing data sets that meet the quality criteria referred to in paragraphs 2 to 5.
+- **Article 10(2)**: Data governance and management practices — training datasets shall address design choices, data collection processes, data preparation operations, formulation of assumptions, prior assessment of data availability and suitability, bias examination and mitigation.
+- **Article 10(3)**: Training datasets shall be relevant, sufficiently representative, and to the extent possible, free of errors and complete.
+- **Article 10(5)**: Processing of special categories of personal data for bias detection — permitted where strictly necessary for the purposes of ensuring bias monitoring, detection and correction, subject to appropriate safeguards including technical limitations on re-use, pseudonymisation, encryption, and GDPR compliance.
+- **Article 11**: Technical documentation for high-risk AI systems must include information about the data used for training, including data cards.
+- **Annex III**: List of high-risk AI areas: biometric identification, critical infrastructure, education, employment, essential services, law enforcement, migration, administration of justice.
 
 ## Regulatory Guidance
 
-### EDPB Guidelines 06/2023 — Processing Personal Data in the Context of AI (Draft)
+### EDPB-EDPS Joint Opinion 5/2021 on the Proposal for an AI Act
 
-- **Key Content**: Detailed analysis of GDPR application to AI development lifecycle. Lawful basis assessment for training, legitimate interests balancing factors, purpose limitation for training data reuse, data minimisation in feature engineering, transparency requirements, and data subject rights (including the right to erasure and its implications for trained models).
+- **Section 4.3**: The EDPB and EDPS stressed that the AI Act must not lower GDPR protections for personal data used in AI training. Any use of personal data in training datasets must comply with GDPR independently.
 
-### CNIL — Practical Guide: AI Systems and Personal Data (2024)
+### ICO — Generative AI and Data Protection: Consultation Series (2024)
 
-- **Key Content**: French DPA guidance on GDPR compliance for AI, covering: web scraping for training data (requires lawful basis), consent for training use (must be specific to AI purpose), legitimate interests for ML training (requires detailed balancing test), data minimisation through feature engineering, and data subject rights including requests for model retraining after erasure.
+- **Chapter 2 — Lawful Basis for Training**: Legitimate interests (Art. 6(1)(f)) is the most likely lawful basis for web-scraped training data, but requires documented LIA considering: data subject reasonable expectations, volume and sensitivity of data, ability to opt out, and safeguards.
+- **Chapter 3 — Purpose Limitation**: Using existing customer data for internal ML model training may be compatible with original purpose if model improves the service data was collected for. Assessment under Art. 6(4) required.
+- **Chapter 4 — Accuracy and Bias**: AI Act requirements for training data quality complement GDPR accuracy principle. Bias in training data can lead to discriminatory outcomes that engage Art. 9 protections.
 
-### ICO — Guidance on AI and Data Protection (2023)
+### CNIL — AI Guidance Sheets (2024)
 
-- **Key Content**: UK ICO guidance covering lawful basis for AI training, fairness and bias in AI, transparency and explainability, DPIA requirements for AI systems, and accountability documentation.
+- **Sheet 1**: Defining the purpose of AI processing — training a model is a distinct processing activity.
+- **Sheet 2**: Lawful basis — legitimate interests most common; consent rarely practical for large-scale training.
+- **Sheet 3**: Data minimisation — principle applies at training data collection, feature engineering, and model deployment stages.
+- **Sheet 4**: Data retention — training data retention must be justified; model weights may embed personal data.
 
-## Technical Standards
-
-### Google Model Cards (Mitchell et al., 2019)
-
-- **Reference**: "Model Cards for Model Reporting" — Conference on Fairness, Accountability, and Transparency (FAT* 2019)
-- **Key Content**: Framework for documenting ML models including intended use, factors, metrics, evaluation data, training data, quantitative analysis, and ethical considerations.
+## Academic Standards
 
 ### Datasheets for Datasets (Gebru et al., 2021)
 
-- **Reference**: "Datasheets for Datasets" — Communications of the ACM, December 2021
-- **Key Content**: Structured documentation framework for ML datasets covering motivation, composition, collection process, preprocessing, uses, distribution, and maintenance.
+- **Citation**: Gebru, T., Morgenstern, J., Vecchione, B., Vaughan, J.W., Wallach, H., Daumé III, H. and Crawford, K. (2021). "Datasheets for Datasets." Communications of the ACM, 64(12), 86-92.
+- **Key Content**: Proposed framework for documenting ML datasets covering motivation, composition, collection process, preprocessing, uses, distribution, and maintenance.
 
-### ISO/IEC 23894:2023 — Artificial Intelligence — Guidance on Risk Management
+### Model Cards for Model Reporting (Mitchell et al., 2019)
 
-- **Key Content**: Risk management framework for AI systems including data quality risks, bias risks, and privacy risks in training data.
-
-### NIST AI Risk Management Framework (AI RMF 1.0, January 2023)
-
-- **Map 1.1**: Legal and regulatory requirements related to AI identified
-- **Map 2.3**: Scientific integrity and TEVV (test, evaluation, verification, validation) considerations documented
-- **Measure 2.6**: Computational bias assessment across demographic groups
-- **Measure 2.7**: AI system evaluated for fairness
+- **Citation**: Mitchell, M., Wu, S., Zaldivar, A., Barnes, P., Vasserman, L., Hutchinson, B., Spitzer, E., Raji, I.D. and Gebru, T. (2019). "Model Cards for Model Reporting." Proceedings of FAT* '19, 220-229.
+- **Key Content**: Framework for documenting trained ML models including intended use, performance metrics by demographic group, ethical considerations, and limitations.

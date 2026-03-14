@@ -1,22 +1,21 @@
-#!/usr/bin/env python3
 """
 Litigation Hold Management Process
-Manages the lifecycle of legal holds including issuance, custodian tracking,
-system hold implementation, and release procedures for Orion Data Vault Corp.
+Manages legal hold lifecycle: issuance, tracking, monitoring, and release.
 """
 
 import json
 from datetime import datetime, timedelta
 from enum import Enum
+from typing import Optional
 
 
 class HoldStatus(Enum):
     ACTIVE = "active"
     RELEASED = "released"
-    UNDER_REVIEW = "under_review"
+    EXPIRED = "expired"
 
 
-class HoldTrigger(Enum):
+class TriggerCategory(Enum):
     LITIGATION_FILED = "litigation_filed"
     LITIGATION_ANTICIPATED = "litigation_anticipated"
     REGULATORY_INVESTIGATION = "regulatory_investigation"
@@ -26,217 +25,181 @@ class HoldTrigger(Enum):
     EMPLOYMENT_DISPUTE = "employment_dispute"
 
 
-SYSTEM_HOLD_METHODS = {
-    "Exchange Online": "Litigation Hold via Compliance Center",
-    "Google Workspace": "Google Vault — Matter and Hold",
-    "SharePoint / OneDrive": "Preservation Hold via Microsoft Purview",
-    "AWS S3": "S3 Object Lock Legal Hold (PutObjectLegalHold)",
-    "Azure Blob": "Legal Hold tags via immutability policy",
-    "GCP GCS": "Temporary hold (gcloud storage objects update --temporary-hold)",
-    "Databases": "Disable auto-deletion jobs; flag records with hold reference",
-    "Backup Systems": "Tag for indefinite retention; exclude from rotation",
-    "Deletion Orchestrator": "Add hold reference to exclusion list",
-    "Teams / Slack": "Microsoft Purview retention / Slack Enterprise Legal Hold",
-}
+class CustodianAcknowledgement(Enum):
+    PENDING = "pending"
+    ACKNOWLEDGED = "acknowledged"
+    OVERDUE = "overdue"
 
 
-def generate_hold_reference() -> str:
-    """Generate a unique litigation hold reference."""
-    year = datetime.utcnow().strftime("%Y")
-    seq = datetime.utcnow().strftime("%m%d")
-    return f"LH-{year}-{seq}"
+class LitigationHold:
+    """Represents a litigation hold with full lifecycle management."""
+
+    def __init__(
+        self,
+        hold_reference: str,
+        matter_description: str,
+        legal_counsel: str,
+        trigger_category: TriggerCategory,
+        date_range_start: str,
+        date_range_end: Optional[str] = None,
+        data_categories: Optional[list[str]] = None,
+        systems_in_scope: Optional[list[str]] = None,
+    ):
+        self.hold_reference = hold_reference
+        self.matter_description = matter_description
+        self.legal_counsel = legal_counsel
+        self.trigger_category = trigger_category
+        self.date_range_start = date_range_start
+        self.date_range_end = date_range_end or "ongoing"
+        self.data_categories = data_categories or []
+        self.systems_in_scope = systems_in_scope or []
+        self.status = HoldStatus.ACTIVE
+        self.issued_date = datetime.utcnow()
+        self.released_date: Optional[datetime] = None
+        self.next_review_date = self.issued_date + timedelta(days=90)
+        self.custodians: list[dict] = []
+        self.queued_erasure_requests: list[str] = []
+        self.review_history: list[dict] = []
+
+    def add_custodian(self, name: str, title: str, department: str) -> None:
+        """Add a custodian to the hold."""
+        self.custodians.append({
+            "name": name,
+            "title": title,
+            "department": department,
+            "notified_date": datetime.utcnow().isoformat(),
+            "acknowledgement": CustodianAcknowledgement.PENDING.value,
+            "acknowledged_date": None,
+        })
+
+    def acknowledge_custodian(self, name: str) -> None:
+        """Record custodian acknowledgement."""
+        for custodian in self.custodians:
+            if custodian["name"] == name:
+                custodian["acknowledgement"] = CustodianAcknowledgement.ACKNOWLEDGED.value
+                custodian["acknowledged_date"] = datetime.utcnow().isoformat()
+                return
+        raise ValueError(f"Custodian not found: {name}")
+
+    def check_overdue_acknowledgements(self, deadline_hours: int = 48) -> list[dict]:
+        """Check for custodians who have not acknowledged within the deadline."""
+        overdue = []
+        deadline = timedelta(hours=deadline_hours)
+        for custodian in self.custodians:
+            if custodian["acknowledgement"] == CustodianAcknowledgement.PENDING.value:
+                notified = datetime.fromisoformat(custodian["notified_date"])
+                if datetime.utcnow() - notified > deadline:
+                    custodian["acknowledgement"] = CustodianAcknowledgement.OVERDUE.value
+                    overdue.append(custodian)
+        return overdue
+
+    def queue_erasure_request(self, request_reference: str) -> None:
+        """Queue an Art. 17 erasure request for processing after hold release."""
+        self.queued_erasure_requests.append(request_reference)
+
+    def record_review(self, reviewer: str, outcome: str, notes: str) -> None:
+        """Record a periodic review of the hold."""
+        self.review_history.append({
+            "review_date": datetime.utcnow().isoformat(),
+            "reviewer": reviewer,
+            "outcome": outcome,
+            "notes": notes,
+        })
+        self.next_review_date = datetime.utcnow() + timedelta(days=90)
+
+    def release(self, authorized_by: str, reason: str) -> dict:
+        """Release the litigation hold."""
+        self.status = HoldStatus.RELEASED
+        self.released_date = datetime.utcnow()
+
+        release_record = {
+            "hold_reference": self.hold_reference,
+            "released_date": self.released_date.isoformat(),
+            "authorized_by": authorized_by,
+            "reason": reason,
+            "queued_erasure_requests": self.queued_erasure_requests,
+            "actions_required": [
+                "Remove technical holds from all in-scope systems",
+                "Re-enable automated deletion for affected data categories",
+                "Process queued erasure requests",
+                "Assess whether retained data has exceeded retention period",
+                "Notify DPO to resume normal retention schedule",
+            ],
+        }
+        return release_record
+
+    def is_review_due(self) -> bool:
+        """Check if the hold is due for review."""
+        return datetime.utcnow() >= self.next_review_date
+
+    def to_dict(self) -> dict:
+        return {
+            "hold_reference": self.hold_reference,
+            "matter_description": self.matter_description,
+            "legal_counsel": self.legal_counsel,
+            "trigger_category": self.trigger_category.value,
+            "status": self.status.value,
+            "issued_date": self.issued_date.isoformat(),
+            "released_date": self.released_date.isoformat() if self.released_date else None,
+            "date_range": f"{self.date_range_start} to {self.date_range_end}",
+            "data_categories": self.data_categories,
+            "systems_in_scope": self.systems_in_scope,
+            "custodians": self.custodians,
+            "next_review_date": self.next_review_date.isoformat(),
+            "queued_erasure_requests": self.queued_erasure_requests,
+            "review_history": self.review_history,
+        }
 
 
-def create_litigation_hold(
-    matter_description: str,
-    trigger: HoldTrigger,
-    legal_counsel: str,
-    date_range_start: str,
-    date_range_end: str,
-    data_categories: list[str],
-    systems_in_scope: list[str],
-    custodians: list[dict],
-) -> dict:
-    """Create a new litigation hold record."""
-    reference = generate_hold_reference()
-    return {
-        "hold_reference": reference,
-        "status": HoldStatus.ACTIVE.value,
-        "matter_description": matter_description,
-        "trigger": trigger.value,
-        "legal_counsel": legal_counsel,
-        "date_issued": datetime.utcnow().strftime("%Y-%m-%d"),
-        "scope": {
-            "date_range": {"start": date_range_start, "end": date_range_end},
-            "data_categories": data_categories,
-            "systems_in_scope": systems_in_scope,
-            "custodians": custodians,
-        },
-        "retention_interaction": {
-            "normal_schedule": "SUSPENDED for all in-scope data",
-            "automated_deletion": "PAUSED for in-scope data categories",
-            "art17_requests": "Exception applies under Art. 17(3)(e)",
-        },
-        "review_schedule": {
-            "frequency": "quarterly",
-            "next_review": (datetime.utcnow() + timedelta(days=90)).strftime("%Y-%m-%d"),
-        },
-        "custodian_acknowledgements": {
-            custodian["name"]: {
-                "notified": datetime.utcnow().strftime("%Y-%m-%d"),
-                "acknowledged": None,
-                "deadline": (datetime.utcnow() + timedelta(days=2)).strftime("%Y-%m-%d"),
-            }
-            for custodian in custodians
-        },
-        "technical_holds": {
-            system: {
-                "method": SYSTEM_HOLD_METHODS.get(system, "Manual hold procedure"),
-                "applied": False,
-                "applied_date": None,
-                "verified": False,
-            }
-            for system in systems_in_scope
-        },
-    }
+class LitigationHoldRegister:
+    """Central register of all litigation holds."""
 
+    def __init__(self):
+        self.holds: list[LitigationHold] = []
 
-def record_custodian_acknowledgement(hold: dict, custodian_name: str) -> dict:
-    """Record a custodian's acknowledgement of a litigation hold."""
-    if custodian_name in hold["custodian_acknowledgements"]:
-        hold["custodian_acknowledgements"][custodian_name]["acknowledged"] = (
-            datetime.utcnow().strftime("%Y-%m-%d")
-        )
-    return hold
+    def add_hold(self, hold: LitigationHold) -> None:
+        self.holds.append(hold)
 
+    def get_active_holds(self) -> list[LitigationHold]:
+        return [h for h in self.holds if h.status == HoldStatus.ACTIVE]
 
-def record_technical_hold(hold: dict, system_name: str) -> dict:
-    """Record the application of a technical hold on a system."""
-    if system_name in hold["technical_holds"]:
-        hold["technical_holds"][system_name]["applied"] = True
-        hold["technical_holds"][system_name]["applied_date"] = (
-            datetime.utcnow().strftime("%Y-%m-%d")
-        )
-    return hold
+    def get_holds_due_review(self) -> list[LitigationHold]:
+        return [h for h in self.get_active_holds() if h.is_review_due()]
 
+    def is_data_subject_held(self, data_subject_ref: str) -> list[str]:
+        """Check if a data subject's data is under any active hold."""
+        active_hold_refs = []
+        for hold in self.get_active_holds():
+            active_hold_refs.append(hold.hold_reference)
+        return active_hold_refs
 
-def verify_technical_hold(hold: dict, system_name: str) -> dict:
-    """Record verification of a technical hold on a system."""
-    if system_name in hold["technical_holds"]:
-        hold["technical_holds"][system_name]["verified"] = True
-    return hold
-
-
-def quarterly_review(hold: dict) -> dict:
-    """Perform quarterly review of an active litigation hold."""
-    review = {
-        "hold_reference": hold["hold_reference"],
-        "review_date": datetime.utcnow().strftime("%Y-%m-%d"),
-        "matter_still_active": None,
-        "custodians_current": True,
-        "new_custodians_identified": [],
-        "technical_holds_verified": all(
-            h["verified"] for h in hold["technical_holds"].values()
-        ),
-        "pending_art17_requests": [],
-        "unacknowledged_custodians": [
-            name
-            for name, ack in hold["custodian_acknowledgements"].items()
-            if ack["acknowledged"] is None
-        ],
-        "recommendation": None,
-    }
-    return review
-
-
-def release_hold(hold: dict, authorizing_counsel: str, matter_outcome: str) -> dict:
-    """Release a litigation hold and generate post-release actions."""
-    hold["status"] = HoldStatus.RELEASED.value
-    release_record = {
-        "hold_reference": hold["hold_reference"],
-        "release_date": datetime.utcnow().strftime("%Y-%m-%d"),
-        "authorizing_counsel": authorizing_counsel,
-        "matter_outcome": matter_outcome,
-        "post_release_actions": {
-            "custodian_release_notices": "Issue to all custodians",
-            "technical_hold_removal": {
-                system: "Remove hold"
-                for system in hold["technical_holds"]
-            },
-            "retention_catchup": {
-                "expired_during_hold": "Schedule immediate deletion (within 30 days)",
-                "queued_art17_requests": "Process immediately",
-                "active_retention": "Resume normal countdown",
-            },
-        },
-        "archive": {
-            "documentation_retained_until": (
-                datetime.utcnow() + timedelta(days=2190)
-            ).strftime("%Y-%m-%d"),
-        },
-    }
-    return release_record
-
-
-def assess_art17_during_hold(
-    hold: dict, data_subject_ref: str, data_categories_requested: list[str]
-) -> dict:
-    """Assess an Art. 17 erasure request against an active litigation hold."""
-    overlapping = [
-        cat
-        for cat in data_categories_requested
-        if cat in hold["scope"]["data_categories"]
-    ]
-    return {
-        "hold_reference": hold["hold_reference"],
-        "data_subject_ref": data_subject_ref,
-        "assessment_date": datetime.utcnow().strftime("%Y-%m-%d"),
-        "categories_requested": data_categories_requested,
-        "categories_under_hold": overlapping,
-        "categories_not_held": [
-            cat for cat in data_categories_requested if cat not in overlapping
-        ],
-        "exception_applies": len(overlapping) > 0,
-        "exception_basis": "Art. 17(3)(e) — establishment, exercise, or defence of legal claims"
-        if overlapping
-        else "No exception — proceed with erasure",
-        "action": {
-            "held_categories": "Queue for processing upon hold release"
-            if overlapping
-            else "N/A",
-            "non_held_categories": "Process erasure normally"
-            if [c for c in data_categories_requested if c not in overlapping]
-            else "N/A",
-        },
-    }
+    def generate_register_report(self) -> dict:
+        return {
+            "report_date": datetime.utcnow().isoformat(),
+            "organization": "Orion Data Vault Corp",
+            "total_holds": len(self.holds),
+            "active_holds": len(self.get_active_holds()),
+            "holds_due_review": len(self.get_holds_due_review()),
+            "holds": [h.to_dict() for h in self.holds],
+        }
 
 
 if __name__ == "__main__":
-    hold = create_litigation_hold(
-        matter_description="Commercial dispute — contract breach claim by Supplier X",
-        trigger=HoldTrigger.LITIGATION_FILED,
-        legal_counsel="External Counsel — Smith & Partners LLP",
-        date_range_start="2024-01-01",
-        date_range_end="2026-03-14",
-        data_categories=["Email", "CRM records", "Financial records", "Contracts"],
-        systems_in_scope=["Exchange Online", "AWS S3", "Databases"],
-        custodians=[
-            {"name": "Jane Smith", "title": "Procurement Director"},
-            {"name": "John Doe", "title": "CFO"},
-            {"name": "Sarah Brown", "title": "Legal Counsel"},
-        ],
-    )
-    print(f"Hold Created: {hold['hold_reference']}")
-    print(f"Status: {hold['status']}")
-    print(f"Custodians: {len(hold['scope']['custodians'])}")
-    print(f"Systems: {len(hold['technical_holds'])}")
+    register = LitigationHoldRegister()
 
-    art17 = assess_art17_during_hold(
-        hold,
-        data_subject_ref="DS-HASH-abc123",
-        data_categories_requested=["Email", "Marketing data"],
+    hold = LitigationHold(
+        hold_reference="LH-2026-0023",
+        matter_description="Commercial dispute — contract breach claim",
+        legal_counsel="External Counsel — Smith & Partners LLP",
+        trigger_category=TriggerCategory.LITIGATION_FILED,
+        date_range_start="2024-01-01",
+        data_categories=["Email", "CRM records", "Financial records"],
+        systems_in_scope=["Exchange", "Salesforce", "SAP", "Finance system"],
     )
-    print(f"\nArt. 17 Assessment:")
-    print(f"  Exception applies: {art17['exception_applies']}")
-    print(f"  Held categories: {art17['categories_under_hold']}")
-    print(f"  Non-held (process normally): {art17['categories_not_held']}")
+    hold.add_custodian("Jane Smith", "Sales Director", "Sales")
+    hold.add_custodian("John Doe", "Finance Manager", "Finance")
+    hold.add_custodian("Alice Johnson", "Account Manager", "Sales")
+    hold.acknowledge_custodian("Jane Smith")
+
+    register.add_hold(hold)
+    print(json.dumps(register.generate_register_report(), indent=2))

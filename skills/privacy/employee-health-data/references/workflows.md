@@ -5,85 +5,89 @@
 ```
 START: Employee reports sickness absence
 │
-├─ Day 1-7: Self-certification
-│  ├─ Employee notifies manager of absence (reason NOT required)
-│  ├─ HR records: absence dates, type (sick leave)
-│  └─ HR does NOT record diagnosis or symptoms
+├─ Days 1-7: Self-certification period
+│  ├─ Employee notifies employer of absence (phone, email, app)
+│  ├─ Employer records: absence start date, expected return
+│  ├─ Employer does NOT request or record diagnosis
+│  └─ Manager access: absence dates only
 │
-├─ Day 8+: Fit note / medical certificate required
-│  ├─ Employee provides fit note from GP/treating physician
-│  ├─ Fit note contains: date range, fit/unfit conclusion, recommended adjustments
-│  ├─ HR records: fit note dates, fit/unfit status, adjustment requirements
-│  └─ HR does NOT enter diagnosis into HR system (even if visible on certificate)
+├─ Day 8+: Medical certification required
+│  ├─ Employee provides fit note / medical certificate from GP
+│  ├─ Fit note states: date range, fit/unfit/fit-with-adjustments
+│  ├─ HR records: fit note dates, fit/unfit status, adjustments needed
+│  ├─ HR does NOT enter diagnosis into HR system
+│  └─ Manager access: absence dates + expected return + adjustments (no diagnosis)
 │
-├─ Week 4+: Occupational health referral (optional)
-│  ├─ Manager or HR offers OH referral (employee cooperation required)
-│  ├─ Referral letter contains: specific questions about fitness and adjustments
-│  ├─ Referral does NOT contain health information employer does not already hold
-│  ├─ OH provider examines employee
-│  ├─ OH report to employer: fit/unfit/fit with adjustments
-│  ├─ OH report does NOT contain diagnosis (unless employee consents)
-│  └─ Employee receives copy of report; may request amendments before release
+├─ Week 4+: Occupational health referral (if appropriate)
+│  ├─ HR drafts referral with specific questions (fitness, adjustments, return timeline)
+│  ├─ Employee informed of referral and consents to OH assessment
+│  ├─ OH professional conducts assessment
+│  ├─ OH report to employer: fitness conclusion + functional adjustments
+│  ├─ OH report does NOT include clinical diagnosis
+│  └─ Employee receives copy of OH report before employer
 │
-└─ END: Employer holds absence dates and fitness conclusion only.
+└─ END: Employee returns to work. Absence recorded. Health details remain with OH provider.
 ```
 
-## Workflow 2: Fitness-for-Work Assessment
+## Workflow 2: Fitness-for-Work Referral
 
 ```
-START: Safety-critical role or return from long-term absence
+START: Concern about employee fitness for safety-critical role
 │
-├─ Step 1: Referral
-│  ├─ HR drafts referral with specific questions:
-│  │  "Is the employee fit to [specific task]?"
-│  │  "Are workplace adjustments required?"
-│  ├─ Referral reviewed by DPO for data minimisation
+├─ Step 1: Referral preparation
+│  ├─ HR drafts referral letter with:
+│  │  - Specific referral questions (fit for role? adjustments needed?)
+│  │  - Employee's job description and physical requirements
+│  │  - Relevant absence history (dates, not diagnoses)
+│  ├─ HR does NOT include health information in referral
 │  └─ Employee informed of referral and purpose
 │
-├─ Step 2: Assessment
-│  ├─ OH provider conducts assessment
-│  ├─ Employee has right to see report before release (Access to Medical Reports Act 1988, UK)
-│  └─ Employee may request factual amendments
+├─ Step 2: Employee rights
+│  ├─ Employee may see the referral questions before assessment
+│  ├─ Employee may request to see the OH report before employer (Access to Medical Reports Act 1988, UK)
+│  ├─ Employee may request amendments to factual inaccuracies
+│  └─ Employee may withhold consent (but employer may need to make decisions on available information)
 │
-├─ Step 3: Report to employer
-│  ├─ Report contains: fitness conclusion, functional limitations, recommended adjustments, anticipated timeline
-│  ├─ Report does NOT contain: diagnosis, treatment details, medication, prognosis
-│  └─ Report stored in restricted health data section of HR system
+├─ Step 3: OH assessment
+│  ├─ OH professional examines employee
+│  ├─ OH professional issues report addressing referral questions ONLY:
+│  │  - Fit / Unfit / Fit with adjustments
+│  │  - Specific functional adjustments (e.g., "no lifting above 10kg for 6 weeks")
+│  │  - Anticipated return date (if currently absent)
+│  └─ OH professional does NOT disclose diagnosis to employer
 │
-├─ Step 4: Employment decision
-│  ├─ Manager informed of fitness conclusion and adjustments only
-│  ├─ Manager does NOT receive the OH report itself
-│  └─ Adjustments implemented; review date set
+├─ Step 4: Employer action
+│  ├─ Implement recommended adjustments
+│  ├─ Record fitness conclusion in HR system (not diagnosis)
+│  ├─ If unfit: manage absence per policy
+│  └─ If fit with adjustments: monitor adjustment compliance
 │
-└─ END: Fitness assessed. Data minimised. Access restricted.
+└─ END: Fitness assessed. Clinical data remains with OH provider.
 ```
 
-## Workflow 3: Health Data Retention Review
+## Workflow 3: Health Data Access Control Review
 
 ```
-START: Annual retention review or employee termination
+START: Quarterly review of health data access in HR system
 │
-├─ Step 1: Identify health data held
-│  ├─ Absence records (dates and types)
-│  ├─ Fit note records
-│  ├─ OH referral correspondence
-│  ├─ Fitness certificates
-│  ├─ COVID testing/vaccination legacy data
-│  └─ Disability adjustment records
+├─ Step 1: Review access matrix
+│  ├─ HR Manager: absence dates + fit/unfit + adjustments [Correct]
+│  ├─ Line Manager: absence dates + expected return only [Verify no health fields visible]
+│  ├─ Payroll: SSP-relevant absence dates only [Verify no health details]
+│  ├─ DPO: audit access, no individual data [Verify]
+│  ├─ IT: no health data access [Verify]
+│  └─ Identify any role with inappropriate access → Remediate
 │
-├─ Step 2: Apply retention schedule
-│  ├─ Standard absence records: 2 years current + 1 year archive → delete
-│  ├─ OH records (standard employment): 6 years post-termination → delete
-│  ├─ OH records (occupational health surveillance): 40 years (asbestos/radiation) → archive
-│  ├─ COVID data: delete unless ongoing legal obligation
-│  ├─ Disability adjustment records: duration of employment + 6 years → delete
-│  └─ Wellness programme data: delete on withdrawal or termination
+├─ Step 2: Review audit logs
+│  ├─ Any unusual access to health data fields? [Investigate]
+│  ├─ Any bulk exports of health data? [Investigate]
+│  └─ Document review findings
 │
-├─ Step 3: Execute deletion
-│  ├─ Delete expired records from HR system
-│  ├─ Verify deletion from backups within backup rotation period
-│  ├─ Retain aggregate anonymised statistics where needed
-│  └─ Document deletion in retention log
+├─ Step 3: Review retention compliance
+│  ├─ Standard absence records: within 2-year retention? [Verify]
+│  ├─ OH records: within applicable retention (6 years standard / 40 years occupational)? [Verify]
+│  ├─ COVID testing/vaccination data: deleted if basis expired? [Verify]
+│  └─ Identify data past retention → Schedule deletion
 │
-└─ END: Health data retention compliant. Schedule next review.
+└─ END: Access review documented. Remediation actions tracked to completion.
 ```

@@ -1,19 +1,19 @@
 # Privacy Metrics Dashboard — Standards References
 
-## Primary References
+## Frameworks
 - IAPP Privacy Program Management Guide (CIPM Body of Knowledge)
 - NIST Privacy Framework — GV.MT (Monitoring and Review)
 - ISO/IEC 27701:2019 — Clause 9 (Performance Evaluation)
-- EDPB Guidelines on Data Breach Notification (WP250 rev.01)
-
-## Supplementary Standards
-- Gartner Privacy Program Metrics Framework
 - ISACA Privacy Audit and Assurance Program
-- ISO/IEC 27004:2016 — Information Security Management — Monitoring, Measurement, Analysis, Evaluation
-- NIST SP 800-55 Rev. 2 — Performance Measurement Guide for Information Security
+- Gartner Privacy Program Metrics Framework
 
-## Regulatory Reporting Requirements
-- GDPR Article 33: 72-hour breach notification timeline (breach metrics)
-- GDPR Article 15: One-month DSAR response deadline (DSAR metrics)
-- GDPR Article 35: DPIA requirements (assessment metrics)
-- GDPR Article 39(1)(b): DPO training obligations (training metrics)
+## Regulatory Metrics Requirements
+- GDPR Article 33: 72-hour breach notification (MTTN metric)
+- GDPR Article 12(3): One-month DSAR response deadline
+- GDPR Article 35: DPIA completion requirement
+- CCPA Section 1798.130: 45-day DSAR response deadline
+
+## Visualization and Reporting
+- EDPB Guidelines on Data Breach Notification (WP250 rev.01)
+- ISO 27001:2022 Clause 9.1: Monitoring, measurement, analysis, evaluation
+- NIST SP 800-55: Performance Measurement Guide for Information Security

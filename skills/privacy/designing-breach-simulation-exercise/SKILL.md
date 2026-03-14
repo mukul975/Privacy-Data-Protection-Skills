@@ -1,156 +1,153 @@
 ---
 name: designing-breach-simulation-exercise
 description: >-
-  Designs and executes tabletop breach simulation exercises to test
-  organizational readiness for data breach response. Covers scenario creation
-  with realistic attack narratives, participant role assignment, inject timeline
-  design, communication channel testing, decision-point evaluation, and
-  after-action report generation. Keywords: tabletop exercise, breach
-  simulation, incident response drill, scenario testing, after-action report.
+  Designs and executes tabletop breach simulation exercises for testing
+  organizational breach response capabilities. Covers scenario creation with
+  realistic inject timelines, participant role assignment, communication
+  testing across internal and external channels, decision-point evaluation,
+  and after-action report generation. Keywords: tabletop exercise, breach
+  simulation, incident response testing, scenario design, after-action report.
 license: Apache-2.0
 metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
   subdomain: data-breach-response
-  tags: "tabletop-exercise, breach-simulation, incident-response-drill, scenario-testing, after-action"
+  tags: "tabletop-exercise, breach-simulation, incident-response, scenario-design, after-action"
 ---
 
 # Designing Breach Simulation Exercise
 
 ## Overview
 
-Breach simulation exercises (tabletop exercises) test an organization's ability to detect, respond to, and recover from a personal data breach without the cost and disruption of an actual incident. EDPB Guidelines 9/2022 recommend regular testing of breach response procedures. This skill provides the complete framework for designing, executing, and evaluating tabletop exercises.
+Breach simulation exercises (tabletop exercises) test an organization's ability to detect, respond to, and recover from a personal data breach without the consequences of an actual incident. A well-designed exercise validates the breach response plan, identifies gaps in procedures, communication, and decision-making, and builds institutional muscle memory. This skill covers the end-to-end design process from scenario creation through after-action reporting.
 
-## Exercise Types
+## Exercise Design Framework
 
-| Type | Duration | Participants | Complexity | Frequency |
-|------|----------|-------------|-----------|-----------|
-| Discussion-based tabletop | 2-4 hours | 8-15 senior stakeholders | Medium | Semi-annual |
-| Functional exercise | 4-8 hours | 15-30 including operational staff | High | Annual |
-| Full-scale simulation | 1-3 days | Organization-wide | Very high | Every 2-3 years |
+### Exercise Types
 
-## Scenario Design Framework
+| Type | Duration | Participants | Complexity | Purpose |
+|------|----------|-------------|-----------|---------|
+| Tabletop (discussion-based) | 2-4 hours | 8-15 senior stakeholders | Medium | Test decision-making, communication, and policy application |
+| Functional exercise | 4-8 hours | 15-30 cross-functional team members | High | Test operational procedures and tool usage |
+| Full-scale simulation | 1-3 days | Organization-wide (50+ participants) | Very high | Test end-to-end response including technical, legal, communications, and executive functions |
+
+### Recommended Exercise Cadence
+
+| Exercise Type | Frequency | Audience |
+|--------------|-----------|----------|
+| Tabletop | Semi-annually | Executive team, DPO, legal, communications, CISO |
+| Functional | Annually | SOC, privacy team, IT operations, HR, customer service |
+| Full-scale | Every 2 years | Organization-wide |
+
+## Scenario Design
 
 ### Scenario 1: Ransomware Attack on Customer Database
 
-**Narrative**: A sophisticated threat actor deploys LockBit 3.0 ransomware targeting the production customer database. The attack begins with a spear-phishing email to an IT administrator. The attacker harvests credentials, moves laterally through the network, and encrypts 48,720 customer records. A ransom note demands 15 BTC (approximately EUR 850,000) within 72 hours.
+**Complexity**: High
+**Duration**: 3 hours
+**Primary objectives**: Test Art. 33 72-hour notification decision-making, executive communication, and vendor coordination.
 
-**Complexity layers**:
-- Phase 1: SOC detects anomalous file encryption activity at 11:15 UTC on a Friday before a national holiday.
-- Phase 2: Investigation reveals the initial compromise occurred 72 hours earlier — the attacker has been inside the network for 3 days.
-- Phase 3: Media inquiry received from a technology journalist who was tipped off about the attack.
-- Phase 4: Forensic analysis cannot confirm or deny data exfiltration.
-- Phase 5: The 72-hour GDPR notification deadline falls on a national holiday.
+**Background briefing (distributed 24 hours before exercise):**
+Stellar Payments Group processes payment transactions for 15,230 account holders across 18 EU member states and 12 US states. The production customer database is hosted on a PostgreSQL cluster in AWS eu-west-1. The DPO is Dr. Elena Vasquez. The CISO is Thomas Brenner. Mandiant is the retained incident response firm.
 
-### Scenario 2: Insider Threat — Departing Employee Data Theft
+**Inject timeline:**
 
-**Narrative**: A senior data analyst in the People Operations department who has submitted their resignation downloads a comprehensive employee dataset (3,400 records including names, salaries, performance ratings, and health information) to a personal cloud storage service. The DLP system generates an alert, but the analyst claims the download was for a legitimate work purpose.
+| Time | Inject | Expected Action |
+|------|--------|-----------------|
+| T+0 min | SOC alert: CrowdStrike detects rapid file encryption on db-prod-eu-west-01. 500+ file renames per second. Known ransomware indicators (LockBit 3.0). | SOC initiates incident response. Incident Commander activated. |
+| T+15 min | Update: Encryption spreading to db-prod-eu-west-02 and 03. Customer portal returning database errors. Customer complaints arriving via support channels. | Decision point: Isolate database cluster? Accept service disruption vs. further damage? |
+| T+30 min | Forensic initial finding: Attack vector appears to be compromised service account (svc-migration-2024). Account authenticated from Tor exit node 3 days prior. | Update risk assessment. Determine scope of potentially compromised data. |
+| T+60 min | Customer database confirmed encrypted. 48,720 records across 15,230 data subjects. Backup from 12 hours ago available and verified clean. | Decision point: Restore from backup? Art. 33 notification clock — when did we "become aware"? |
+| T+90 min | Ransom note found: 50 BTC demanded. Threat to publish data on dark web if not paid within 48 hours. Media outlet (Handelsblatt) calls communications team for comment. | Decision points: Pay ransom? Engage law enforcement? Media statement? |
+| T+120 min | Mandiant confirms no evidence of exfiltration but cannot rule it out. Backup restoration is 60% complete. Berliner BfDI opens office in 2 hours. | Decision point: File Art. 33 notification now or wait for more information? Prepare Art. 34 data subject notification? |
+| T+150 min | Second media outlet (Bloomberg) publishes story. Social media discussion begins. 50+ customer support calls in past hour. Three enterprise clients demand written assurance. | Communications crisis management. Customer and B2B stakeholder communication. |
+| T+180 min | Exercise conclusion. Facilitator reveals exercise end state and leads debrief discussion. | After-action discussion. |
 
-**Complexity layers**:
-- Phase 1: DLP alert triggers during business hours; analyst's manager confirms no legitimate business need.
-- Phase 2: Analyst refuses to provide access to personal cloud storage for verification.
-- Phase 3: Works council (Betriebsrat) representative raises concerns about employee surveillance proportionality.
-- Phase 4: The dataset includes Art. 9 special category health data from the wellness programme.
-- Phase 5: The analyst threatens to publish the data if disciplinary action is taken.
+### Scenario 2: Insider Threat — Employee Data Exfiltration
+
+**Complexity**: Medium
+**Duration**: 2.5 hours
+
+**Inject timeline:**
+
+| Time | Inject | Expected Action |
+|------|--------|-----------------|
+| T+0 min | DLP alert: HR database export (3,400 employee records) copied to personal OneDrive by departing employee (last day is Friday). | Validate alert. Determine whether personal data is involved. |
+| T+20 min | Records include names, home addresses, salaries, bank details, and national ID numbers. Employee's manager confirms the employee submitted resignation 2 weeks ago. | Decision point: Confront employee? Preserve evidence? Involve legal? |
+| T+45 min | IT confirms the file was synced to the employee's personal laptop. The employee is currently in the office. | Decision points: Device seizure? HR involvement? Works Council (Betriebsrat) notification? |
+| T+75 min | Legal advises on employee rights under German labor law. Works Council representative requests consultation before any confrontation. | Balance breach response urgency against employee rights and Works Council obligations. |
+| T+105 min | Employee is interviewed with Works Council representative present. Claims data was for "reference purposes." Refuses to allow personal laptop examination. | Decision point: Law enforcement referral? Court order for device examination? Art. 33 notification? |
+| T+135 min | DPO completes risk assessment: 3,400 employees, government IDs + financial data = high risk. Art. 33 and Art. 34 notification recommended. | Notification preparation. Employee communication planning (how to tell 3,400 employees their data was compromised by a colleague). |
+| T+150 min | Exercise conclusion and debrief. | After-action discussion. |
 
 ### Scenario 3: Third-Party Processor Breach
 
-**Narrative**: Stellar Payments Group's cloud-hosted customer analytics platform (operated by a processor) experiences a breach. The processor notifies Stellar Payments 5 days after discovering the breach, claiming "investigation was needed." The breach potentially affects 42,000 customer records processed on Stellar Payments' behalf.
+**Complexity**: Medium
+**Duration**: 2 hours
 
-**Complexity layers**:
-- Phase 1: Processor's notification is vague — minimal details about scope, cause, or affected data.
-- Phase 2: Stellar Payments' 72-hour GDPR clock started when the processor notified, but 5 days have already elapsed since the processor became aware.
-- Phase 3: The processor's Art. 28 data processing agreement specifies 24-hour notification to the controller.
-- Phase 4: Affected data subjects are spread across 8 EU member states.
-- Phase 5: The processor is established in the US and disputes GDPR applicability.
+**Inject timeline:**
+
+| Time | Inject | Expected Action |
+|------|--------|-----------------|
+| T+0 min | Email from cloud payroll processor (PayrollCloud GmbH): "We are writing to inform you of a security incident affecting customer data hosted on our platform." No details provided. | Contact processor for details. Review Art. 28 DPA for incident notification obligations. |
+| T+20 min | Processor confirms: SQL injection attack. Unclear which clients affected. Estimated timeline for client-specific impact assessment: 5-7 days. | Decision point: Can we wait 5-7 days? How does this affect our 72-hour clock? |
+| T+45 min | Processor provides partial information: "Your organization's data was on the affected server, but we cannot confirm whether it was accessed." 3,400 employee payroll records potentially exposed. | Assess when the controller "became aware" for Art. 33 purposes. Begin parallel risk assessment. |
+| T+75 min | Media reports the processor breach. Several of the processor's other clients have publicly acknowledged being affected. | Decision point: Proactive disclosure? Wait for confirmed impact? |
+| T+105 min | Processor confirms: Stellar Payments Group data was accessed. 3,400 employee records including names, salaries, bank account numbers, and tax IDs. | Art. 33 notification preparation. Employee communication planning. Processor accountability assessment. |
+| T+120 min | Exercise conclusion and debrief. | After-action discussion. |
 
 ## Participant Roles
 
-| Role | Participant | Exercise Responsibility |
-|------|------------|----------------------|
-| Incident Commander | CISO (Thomas Brenner) | Overall incident coordination and decision-making |
-| Data Protection Officer | Dr. Elena Vasquez | Notification decision, regulatory communication, data subject rights |
-| Legal Counsel | Sarah Chen (General Counsel) | Legal advice, privilege management, law enforcement coordination |
-| Communications Director | Julia Hoffmann | Media response, internal communications, public statement |
-| IT Forensics Lead | Marcus Weber (SOC Lead) | Technical investigation, evidence preservation, scope determination |
-| HR Representative | Anna Kruger (VP People) | Employee-related breaches, works council coordination |
-| Business Unit Lead | Regional Business Director | Operational impact assessment, customer relationship management |
-| Executive Sponsor | Marcus Lindqvist (CEO) | Strategic decisions, board communication, budget authorization |
-| Exercise Facilitator | External consultant or DPO deputy | Scenario presentation, inject delivery, observation, time management |
-| Observer/Scribe | Internal audit representative | Documentation of decisions, gaps, and improvement opportunities |
+| Role | Participant | Responsibilities During Exercise |
+|------|------------|----------------------------------|
+| Incident Commander | CISO (Thomas Brenner) | Overall incident coordination, resource allocation, containment decisions |
+| Privacy Lead | DPO (Dr. Elena Vasquez) | Notification decisions, risk assessment, data subject communication |
+| Legal Counsel | General Counsel (Sarah Chen) | Legal advice, privilege management, law enforcement coordination, regulatory strategy |
+| Communications Lead | Communications Director (Martin Keller) | Media response, customer communication, internal communication |
+| IT Operations | IT Director (Petra Hoffmann) | Technical containment, backup restoration, system recovery |
+| Executive Sponsor | CEO (Marcus Lindqvist) | Strategic decisions, board notification, public statements |
+| Customer Relations | VP Customer Success (James Park) | Customer communication, B2B client management |
+| HR Lead | CHRO (Claudia Richter) | Employee communication, Works Council coordination (insider threat scenarios) |
+| Exercise Facilitator | External consultant or internal audit | Scenario delivery, inject timing, discussion facilitation, observation |
+| Observer/Recorder | DPO office analyst | Document decisions, actions, timelines, and gaps for after-action report |
 
-## Inject Timeline Template
+## Decision Points to Evaluate
 
-### Exercise: Ransomware Attack Tabletop (3.5 Hours)
+1. **Breach awareness determination**: When exactly did the controller "become aware" for Art. 33 clock purposes?
+2. **Containment vs. evidence preservation**: Did the team balance immediate containment with the need to preserve forensic evidence?
+3. **Notification timing**: Was the 72-hour deadline tracked and met?
+4. **Risk assessment quality**: Was the risk assessment methodology applied consistently and documented?
+5. **Communication coordination**: Were media, customer, and internal communications coordinated and consistent?
+6. **Escalation effectiveness**: Were the right people involved at the right time?
+7. **Cross-functional coordination**: Did legal, privacy, IT, and communications work together effectively?
+8. **Regulatory coordination**: Was the correct supervisory authority identified and notification prepared?
+9. **Data subject communication**: Was Art. 34 notification considered at the appropriate threshold?
+10. **Documentation**: Was the decision-making process documented in real-time?
 
-| Time | Inject | Decision Point | Expected Response |
-|------|--------|---------------|-------------------|
-| 0:00 | Exercise brief and ground rules | — | — |
-| 0:15 | Inject 1: SOC alert — anomalous file encryption on db-prod cluster | Classify as potential breach or security incident | Activate incident response procedure |
-| 0:30 | Inject 2: Investigation confirms ransomware — customer data encrypted | Confirm personal data breach; start 72-hour clock | DPO notified; escalation to Incident Commander |
-| 0:50 | Inject 3: Ransom note discovered demanding 15 BTC | Decide on ransom payment policy | Decline payment per policy; engage law enforcement |
-| 1:10 | Inject 4: Discovery that initial compromise occurred 3 days ago | Re-assess scope and determine if exfiltration occurred | Expand investigation; preserve additional evidence |
-| 1:30 | BREAK (15 minutes) | — | — |
-| 1:45 | Inject 5: Media call — journalist asks about the attack | Prepare media statement | Communications Director drafts holding statement |
-| 2:00 | Inject 6: Forensics cannot confirm or deny exfiltration | Decide notification approach given uncertainty | Apply precautionary principle; proceed with SA notification |
-| 2:20 | Inject 7: 72-hour deadline falls on a national holiday | Determine if SA portal is available; identify backup channels | Submit before deadline; DPO activates on-call |
-| 2:40 | Inject 8: Supervisory authority acknowledges notification and requests forensic report | Prepare supplementary submission timeline | Commit to 30-day forensic report delivery |
-| 3:00 | Inject 9: Board chair calls demanding briefing | Brief the board on breach and response status | CEO provides structured briefing using prepared template |
-| 3:15 | Exercise debrief and initial observations | — | — |
-| 3:30 | Exercise concludes | — | — |
+## After-Action Report Structure
 
-## Evaluation Criteria
+### Section 1: Exercise Summary
+- Exercise date, duration, scenario, and participants.
+- Exercise objectives and whether they were met.
 
-### Communication Effectiveness
-- Were the right people notified at each stage?
-- Was internal communication clear and timely?
-- Was the media response appropriate and pre-approved?
-- Were data subjects considered throughout the decision-making process?
+### Section 2: Timeline Analysis
+- Actual timeline of decisions and actions during the exercise.
+- Comparison against expected/ideal timeline from the breach response plan.
+- Identification of delays and bottlenecks.
 
-### Decision Quality
-- Were decisions evidence-based or assumption-based?
-- Were GDPR notification thresholds correctly applied?
-- Was the precautionary principle applied where uncertainty existed?
-- Were legal and regulatory obligations correctly identified?
+### Section 3: Findings
+- What worked well (strengths to maintain).
+- What needs improvement (gaps and deficiencies).
+- Severity rating for each finding: Critical, Major, Minor, Observation.
 
-### Process Adherence
-- Did the team follow the documented breach response procedure?
-- Were the escalation matrix and notification timelines followed?
-- Was evidence preservation initiated before any remediation?
-- Were all actions documented in the incident management system?
+### Section 4: Recommendations
+- Specific, actionable remediation recommendations with owners and deadlines.
+- Prioritized by severity.
 
-### Timeliness
-- Would the 72-hour GDPR notification deadline have been met?
-- Were all escalation targets reached within the required timeframes?
-- Was the risk assessment completed within the expected timeline?
-
-## After-Action Report Template
-
-### Section 1: Exercise Overview
-- Exercise name, date, duration, facilitator, participants
-- Scenario summary
-
-### Section 2: Key Observations
-- What worked well (strengths)
-- What needs improvement (gaps)
-- Unexpected challenges encountered
-
-### Section 3: Decision Log
-- Each decision point, the decision made, the rationale, and whether it was correct
-
-### Section 4: Gap Analysis
-- Procedural gaps identified
-- Technical capability gaps
-- Training gaps
-- Communication gaps
-
-### Section 5: Improvement Actions
-- Action items with owner, priority, and target completion date
-
-### Section 6: Metrics
-- Time to detect (simulated)
-- Time to escalate to DPO
-- Time to notification decision
-- Time to SA notification preparation
-- Time to media statement readiness
+### Section 5: Metrics
+- Time from detection to containment decision.
+- Time from awareness to DPO notification.
+- Time from awareness to notification preparation completion.
+- Communication consistency score (number of conflicting messages identified).
+- Decision quality score (percentage of decisions aligned with policy and regulation).

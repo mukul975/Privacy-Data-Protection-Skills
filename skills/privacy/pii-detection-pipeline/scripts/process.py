@@ -171,7 +171,7 @@ if __name__ == "__main__":
 
     sample_text = """
     Customer: John Smith (CEL-00142)
-    Email: john.smith@example.com
+    Email: john.smith@cipherengineeringlabs.com
     Phone: +1 (555) 012-3456
     SSN: 123-45-6789
     Card: 4111-1111-1111-1111

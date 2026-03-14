@@ -1,54 +1,49 @@
 # APEC CBPR Certification Standards Reference
 
-## Primary Standards
+## Primary Frameworks
 
 ### APEC Privacy Framework (2015)
 - **Publisher**: Asia-Pacific Economic Cooperation
-- **Adopted**: 2004 (original), 2015 (revised)
-- **Scope**: Nine privacy principles governing the collection, use, and cross-border transfer of personal information across APEC economies
+- **Adopted**: 2004; updated 2015
+- **Scope**: Nine privacy principles for APEC economies
 - **Principles**: Preventing Harm, Notice, Collection Limitation, Uses of Personal Information, Choice, Integrity, Security Safeguards, Access and Correction, Accountability
 
 ### APEC Cross-Border Privacy Rules System
 - **Established**: 2011
-- **Publisher**: APEC Electronic Commerce Steering Group (ECSG)
-- **Scope**: Certifiable program requirements implementing the APEC Privacy Framework for cross-border data flows
-- **Program Requirements**: 50 requirements organized by nine APEC Privacy Framework principles
+- **Publisher**: APEC Electronic Commerce Steering Group
+- **Scope**: Certifiable implementation of APEC Privacy Framework principles for cross-border data flows
+- **Program Requirements**: 50 requirements across the nine principles
 
-### Global CBPR Framework
+### Global CBPR Forum Framework
 - **Established**: April 2022
-- **Publisher**: Global CBPR Forum
-- **Members**: US, Canada, Japan, Korea, Philippines, Singapore, Chinese Taipei, Bermuda, Jersey, UK (observer)
-- **Evolution**: Successor to APEC CBPR, open to non-APEC economies
+- **Members**: US, Canada, Japan, Republic of Korea, Philippines, Singapore, Chinese Taipei, Bermuda, Jersey
+- **Scope**: Expanded CBPR system beyond APEC economies
+- **Relationship**: Based on APEC CBPR with updated governance
 
 ## Accountability Agents
 
 | Economy | Agent | Accreditation |
 |---------|-------|---------------|
-| United States | TRUSTe (TrustArc) | FTC-recognized |
-| United States | BBB National Programs | FTC-recognized |
-| Japan | JIPDEC | PPC-recognized |
-| Republic of Korea | KISA | PIPC-recognized |
-| Singapore | IMDA | PDPC-recognized |
-| Philippines | NPC | NPC self-administered |
-| Chinese Taipei | III | NDC-recognized |
-| Mexico | INAI | INAI self-administered |
+| United States | TRUSTe (TrustArc) | FTC recognized |
+| United States | BBB National Programs | FTC recognized |
+| Japan | JIPDEC | PPC recognized |
+| Republic of Korea | KISA | PIPC recognized |
+| Singapore | IMDA | PDPC recognized |
+| Philippines | NPC | Self-administered |
+| Chinese Taipei | III | NDC recognized |
 
-## Related Frameworks
+## Related Instruments
+
+### APEC Cross-border Privacy Enforcement Arrangement (CPEA)
+- **Scope**: Voluntary framework for cross-border enforcement cooperation among APEC privacy enforcement authorities
+- **Application**: Supports CBPR complaint resolution through cross-border enforcement
 
 ### APEC Privacy Recognition for Processors (PRP)
-- Companion certification for data processors
-- Similar assessment methodology to CBPR but processor-focused requirements
-- Being integrated into Global CBPR framework
+- **Scope**: Companion certification for data processors
+- **Relationship**: Addresses processor-specific obligations parallel to CBPR controller requirements
 
-### APEC Cross-Border Privacy Enforcement Arrangement (CPEA)
-- Enforcement cooperation framework for cross-border privacy complaints
-- Enables information sharing between privacy enforcement authorities
-- Supports CBPR system complaint resolution
-
-## Key Documents
-
-- APEC Privacy Framework (2015 revision)
-- APEC Cross-Border Privacy Rules System Policies, Rules and Guidelines
-- CBPR Self-Assessment Questionnaire Template
-- Global CBPR Forum Joint Declaration (April 2022)
-- FTC Recognition of Accountability Agents
+## Key Publications
+- APEC Privacy Framework (2015 update)
+- APEC CBPR System Policies, Rules and Guidelines
+- APEC CBPR Self-Assessment Guidelines for Organizations
+- Global CBPR Forum Declaration (April 2022)

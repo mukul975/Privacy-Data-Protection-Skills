@@ -1,162 +1,174 @@
 ---
 name: vendor-termination-data
 description: >-
-  Vendor termination data return and deletion per GDPR Article 28(3)(g). Covers
-  data extraction format requirements, certified deletion procedures, transition
-  planning, residual data handling, and post-termination verification.
+  Vendor termination data return and deletion procedures per GDPR Article
+  28(3)(g). Covers data extraction formats, deletion certification requirements,
+  transition planning, residual data handling, and post-termination verification.
 license: Apache-2.0
 metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
   subdomain: vendor-privacy-management
-  tags: "vendor-termination, data-return, data-deletion, art-28-termination, transition-planning"
+  tags: "vendor-termination, data-return, deletion-certification, art-28-termination, data-portability"
 ---
 
 # Vendor Termination Data Return and Deletion
 
 ## Overview
 
-GDPR Article 28(3)(g) requires that "at the choice of the controller, [the processor shall] delete or return all the personal data to the controller after the end of the provision of services relating to processing, and delete existing copies unless Union or Member State law requires storage of the personal data." This provision ensures controllers retain control over personal data throughout the vendor lifecycle, including at termination.
+GDPR Article 28(3)(g) requires that at the choice of the controller, the processor shall "delete or return all the personal data to the controller after the end of the provision of services relating to processing, and delete existing copies unless Union or Member State law requires storage of the personal data." This termination obligation ensures that personal data does not persist at a former processor beyond the legitimate processing period.
 
-The obligation covers all personal data processed under the DPA — not just primary datasets, but also derived data, backup copies, logs containing personal data, cached data, and any copies held by the processor's sub-processors. The EDPB Guidelines 07/2020 emphasize that this obligation must be practical and enforceable, with specific procedures and timelines documented in the DPA.
+The EDPB Guidelines 07/2020 (paragraph 108) emphasize that this obligation extends to all copies, backups, and derived data — not just production data. The deletion must be verifiable, and the controller should obtain written certification.
 
-At Summit Cloud Partners, the Vendor Termination Data Protocol establishes a structured process for data return, verified deletion, and safe transition when a vendor relationship ends.
+At Summit Cloud Partners, the Vendor Termination Data Protocol provides a structured process for managing data return and deletion when vendor relationships end.
 
-## Termination Scenarios
+## Termination Triggers
 
-| Scenario | Trigger | Timeline | Priority |
-|----------|---------|----------|----------|
-| Planned termination | Contract expiry, non-renewal | 90-day DPA window | Standard |
-| Early termination (convenience) | Business decision to end service | Per MSA notice period + 90-day DPA window | Standard |
-| Termination for cause | DPA breach, audit failure, vendor breach | Expedited — per DPA emergency provisions | High |
-| Vendor insolvency | Vendor bankruptcy or cessation | Immediate — maximum urgency | Critical |
-| Service migration | Transition to replacement vendor | Overlapping with new vendor onboarding | Standard |
+| Trigger | Description | Timeline Considerations |
+|---------|-------------|----------------------|
+| Contract expiry (non-renewal) | MSA/DPA term ends without renewal | 90-day notice per DPA |
+| Termination for convenience | Controller elects to terminate | Per MSA notice period |
+| Termination for cause | Material DPA breach by processor | Immediate or per cure period |
+| Service migration | Controller moves to alternative provider | Overlap period for data migration |
+| Vendor insolvency | Processor enters insolvency proceedings | Emergency data retrieval |
+| Regulatory order | Supervisory authority orders cessation | Per order timeline |
 
-## Data Return Requirements
+## Data Return Process
 
-### Controller Choice: Return vs. Delete
+### Step 1: Data Inventory and Mapping
 
-Article 28(3)(g) gives the controller the choice between data return and deletion. At Summit Cloud Partners, the default is: **return first, then delete** — ensuring data is safely received before directing deletion.
+Before initiating return, confirm the complete scope of personal data held by the processor:
 
-### Data Return Specifications
+| Data Category | Location | Format | Volume | Retention Basis |
+|--------------|----------|--------|--------|----------------|
+| Production data | Primary database | Structured (SQL/JSON) | [Volume] | DPA processing |
+| Backup data | Backup storage | Encrypted backup files | [Volume] | Business continuity per DPA |
+| Log data | Log storage | Semi-structured (JSON/text) | [Volume] | Security monitoring |
+| Derived/aggregated data | Analytics system | Structured | [Volume] | Processing output |
+| Metadata | Various systems | Structured | [Volume] | System operation |
+| Cached data | CDN/cache layers | Various | [Volume] | Performance |
 
-**Format Requirements:**
+### Step 2: Data Export Format and Method
 
-| Aspect | Requirement |
-|--------|-------------|
-| File format | Machine-readable, commonly used format (CSV, JSON, XML, Parquet, or database dump) |
-| Character encoding | UTF-8 |
-| Structure | Documented schema with field descriptions |
-| Completeness | All personal data categories per DPA Annex I |
-| Integrity verification | SHA-256 checksums for all exported files |
-| Encryption | AES-256 encrypted during transfer; encryption keys delivered via separate secure channel |
-| Transfer method | SFTP, encrypted API endpoint, or secure cloud storage (mutually agreed) |
-| Transfer authentication | MFA-protected credentials |
+**Standard Export Formats:**
 
-**Return Data Scope:**
+| Data Type | Preferred Format | Alternative Format | Notes |
+|-----------|-----------------|-------------------|-------|
+| Structured data | CSV with defined schema | JSON, XML, Parquet | UTF-8 encoding required |
+| Documents | Original format (PDF, DOCX) | ZIP archive | Preserve directory structure |
+| Images/media | Original format (PNG, JPEG) | ZIP archive | Preserve metadata |
+| Logs | JSON lines (JSONL) | CSV | Include timestamps |
+| API-accessible data | Direct API extraction | Bulk export endpoint | Paginated if large |
 
-| Data Type | Included in Return? | Notes |
-|-----------|:------------------:|-------|
-| Primary operational data | Yes | All personal data processed per DPA |
-| Derived/aggregated data containing personal data | Yes | Analytics outputs, reports with personal data |
-| Backup copies | Not returned — deleted | Deletion verification required |
-| System logs containing personal data | Not returned — deleted | Deletion verification required |
-| Cached data | Not returned — deleted | Deletion verification required |
-| Metadata with personal data elements | Yes | Configuration data, user profiles |
-| Sub-processor held data | Via processor | Processor coordinates sub-processor return/deletion |
+**Export Methods:**
 
-### Return Verification
+| Method | When to Use | Security Requirements |
+|--------|-----------|----------------------|
+| Encrypted file transfer (SFTP) | Large datasets | TLS 1.2+, PGP encryption |
+| Secure API extraction | Structured, API-accessible data | OAuth 2.0, TLS 1.3 |
+| Encrypted portable media | Very large datasets without bandwidth | AES-256 encryption, tracked courier |
+| Cloud-to-cloud migration | Cloud provider transition | Encrypted transfer, access audit |
 
-| Step | Action | Evidence |
-|------|--------|---------|
-| 1 | Receive exported data from vendor | Transfer receipt confirmation |
-| 2 | Verify completeness against DPA Annex I data categories | Completeness checklist |
-| 3 | Verify integrity via SHA-256 checksums | Checksum verification log |
-| 4 | Validate data structure against documented schema | Validation report |
-| 5 | Sample verification — compare records against known data | Sample check results |
-| 6 | Import into Summit systems or archive | Import confirmation |
-| 7 | Confirm receipt to vendor | Written confirmation |
+### Step 3: Data Validation
 
-## Data Deletion Requirements
+Upon receiving returned data, Summit Cloud Partners validates:
 
-### Deletion Standards
+| Validation Check | Method | Pass Criteria |
+|-----------------|--------|---------------|
+| Completeness | Record count comparison | Returned count matches source count |
+| Integrity | Checksum verification (SHA-256) | Checksums match vendor-provided manifest |
+| Format compliance | Schema validation | All fields present per agreed schema |
+| Encoding | Character encoding verification | UTF-8 without corruption |
+| Sample verification | Random sample manual review | Data content matches expectations |
+
+## Data Deletion Process
+
+### Deletion Scope
+
+The processor must delete ALL copies of personal data, including:
+
+1. **Production data** — Primary databases and data stores
+2. **Backup data** — All backup copies including off-site backups
+3. **Disaster recovery copies** — DR site data
+4. **Log data** — Application logs, access logs, audit logs containing personal data
+5. **Cached data** — CDN caches, application caches, database caches
+6. **Derived data** — Analytics outputs, aggregated data containing personal data
+7. **Metadata** — System metadata referencing personal data
+8. **Archived data** — Any archived copies
+9. **Sub-processor data** — Data at all sub-processors
+
+### Deletion Methods
 
 | Data Location | Deletion Method | Verification |
-|--------------|----------------|-------------|
-| Primary storage (SSD) | Cryptographic erasure (destroy encryption keys) or NIST SP 800-88 Clear/Purge | Vendor certification |
-| Primary storage (HDD) | NIST SP 800-88 Purge or Destroy | Vendor certification |
-| Backup media | Overwrite on next backup cycle or physical destruction | Vendor certification with timeline |
-| Cloud storage | Provider deletion API + encryption key destruction | Provider deletion confirmation |
-| Logs containing personal data | Log rotation with deletion or anonymization | Vendor certification |
-| Cached data | Cache flush and verification | Vendor certification |
-| Sub-processor storage | Sub-processor-specific deletion per cascaded DPA | Sub-processor certification via processor |
-| Development/test environments | Full deletion if containing production personal data | Vendor certification |
+|--------------|----------------|--------------|
+| Databases (SQL) | DELETE + VACUUM or DROP TABLE | Query confirmation; storage analysis |
+| Object storage (S3/Blob) | Delete all objects + bucket | Bucket listing verification |
+| File systems | Secure overwrite (NIST 800-88) | Disk analysis confirmation |
+| SSD/Flash storage | Crypto-erase (destroy encryption key) | Vendor attestation |
+| Backup tapes | Degaussing or physical destruction | Destruction certificate |
+| Application caches | Cache flush + TTL expiry confirmation | Application verification |
+| Log systems | Targeted log deletion or retention expiry | Log query confirmation |
+| Sub-processors | Cascade deletion instruction | Sub-processor deletion certificate |
 
 ### Deletion Timeline
 
-| Data Type | Deletion Deadline | Standard |
-|-----------|------------------|----------|
-| Primary operational data | Within 30 days of return confirmation | DPA standard |
-| Backup copies | Within 90 days of termination (next rotation cycle) | DPA standard |
-| Logs | Within 90 days or upon standard log rotation | DPA standard |
-| Cached data | Within 7 days of termination | DPA standard |
-| Sub-processor data | Within 60 days of termination | DPA standard |
-| All residual copies | Within 90 days of termination | DPA maximum |
+| Phase | Activity | DPA Standard Timeline |
+|-------|----------|----------------------|
+| T+0 | Controller elects deletion (or return + deletion) | Upon termination notice |
+| T+0 to T+30 | Data return completed (if return elected) | 30 calendar days |
+| T+30 to T+60 | Production data deletion | 60 calendar days from termination |
+| T+60 to T+90 | Backup and archive deletion | 90 calendar days from termination |
+| T+90 | Deletion certification issued | 90 calendar days from termination |
 
-### Deletion Certification
+### Deletion Exceptions
 
-The vendor must provide a written deletion certification signed by an authorized officer:
+Article 28(3)(g) permits continued storage where "Union or Member State law requires storage of the personal data." Exceptions must be:
 
-**Required Certification Content:**
+| Requirement | Processor Action |
+|------------|-----------------|
+| Documented in writing | Processor identifies specific legal requirement |
+| Limited to required data | Only data subject to legal retention requirement |
+| Isolated from production | Retained data moved to restricted storage |
+| Time-limited | Retained only for legally required duration |
+| Notified to controller | Controller informed of retention and legal basis |
 
-| Element | Description |
-|---------|-------------|
-| Certification date | Date deletion was completed |
-| Scope | Confirmation that ALL personal data per DPA has been deleted |
-| Locations | List of all storage locations from which data was deleted |
-| Methods | Deletion methods used per data type |
-| Sub-processors | Confirmation that sub-processor deletion has been completed or is in progress with timeline |
-| Retained data | If any data retained per legal obligation — identify the data, legal basis, and expected deletion date |
-| Authorized signatory | Name, title, and signature of authorized vendor officer |
+## Deletion Certification
+
+The processor must provide a written deletion certification containing:
+
+| Field | Content |
+|-------|---------|
+| Certifying party | Name and title of authorized processor representative |
+| Controller name | Summit Cloud Partners |
+| DPA reference | Reference to terminated DPA |
+| Deletion scope | Description of all data deleted (categories, locations, formats) |
+| Deletion date(s) | Date each deletion action was completed |
+| Deletion method(s) | Technical method used for each data location |
+| Sub-processor deletion | Confirmation that all sub-processors have also deleted data |
+| Exceptions | Any data retained under legal obligation (with legal basis citation) |
+| Certification date | Date of certification |
+| Signature | Authorized officer signature |
 
 ## Transition Planning
 
-### Pre-Termination Transition Checklist
+For service migrations, a transition plan ensures continuity while managing data protection obligations:
 
-| # | Action | Responsible | Timeline |
-|---|--------|-------------|----------|
-| 1 | Notify vendor of termination / non-renewal | Legal/Business Owner | Per MSA notice period |
-| 2 | Invoke DPA Article 28(3)(g) — specify return or delete choice | Privacy Team | With termination notice |
-| 3 | Agree on data export format and transfer method | Privacy Team + Vendor | 15 days after notice |
-| 4 | Vendor provides data export timeline | Vendor | 15 days after notice |
-| 5 | Prepare internal systems to receive returned data | IT Team | Before data transfer |
-| 6 | Vendor executes data export | Vendor | Per agreed timeline |
-| 7 | Summit verifies returned data | Privacy Team + IT | Within 5 days of receipt |
-| 8 | Summit confirms receipt to vendor | Privacy Team | Upon verification |
-| 9 | Vendor executes deletion | Vendor | Per DPA deletion timeline |
-| 10 | Vendor provides deletion certification | Vendor | Within 7 days of deletion |
-| 11 | Summit reviews deletion certification | Privacy Team | Within 5 days |
-| 12 | Close vendor record in register | Privacy Team | Upon certification acceptance |
-
-### Residual Data Handling
-
-After primary deletion, residual personal data may exist in:
-
-| Location | Risk | Mitigation |
-|----------|------|-----------|
-| Backup tapes/archives | Data may persist until tape rotation | Require confirmation of backup deletion with specific timeline |
-| Disaster recovery sites | Replicated data may persist | Include DR sites in deletion scope |
-| Log aggregation systems | Personal data in operational logs | Require log anonymization or deletion |
-| Analytics platforms | Derived data sets | Require deletion of all derived data containing personal data |
-| Email/communications | Personal data in support tickets, emails | Require deletion from communication systems |
-| Vendor employee devices | Data downloaded to laptops/devices | Require confirmation of device-level deletion |
+| Phase | Activity | Duration |
+|-------|----------|----------|
+| **Planning** | Define data migration scope, format, timeline | 4-6 weeks |
+| **Parallel operation** | Old and new vendor operate simultaneously | 2-4 weeks |
+| **Migration** | Data transferred from old to new vendor | 1-2 weeks |
+| **Validation** | Verify complete and accurate migration | 1 week |
+| **Cutover** | Switch production to new vendor | 1 day |
+| **Decommission** | Terminate old vendor; initiate deletion | Per DPA timeline |
+| **Deletion verification** | Confirm old vendor data deletion | 90 days |
 
 ## Key Regulatory References
 
-- GDPR Article 28(3)(g) — Data return or deletion upon termination
-- GDPR Article 17(1) — Right to erasure (applies to processor-held data)
+- GDPR Article 28(3)(g) — Deletion or return of personal data upon termination
+- GDPR Article 17 — Right to erasure (informs deletion standards)
 - GDPR Article 5(1)(e) — Storage limitation principle
-- EDPB Guidelines 07/2020 — Paragraph 108-110 on practical enforceability of deletion
+- EDPB Guidelines 07/2020 — Paragraph 108 on termination data obligations
 - NIST SP 800-88 Rev. 1 — Guidelines for Media Sanitization
-- ISO/IEC 27040:2015 — Storage security, including data sanitization
+- ISO/IEC 27001:2022 — A.8.10 Information deletion

@@ -1,98 +1,122 @@
 # Workflows — Implementing CNIL-Compliant Cookies
 
-## Workflow 1: Cookie Consent Banner Display and Response
+## Workflow 1: Cookie Banner Display and Interaction
 
 ```
-START: User visits cloudvault-saas.eu
+START: User visits CloudVault SaaS Inc. website (cloudvault-saas.eu)
   │
-  ├─► Step 1: Check for existing consent cookie
-  │     ├─ Read cv_consent_version cookie
-  │     ├─ If present and not expired (< 6 months):
-  │     │   ├─ Apply stored consent choices
-  │     │   ├─ Load consented cookies/scripts only
-  │     │   └─ Do NOT show banner
-  │     └─ If absent or expired:
-  │           ├─ Block ALL non-essential cookies/scripts
-  │           └─ Display consent banner
+  ├─► Step 1: Check for existing consent
+  │     ├─ Look for cv_consent cookie
+  │     ├─ If exists and < 180 days old: respect stored preferences, no banner
+  │     ├─ If exists and >= 180 days old: re-display banner (6-month reconsent)
+  │     └─ If not exists: display consent banner
   │
-  ├─► Step 2: Display CNIL-compliant banner (first layer)
-  │     ├─ Information: "CloudVault uses cookies to improve your experience."
-  │     ├─ Link: "Learn more in our Cookie Policy"
-  │     ├─ Three buttons with EQUAL prominence:
-  │     │   ├─ [Accept All] — 160x44px, #2563EB, 16px Inter Bold
-  │     │   ├─ [Reject All] — 160x44px, #2563EB, 16px Inter Bold
-  │     │   └─ [Customize]  — 160x44px, #2563EB, 16px Inter Bold
-  │     └─ Content remains accessible behind banner (no cookie wall)
-  │
-  ├─► Step 3: Handle user choice
+  ├─► Step 2: Display CNIL-compliant consent banner
+  │     ├─ Banner appears as overlay (not blocking content per no-cookie-wall rule)
+  │     ├─ Layer 1:
+  │     │   ├─ Brief description of cookie use
+  │     │   ├─ [Accept All] button — 200x44px, blue, bold
+  │     │   ├─ [Refuse All] button — 200x44px, blue, bold (same treatment)
+  │     │   └─ [Manage Preferences] text link
   │     │
-  │     ├─► [Accept All]:
-  │     │     ├─ Set all cookie purposes to "granted"
-  │     │     ├─ Load all cookie scripts
-  │     │     ├─ Set cv_consent_version cookie (Max-Age: 15778800 = ~6 months)
-  │     │     └─ Record consent in audit trail
+  │     └─ Layer 2 (if "Manage Preferences" clicked):
+  │           ├─ Per-purpose toggles (all OFF by default):
+  │           │   ├─ Audience Measurement (analytics)
+  │           │   ├─ Advertising and Targeting
+  │           │   └─ Social Media Sharing
+  │           ├─ Essential Cookies section (always on, not toggleable):
+  │           │   ├─ Session Management
+  │           │   ├─ Security (CSRF)
+  │           │   ├─ Load Balancing
+  │           │   └─ Language Preference
+  │           ├─ Third parties listed by name per purpose
+  │           └─ [Accept Selected] [Refuse All] buttons
+  │
+  ├─► Step 3: Process user choice
   │     │
-  │     ├─► [Reject All]:
-  │     │     ├─ Set all non-essential purposes to "not_granted"
-  │     │     ├─ Keep essential cookies only
-  │     │     ├─ Set cv_consent_version cookie (same 6-month expiry)
-  │     │     └─ Record refusal in audit trail
+  │     ├─► "Accept All" clicked:
+  │     │     ├─ Set cv_consent cookie: {accepted: all, timestamp: ISO8601, version: hash}
+  │     │     ├─ Initialize all cookie categories
+  │     │     ├─ Record consent in backend
+  │     │     └─ Close banner
   │     │
-  │     └─► [Customize]:
-  │           ├─ Display second layer with per-purpose toggles:
-  │           │   ├─ Essential Cookies [Always On, cannot toggle off]
-  │           │   │   Listed: cv_session_id, cv_csrf_token, cv_consent_version, etc.
-  │           │   ├─ Analytics Cookies [Toggle: OFF by default]
-  │           │   │   Listed: Google Analytics (_ga, _gid)
-  │           │   ├─ Advertising Cookies [Toggle: OFF by default]
-  │           │   │   Listed: Facebook Pixel (_fbp), AppsFlyer (_af_*)
-  │           │   └─ Functionality Cookies [Toggle: OFF by default]
-  │           │       Listed: A/B testing (cv_ab_test)
-  │           │
-  │           ├─ Two buttons with equal prominence:
-  │           │   ├─ [Save Preferences] — saves current toggle states
-  │           │   └─ [Reject All] — sets all non-essential to off
-  │           │
-  │           └─ Record per-purpose decisions in audit trail
+  │     ├─► "Refuse All" clicked:
+  │     │     ├─ Set cv_consent cookie: {accepted: none, timestamp: ISO8601, version: hash}
+  │     │     ├─ Load only essential cookies
+  │     │     ├─ Record refusal in backend
+  │     │     └─ Close banner
+  │     │
+  │     └─► "Accept Selected" (from manage):
+  │           ├─ Set cv_consent cookie with per-purpose selections
+  │           ├─ Initialize selected categories only
+  │           ├─ Record per-purpose decisions in backend
+  │           └─ Close banner
   │
-  └─► Step 4: Apply consent decisions
-        ├─ For each granted purpose: load corresponding scripts/cookies
-        ├─ For each refused purpose: ensure no scripts load, no cookies set
-        └─ Banner disappears after choice is made
+  └─► Step 4: Ongoing behavior
+        ├─ No tracking scripts loaded before consent choice
+        ├─ Essential cookies only until user makes a choice
+        ├─ Banner does not reappear until 180 days
+        └─ Preferences accessible via footer "Cookie Settings" link
 ```
 
-## Workflow 2: Consent Renewal (6-Month Interval)
+## Workflow 2: Six-Month Reconsent Cycle
 
 ```
-TRIGGER: cv_consent_version cookie expires (after ~6 months)
+TRIGGER: User returns to site after 180+ days since last consent
   │
-  ├─► Step 1: On next page load, detect missing/expired consent cookie
+  ├─► Step 1: Detect expired consent
+  │     ├─ Read cv_consent cookie
+  │     ├─ Parse timestamp
+  │     └─ If (current_date - consent_date) > 180 days: reconsent needed
   │
-  ├─► Step 2: Block all non-essential cookies (same as first visit)
+  ├─► Step 2: Re-display consent banner
+  │     ├─ Same format as initial consent
+  │     ├─ Pre-fill with previous choices as reference (but do NOT pre-select)
+  │     └─ User makes fresh decision
   │
-  ├─► Step 3: Display consent banner (identical to first-visit banner)
-  │     └─ Previous choices are NOT pre-selected (fresh consent)
+  ├─► Step 3: Process new consent
+  │     ├─ Replace old consent cookie with new one
+  │     ├─ Update consent records in backend
+  │     └─ Apply new preferences immediately
   │
-  ├─► Step 4: User makes new choice
-  │     └─ Standard accept/reject/customize flow
-  │
-  └─► Step 5: Record new consent with new timestamp
+  └─► Step 4: If user previously accepted and now refuses
+        ├─ Stop non-essential cookie processing immediately
+        ├─ Delete non-essential cookies from browser
+        └─ Record the change for audit trail
 ```
 
-## Workflow 3: Cookie Consent Withdrawal
+## Workflow 3: Essential Cookie Documentation
 
 ```
-TRIGGER: User clicks "Privacy Choices" link in footer or navigates to Settings > Privacy
+TRIGGER: Annual review of essential cookies list
   │
-  ├─► Display current cookie consent state (per-purpose toggles)
-  │     ├─ Analytics: ON/OFF
-  │     ├─ Advertising: ON/OFF
-  │     └─ Functionality: ON/OFF
+  ├─► Step 1: Inventory all cookies set by cloudvault-saas.eu
+  │     ├─ First-party cookies (set by our domain)
+  │     ├─ Third-party cookies (set by external domains)
+  │     └─ For each: name, domain, purpose, expiry, data stored
   │
-  ├─► User changes a toggle → processed immediately:
-  │     ├─ If disabling: stop script, delete associated cookies
-  │     ├─ If enabling: load script, set cookies
-  │     └─ Update cv_consent_version cookie
+  ├─► Step 2: Classify each cookie
+  │     ├─ Essential (exempt from consent per CNIL Section 3):
+  │     │   ├─ cv_session: session management
+  │     │   ├─ cv_csrf: CSRF protection
+  │     │   ├─ cv_lb: load balancer affinity
+  │     │   └─ cv_lang: language preference
+  │     │
+  │     └─ Non-essential (consent required):
+  │           ├─ _ga, _gid: Google Analytics
+  │           ├─ _fbp: Facebook Pixel
+  │           └─ All advertising/tracking cookies
   │
-  └─► Record change in consent audit trail
+  ├─► Step 3: Verify essential classification
+  │     ├─ Each "essential" cookie must be strictly necessary
+  │     ├─ Review against CNIL criteria:
+  │     │   ├─ Would the site break without it? (session, CSRF)
+  │     │   ├─ Did the user explicitly request the functionality? (language)
+  │     │   └─ Is it purely for communication transmission? (load balancing)
+  │     └─ DPO sign-off on essential classification
+  │
+  └─► Step 4: Update cookie policy page
+        ├─ List all cookies by category
+        ├─ Specify purpose, duration, and first/third party
+        └─ Publish at cloudvault-saas.eu/cookie-policy
 ```

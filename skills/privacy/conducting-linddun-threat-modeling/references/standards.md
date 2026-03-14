@@ -1,48 +1,54 @@
-# LINDDUN Standards and References
+# LINDDUN Threat Modeling Standards and References
 
-## Methodology Foundation
+## LINDDUN Methodology
 
-### Original LINDDUN Paper (2011)
-Deng, M., Wuyts, K., Scandariato, R., Preneel, B., & Joosen, W. "A privacy threat analysis framework: supporting the elicitation and fulfillment of privacy requirements." Requirements Engineering, 16(1), 3-32. Introduced the LINDDUN methodology with seven privacy threat categories derived from privacy properties.
+### Original Framework (2011)
+Deng, M., Wuyts, K., Scandariato, R., Preneel, B., & Joosen, W. "A privacy threat analysis framework: supporting the elicitation and fulfillment of privacy requirements." Requirements Engineering, 16(1), 3-32. Introduced the LINDDUN framework with seven privacy threat categories mapped to privacy properties.
 
-### LINDDUN GO (2020)
-Wuyts, K., & Joosen, W. "LINDDUN GO: A Lightweight Approach to Privacy Threat Modeling." Streamlined version of LINDDUN using card-based elicitation for agile development teams. Suitable for rapid assessments and workshops.
+### LINDDUN GO (Lightweight Version)
+Wuyts, K. & Joosen, W. "LINDDUN GO: A Lightweight Approach to Privacy Threat Modeling." Simplified version using threat type cards for rapid privacy threat identification in agile environments. Available at linddun.org.
 
-### LINDDUN PRO (2022)
-Full systematic methodology with comprehensive threat tree catalogs, detailed DFD analysis, and formal risk assessment. Suitable for complex systems and high-risk processing activities.
+### Official Resources
+The LINDDUN methodology, threat tree catalogs, and case studies are maintained at linddun.org by the DistriNet research group at KU Leuven (Belgium).
 
-## Privacy Properties
+## Privacy Properties Mapped to LINDDUN
 
-The seven LINDDUN categories map to established privacy properties:
+| LINDDUN Category | Privacy Property | Opposite (Threat) |
+|------------------|-----------------|-------------------|
+| Linking | Unlinkability | Linkability |
+| Identifying | Anonymity / Pseudonymity | Identifiability |
+| Non-repudiation | Plausible deniability | Non-repudiation |
+| Detecting | Undetectability / Unobservability | Detectability |
+| Data Disclosure | Confidentiality | Disclosure |
+| Unawareness | Content awareness | Unawareness |
+| Non-compliance | Policy and consent compliance | Non-compliance |
 
-| LINDDUN Category | Privacy Property | Definition Source |
-|-----------------|-----------------|-------------------|
-| Linking | Unlinkability | ISO/IEC 15408 (Common Criteria) |
-| Identifying | Anonymity, Pseudonymity | Pfitzmann & Hansen terminology (2010) |
-| Non-repudiation | Plausible deniability | Pfitzmann & Hansen terminology |
-| Detecting | Undetectability, Unobservability | Pfitzmann & Hansen terminology |
-| Data Disclosure | Confidentiality | ISO/IEC 27001 |
-| Unawareness | Transparency, Intervenability | GDPR Articles 12-14 |
-| Non-compliance | Compliance | GDPR Article 5, ISO/IEC 27701 |
+## Relationship to STRIDE
 
-## GDPR Integration
+| STRIDE Category | Focus | LINDDUN Category | Focus |
+|----------------|-------|-------------------|-------|
+| Spoofing | Authentication | Identifying | Anonymity |
+| Tampering | Integrity | Non-compliance | Policy adherence |
+| Repudiation | Non-repudiation | Non-repudiation | Plausible deniability |
+| Information disclosure | Confidentiality | Data Disclosure | Data confidentiality |
+| Denial of service | Availability | (Not directly mapped) | |
+| Elevation of privilege | Authorization | Detecting | Undetectability |
 
-### Article 25(1) — Data Protection by Design
-LINDDUN serves as a systematic methodology for identifying privacy risks during the design phase, directly implementing the Article 25(1) requirement to consider privacy "at the time of the determination of the means for processing."
+## GDPR Regulatory Basis
 
-### Article 35 — DPIA
-LINDDUN provides a structured risk identification methodology suitable for the "systematic description of the envisaged processing operations and the purposes" (Article 35(7)(a)) and "assessment of the risks to the rights and freedoms of data subjects" (Article 35(7)(c)).
+### Article 25 — Data Protection by Design
+LINDDUN directly supports Article 25 by providing a systematic methodology for identifying privacy risks at the design stage and selecting appropriate technical measures.
 
-### EDPB Guidelines 4/2019
-Identifies threat modeling as a recommended approach for implementing data protection by design. LINDDUN is explicitly suitable for the privacy risk assessment required under these guidelines.
+### Article 35 — Data Protection Impact Assessment
+LINDDUN can serve as the risk identification methodology within a DPIA. The threat trees provide structured elicitation of privacy risks, and the risk scoring supports the DPIA's risk assessment.
 
-## Related Methodologies
+### Article 32 — Security of Processing
+While LINDDUN focuses on privacy threats, several categories (Data Disclosure, Non-compliance) overlap with security requirements under Article 32.
 
-### STRIDE (Microsoft)
-Security-focused threat modeling framework. LINDDUN complements STRIDE by addressing privacy-specific threats not covered by security analysis.
+## Supporting Standards
 
-### PASTA (Process for Attack Simulation and Threat Analysis)
-Risk-centric threat modeling methodology. Can be combined with LINDDUN for comprehensive security and privacy threat assessment.
+### ISO/IEC 27005:2022 — Information Security Risk Management
+Provides a general framework for risk assessment that LINDDUN specializes for privacy threats. The risk scoring methodology (likelihood x impact) is compatible with ISO 27005.
 
-### NIST Privacy Framework
-Provides a high-level privacy risk management framework. LINDDUN operationalizes the "Identify" and "Govern" functions at the technical architecture level.
+### NIST Privacy Framework v1.0
+NIST's privacy framework identifies functions (Identify, Govern, Control, Communicate, Protect) that map to LINDDUN mitigation categories.

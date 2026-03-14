@@ -2,165 +2,151 @@
 name: ai-training-data-class
 description: >-
   Classifies sensitive data in AI/ML training datasets including bias detection
-  for Art. 9 special categories, data card documentation, provenance tracking,
-  and consent verification for model training. Keywords: AI training data, ML
-  dataset classification, bias detection, data card, provenance, consent, Art 9.
+  for Art. 9 categories, data card documentation, provenance tracking, and
+  consent verification for model training. Keywords: AI training data, ML
+  dataset, bias detection, data card, model training, Art 9, consent, GDPR AI.
 license: Apache-2.0
 metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
   subdomain: data-classification
-  tags: "ai-training-data, ml-dataset, bias-detection, data-card, provenance, consent"
+  tags: "ai-training-data, ml-dataset, bias-detection, data-card, model-training, gdpr-ai"
 ---
 
-# AI/ML Training Data Classification
+# Sensitive Data Classification for AI/ML Training Datasets
 
 ## Overview
 
-AI and machine learning models are only as good — and as compliant — as their training data. When training datasets contain personal data, GDPR obligations apply in full to the training process, model storage, and inference outputs. When training data includes Art. 9 special categories, the risks multiply: biased models can perpetuate discrimination, inferred attributes can constitute new special category processing, and the inability to exercise erasure rights against trained models creates novel compliance challenges. This skill provides a framework for classifying, documenting, and governing training data for AI/ML systems in compliance with GDPR.
+AI and machine learning models trained on personal data raise distinct classification challenges. Training data may contain direct personal data, inferred special categories, proxy variables for protected characteristics, and data whose consent scope does not extend to model training. The EU AI Act (Regulation (EU) 2024/1689) imposes additional requirements for high-risk AI systems, including data governance obligations under Art. 10 that intersect with GDPR classification requirements. This skill provides a framework for classifying training data, detecting bias-relevant features, documenting data provenance, and verifying consent coverage.
 
-## Regulatory Framework for AI Training Data
+## GDPR and AI Act Intersection
 
-### GDPR Obligations Applicable to ML Training
+### GDPR Requirements for Training Data
 
-| Obligation | Application to Training Data | Vanguard Implication |
-|-----------|-----------------------------|--------------------|
-| **Art. 5(1)(a) Lawfulness** | A lawful basis is required for each use of personal data in training | Cannot train on customer data collected for service delivery if training is a new, incompatible purpose |
-| **Art. 5(1)(b) Purpose limitation** | Training is a specific purpose; must be compatible with original collection purpose or have independent basis | Legitimate interests assessment or consent required for ML training distinct from original purpose |
-| **Art. 5(1)(c) Data minimisation** | Only personal data necessary for effective model training should be used | Feature selection must exclude unnecessary personal attributes |
-| **Art. 5(1)(d) Accuracy** | Training data must be accurate; biased or inaccurate training data produces biased models | Data quality assessment required before training |
-| **Art. 5(1)(e) Storage limitation** | Training data should not be retained longer than necessary for the training purpose | Post-training retention justification required |
-| **Art. 6 Lawful basis** | At least one Art. 6(1) basis for using personal data to train the model | Most commonly: Art. 6(1)(f) legitimate interests (with balancing test) or Art. 6(1)(a) consent |
-| **Art. 9 Special categories** | If training data contains or model infers Art. 9 data, Art. 9(2) condition required | Bias detection must identify special category features and proxies |
-| **Art. 13/14 Transparency** | Data subjects must be informed their data is used for ML training | Privacy notice must specify AI/ML training as a purpose |
-| **Art. 17 Right to erasure** | Erasure requests must be addressed; may require model retraining or unlearning | Machine unlearning strategy or retraining pipeline required |
-| **Art. 22 Automated decisions** | If model output produces legal or significant effects, Art. 22 rights apply | Human oversight required for consequential decisions |
-| **Art. 35 DPIA** | ML training on personal data at scale likely triggers mandatory DPIA | DPIA required for all ML models using personal data |
+| GDPR Article | Application to AI Training |
+|-------------|--------------------------|
+| **Art. 5(1)(b) — Purpose limitation** | Training a model is a distinct processing purpose; if data was collected for customer service, using it for ML training requires a compatible purpose assessment or new lawful basis |
+| **Art. 5(1)(c) — Data minimisation** | Training datasets must not include more personal data than necessary for the model objective |
+| **Art. 6 — Lawful basis** | Model training requires its own lawful basis; legitimate interests (Art. 6(1)(f)) is most common, but requires LIA documentation |
+| **Art. 9 — Special categories** | If training data contains or enables inference of special category data, Art. 9(2) condition required |
+| **Art. 22 — Automated decision-making** | If the trained model makes decisions with legal or significant effects, additional safeguards apply |
+| **Art. 25 — Data protection by design** | Classification of training data is a by-design measure enabling appropriate technical protections |
+| **Art. 35 — DPIA** | High-risk AI processing (profiling, automated decision-making) requires DPIA |
 
-### EU AI Act — Regulation (EU) 2024/1689
+### EU AI Act Art. 10 — Data Governance for High-Risk AI
 
-The EU AI Act (entered into force 1 August 2024) establishes specific requirements for training data:
+The AI Act Art. 10 requires that training, validation, and testing datasets for high-risk AI systems:
 
-- **Art. 10**: Data and data governance — training, validation, and testing datasets must be relevant, sufficiently representative, and as free of errors as possible. Must examine for biases that may affect health, safety, or lead to discrimination.
-- **Art. 10(5)**: Processing of special categories for bias monitoring — permits processing of Art. 9 special categories "to the extent that is strictly necessary" for ensuring bias detection and correction, subject to appropriate safeguards.
-- **Annex IV**: Technical documentation must include information about training data, including data provenance, collection methods, and preparation steps.
+1. Are subject to appropriate data governance and management practices (Art. 10(2))
+2. Are relevant, sufficiently representative, and to the extent possible free of errors and complete (Art. 10(3))
+3. Take into account the specific geographical, contextual, behavioural, or functional setting within which the AI system is intended to be used (Art. 10(4))
+4. Where special category data processing is strictly necessary for bias detection and correction, this is permitted under Art. 10(5), subject to appropriate safeguards including pseudonymisation and GDPR compliance
 
 ## Training Data Classification Framework
 
-### Classification Dimensions
+### Classification Tier 1: Personal Data Content
 
-| Dimension | Categories | Assessment Method |
-|-----------|-----------|-----------------|
-| **Personal data content** | Contains personal data / No personal data / Uncertain | PII scanning (see auto-data-discovery, pii-in-unstructured) |
-| **Special category presence** | Contains Art. 9 data / Art. 9 proxies / No Art. 9 data | Feature analysis + proxy detection |
-| **Criminal data presence** | Contains Art. 10 data / No Art. 10 data | Criminal data scan (see criminal-data-handling) |
-| **Consent status** | Consent obtained / Consent not required / Consent unknown | Consent audit trail verification |
-| **Bias risk** | High / Medium / Low | Statistical fairness assessment |
-| **Provenance** | First-party collected / Third-party sourced / Public data / Synthetic | Data lineage documentation |
-| **Data quality** | High / Medium / Low | Accuracy, completeness, timeliness assessment |
+| Classification | Description | Example |
+|---------------|-------------|---------|
+| **TRAINING_PII_DIRECT** | Dataset contains direct identifiers | Customer names, email addresses in NLP training corpus |
+| **TRAINING_PII_INDIRECT** | Dataset contains indirect identifiers | Customer IDs, transaction patterns enabling singling out |
+| **TRAINING_SPECIAL_CAT** | Dataset contains Art. 9 special category data | Health records for medical diagnosis model |
+| **TRAINING_CRIMINAL** | Dataset contains Art. 10 criminal data | Fraud transaction labels derived from criminal investigations |
+| **TRAINING_PSEUDONYMISED** | Personal data replaced with tokens but re-identification key exists | Pseudonymised customer data with mapping held by data team |
+| **TRAINING_ANONYMISED** | Data verified as anonymised per WP29 criteria | Aggregated population statistics with k ≥ 10 |
+| **TRAINING_SYNTHETIC** | Artificially generated data with no real personal data | GAN-generated synthetic transaction data |
+| **TRAINING_NON_PERSONAL** | No personal data content | Market price data, weather data, product specifications |
 
-### Art. 9 Special Category Detection in Training Features
+### Classification Tier 2: Bias and Proxy Detection
 
-Direct special category features are obvious (gender, ethnicity, religion fields). The greater risk is **proxy features** — attributes that correlate with protected characteristics:
+Even when a dataset does not directly contain Art. 9 special category data, it may contain proxy variables that correlate with protected characteristics:
 
-| Protected Category | Common Proxy Features | Detection Method |
-|-------------------|---------------------|-----------------|
-| Racial/ethnic origin | Postcode/ZIP code, surname, language preference | Correlation analysis with census demographic data |
-| Political opinions | Media consumption patterns, donation history | Topic modelling on text features |
-| Religious beliefs | Dietary preferences, holiday patterns, geographic clusters | Association rule mining |
-| Health status | Insurance claim patterns, absence records, purchase history (pharmacy) | Feature importance analysis against health outcome proxies |
-| Sexual orientation | Household composition, partner benefits, name analysis | Inference risk assessment |
-| Age | Graduation year, employment history length, technology usage patterns | Correlation with age data where available |
+| Proxy Variable | Correlated Protected Characteristic | Detection Method |
+|---------------|-------------------------------------|-----------------|
+| **Postcode/ZIP code** | Racial/ethnic origin, socioeconomic status | Geographic demographic analysis |
+| **First name** | Gender, ethnic origin, age cohort | Name demographics database lookup |
+| **Language preference** | Ethnic origin, nationality | Statistical correlation analysis |
+| **Shopping patterns** | Religious belief (halal/kosher purchases), health status | Purchase category analysis |
+| **Web browsing history** | Political opinions, sexual orientation, health status | Topic modelling on browsing categories |
+| **Employment gap patterns** | Gender (maternity), disability, health | Statistical pattern analysis |
+| **Credit score** | Racial/ethnic origin (documented correlation in US/UK studies) | Disparate impact analysis |
 
-### Bias Detection Methodology
+### Classification Tier 3: Consent and Purpose Scope
 
-#### Statistical Fairness Metrics
-
-For each protected group (defined by Art. 9 categories or proxies):
-
-| Metric | Definition | Threshold |
-|--------|-----------|-----------|
-| **Demographic parity** | P(positive outcome \| group A) ≈ P(positive outcome \| group B) | Ratio within 0.8-1.25 (80% rule) |
-| **Equalised odds** | True positive rate and false positive rate equal across groups | Difference < 5 percentage points |
-| **Calibration** | For a given predicted probability, actual outcome rate is similar across groups | Maximum calibration gap < 10% |
-| **Counterfactual fairness** | Changing the protected attribute (and its causal descendants) does not change the prediction | Prediction change < 5% |
+| Classification | Description | Compliance Requirement |
+|---------------|-------------|----------------------|
+| **CONSENT_COVERS_TRAINING** | Original consent explicitly covers AI/ML training | Document consent text and verify specificity |
+| **CONSENT_DOES_NOT_COVER** | Original consent did not anticipate ML training | New consent required or alternative lawful basis needed |
+| **LEGITIMATE_INTEREST** | ML training relies on legitimate interests (Art. 6(1)(f)) | Documented LIA required |
+| **CONTRACT_PERFORMANCE** | ML training is necessary for contract performance | Narrow scope — must be genuinely necessary |
+| **PUBLIC_DATA** | Data sourced from publicly available sources | Still requires lawful basis; public availability is not a lawful basis |
+| **RESEARCH_EXEMPTION** | Processing under Art. 89(1) research exemption | Appropriate safeguards including pseudonymisation required |
 
 ## Data Card Documentation
 
-Every ML training dataset at Vanguard must have a Data Card documenting:
+A data card is a structured document accompanying each training dataset, providing transparency about its contents, provenance, and limitations. Modelled on the "Datasheets for Datasets" framework (Gebru et al., 2021) and adapted for GDPR compliance.
 
-### Required Data Card Fields
+### Required Data Card Fields for Vanguard Financial Services
 
-| Section | Required Content |
-|---------|-----------------|
-| **Dataset overview** | Name, version, creation date, owner, purpose |
-| **Composition** | Record count, feature count, label distribution, temporal coverage |
-| **Personal data classification** | PII categories present, Art. 9 data present, Art. 10 data present |
-| **Collection process** | How data was collected, from whom, under what notice/consent |
-| **Provenance** | Original data source, transformations applied, chain of custody |
-| **Lawful basis** | Art. 6 basis for training use, Art. 9(2) condition if applicable |
-| **Consent status** | Whether data subjects consented to ML training use specifically |
-| **Bias assessment** | Protected categories identified, proxy features flagged, fairness metrics |
-| **Pre-processing** | Anonymisation, pseudonymisation, feature selection, outlier handling |
-| **Quality metrics** | Accuracy, completeness, consistency, timeliness of the data |
-| **Representativeness** | Demographic distribution vs. target population, coverage gaps |
-| **Known limitations** | Known biases, underrepresented groups, quality issues |
-| **Retention** | How long training data is retained, deletion schedule |
-| **Access controls** | Who can access the training data, under what conditions |
-| **DPIA reference** | Reference to the DPIA covering this training activity |
-| **Review schedule** | When the data card is next reviewed |
+| Section | Fields |
+|---------|--------|
+| **1. Dataset Identity** | Name, version, creation date, owner, purpose |
+| **2. Personal Data Classification** | Tier 1 classification, data elements present, classification labels |
+| **3. Data Subjects** | Categories of data subjects, volume, geographic scope |
+| **4. Provenance** | Original collection purpose, source systems, processing chain from collection to training set |
+| **5. Consent/Lawful Basis** | Tier 3 classification, consent text reference or LIA reference, purpose compatibility assessment |
+| **6. Special Category Assessment** | Whether Art. 9 data is present (direct or inferred), Art. 9(2) condition if applicable |
+| **7. Bias Assessment** | Proxy variables identified, disparate impact analysis results, demographic representation statistics |
+| **8. De-identification** | Technique applied (pseudonymisation, anonymisation, synthetic generation), assessment reference |
+| **9. Retention** | Training data retention period, model retention period, deletion schedule |
+| **10. Access Controls** | Who can access the training data, who can access the model, audit logging |
+| **11. DPIA Reference** | DPIA document reference if applicable |
+| **12. Limitations** | Known biases, geographic limitations, temporal limitations, data quality issues |
 
-## Provenance Tracking Requirements
+## Bias Detection Methodology
 
-### Chain of Custody Documentation
+### Step 1: Demographic Representation Analysis
 
-For each training dataset, maintain:
+For each training dataset, calculate representation statistics:
+- What percentage of records come from each demographic group (to the extent known)?
+- Does the representation match the target population?
+- Are any groups under-represented by more than 20% relative to population?
 
-```
-Original Source → Collection → Transformation → Training → Model → Inference
-     │                │              │              │          │
-     ▼                ▼              ▼              ▼          ▼
-  Source ID      Collection      Transform     Training    Model version
-  Data owner     method          log           date        Inference
-  Legal basis    Date            Features      Hyperparams outputs
-  Consent        Volume          selected      Accuracy    Decisions
-  status         Quality check   Bias check    Bias eval   affected
-```
+### Step 2: Proxy Variable Identification
 
-### Consent Verification Workflow
+Scan all features for proxy correlation with Art. 9 protected characteristics:
+- Calculate correlation coefficient between each feature and known protected characteristics (where available)
+- Flag features with |correlation| > 0.3 as potential proxies
+- Document all proxy variables in the data card
 
-Before using personal data for ML training:
+### Step 3: Disparate Impact Analysis
 
-1. **Identify the original collection purpose** — was ML training specified or compatible?
-2. **Check consent scope** — if consent-based, does consent cover ML training?
-3. **Assess purpose compatibility** — if legitimate interests, is training compatible under Art. 6(4)?
-4. **Verify Art. 9 conditions** — if special category data, is there a valid Art. 9(2) basis for training?
-5. **Document the assessment** — record in the data card
+For classification or scoring models:
+- Calculate model performance metrics by demographic group
+- Apply the 80% (four-fifths) rule: if the selection rate for any protected group is less than 80% of the rate for the most favoured group, disparate impact may exist
+- Document disparate impact analysis results in the data card
 
-## Implementation at Vanguard Financial Services
+### Step 4: AI Act Art. 10(5) Assessment
 
-### ML Models Currently in Use
+If bias detection requires processing special category data:
+- Document why processing is "strictly necessary" for bias detection and correction
+- Implement pseudonymisation of the special category data used for bias testing
+- Ensure GDPR Art. 9(2) condition is established (typically Art. 9(2)(g) substantial public interest or Art. 9(2)(j) research)
+- Process in a controlled environment with access restricted to the bias assessment team
+- Delete special category data after bias assessment is complete
 
-| Model | Training Data | Personal Data | Art. 9 Risk | Status |
-|-------|-------------|---------------|-------------|--------|
-| Credit risk scoring | Customer financial history, repayment patterns | YES — financial data, account activity | MEDIUM — postcode proxy for ethnicity | Data card completed, DPIA done |
-| Fraud detection (transactions) | Transaction patterns, merchant data, device data | YES — behavioural patterns, IP addresses | LOW — no direct Art. 9 features | Data card completed, DPIA done |
-| Customer churn prediction | Service usage, complaint history, demographics | YES — age, postcode, usage patterns | MEDIUM — age and postcode proxies | Data card completed, bias review pending |
-| AML suspicious activity | Transaction patterns, counterparty data, geographic risk | YES — transaction data, geographic data | MEDIUM — geographic features may proxy nationality | Data card completed, DPIA done |
-| Document classification (NLP) | Historical customer correspondence | YES — names, account details in text | HIGH — health data may appear in complaints | Remediation required — PII scrubbing needed |
+## Enforcement and Regulatory Precedents
 
-## Enforcement Precedents and Guidance
-
-- **Italian DPA (Garante) v Clearview AI (2022)**: EUR 20 million fine — scraped biometric data from social media for facial recognition training without lawful basis, consent, or transparency
-- **ICO v Clearview AI (2022)**: GBP 7.5 million fine (reduced from 17M on appeal) — processing UK citizens' images for AI training without lawful basis
-- **EDPB Guidelines 06/2023 on AI and GDPR**: Processing personal data for AI training requires a lawful basis; legitimate interests requires careful balancing test considering the intrusiveness of the training and the data subjects' reasonable expectations
-- **CNIL Guidance on AI and Personal Data (2024)**: Detailed guidance on applying GDPR to AI model training, including consent requirements, legitimate interests balancing, purpose limitation for training data reuse, and data minimisation in feature engineering
+- **Italian Garante — Clearview AI (2022)**: EUR 20 million fine for processing biometric data scraped from public sources for AI facial recognition training without lawful basis, consent, or transparency. Established that public availability does not provide lawful basis for AI training.
+- **Italian Garante — ChatGPT/OpenAI (2023)**: Temporary ban and subsequent enforcement requiring OpenAI to establish lawful basis for training data collection, implement age verification, and provide opt-out mechanisms. Highlighted that AI training on personal data requires GDPR compliance throughout the data lifecycle.
+- **CNIL — Enforcement Notice on AI Training Data (2024)**: CNIL published guidance sheets on AI training data requiring purpose limitation assessment, proportionality analysis, and specific measures when training data contains special category data.
+- **ICO — Generative AI and Data Protection Consultation (2024)**: ICO's position that legitimate interests is the most likely lawful basis for AI training but requires documented LIA considering data subject reasonable expectations.
 
 ## Integration Points
 
-- **special-category-data**: Art. 9 detection in training features and proxy identification
-- **auto-data-discovery**: Automated scanning of training datasets for PII
-- **pii-in-unstructured**: Detection of PII in unstructured training data (text corpora, images)
-- **pseudo-vs-anon-data**: Assessment of whether training data anonymisation is adequate
-- **data-lineage-tracking**: Provenance chain documentation for training data
+- **personal-data-test**: Training data must first be classified as personal or non-personal
+- **special-category-data**: Art. 9 data in training sets requires heightened protections
+- **pseudo-vs-anon-data**: De-identification of training data must be validated
+- **classification-policy**: Training data classified under enterprise classification tiers
+- **data-lineage-tracking**: Full provenance from original collection to model deployment must be tracked

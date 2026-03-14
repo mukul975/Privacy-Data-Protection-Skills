@@ -1,109 +1,65 @@
-#!/usr/bin/env python3
 """
 Cloud Storage Retention Configuration Process
-Generates lifecycle rules and retention policies for AWS S3, Azure Blob, and GCP GCS.
+Generates and validates retention policies for AWS S3, Azure Blob, and GCP Cloud Storage.
 """
 
 import json
 from datetime import datetime
+from typing import Optional
 
 
-RETENTION_TIERS = {
-    "customer-data": {
-        "description": "Customer transaction records",
-        "retention_days": 2190,
-        "transitions": [
-            {"days": 90, "target": "cool"},
-            {"days": 365, "target": "archive"},
-        ],
-        "statutory_basis": "HMRC record-keeping; Companies Act 2006 s.386",
-    },
-    "marketing-data": {
-        "description": "Marketing contact data",
-        "retention_days": 730,
-        "transitions": [
-            {"days": 180, "target": "cool"},
-        ],
-        "statutory_basis": "Consent-based; 2-year engagement window",
-    },
-    "analytics": {
-        "description": "Website analytics data",
-        "retention_days": 790,
-        "transitions": [
-            {"days": 90, "target": "cool"},
-        ],
-        "statutory_basis": "ICO/CNIL 26-month recommendation",
-    },
-    "cctv": {
-        "description": "CCTV footage",
-        "retention_days": 30,
-        "transitions": [],
-        "statutory_basis": "ICO CCTV Code of Practice",
-    },
-    "recruitment": {
-        "description": "Job applicant data",
-        "retention_days": 180,
-        "transitions": [],
-        "statutory_basis": "ICO Employment Practices Code",
-    },
-    "finance": {
-        "description": "Financial and tax records",
-        "retention_days": 2190,
-        "transitions": [
-            {"days": 365, "target": "archive"},
-        ],
-        "statutory_basis": "Companies Act 2006; HMRC requirements",
-    },
-}
-
-AWS_STORAGE_CLASS_MAP = {
-    "cool": "GLACIER_IR",
-    "archive": "DEEP_ARCHIVE",
-}
-
-AZURE_TIER_MAP = {
-    "cool": "tierToCool",
-    "archive": "tierToArchive",
-}
-
-GCP_CLASS_MAP = {
-    "cool": "NEARLINE",
-    "archive": "ARCHIVE",
+# Retention periods in days mapped to data categories
+RETENTION_PERIODS = {
+    "customer-data": {"days": 2190, "description": "6 years — HMRC/Companies Act"},
+    "marketing-data": {"days": 730, "description": "2 years — consent-based"},
+    "analytics-data": {"days": 790, "description": "26 months — ICO/CNIL"},
+    "cctv-footage": {"days": 30, "description": "30 days — ICO CCTV Code"},
+    "applicant-data": {"days": 180, "description": "6 months — unsuccessful applicants"},
+    "financial-records": {"days": 2190, "description": "6 years — Companies Act/HMRC"},
+    "employee-records": {"days": 2190, "description": "6 years post-employment"},
+    "aml-records": {"days": 1825, "description": "5 years — MLR 2017"},
+    "audit-records": {"days": 2555, "description": "7 years — SOX (if applicable)"},
 }
 
 
-def generate_s3_lifecycle_rules() -> dict:
-    """Generate AWS S3 lifecycle configuration."""
-    rules = []
-    for prefix, config in RETENTION_TIERS.items():
-        rule = {
-            "ID": f"{prefix}-lifecycle",
-            "Filter": {"Prefix": f"{prefix}/"},
-            "Status": "Enabled",
-            "Transitions": [],
-            "Expiration": {"Days": config["retention_days"]},
-            "NoncurrentVersionExpiration": {"NoncurrentDays": config["retention_days"]},
-        }
-        for transition in config["transitions"]:
-            rule["Transitions"].append({
-                "Days": transition["days"],
-                "StorageClass": AWS_STORAGE_CLASS_MAP.get(transition["target"], "GLACIER_IR"),
-            })
-        if config["transitions"]:
-            rule["NoncurrentVersionTransitions"] = [
-                {
-                    "NoncurrentDays": config["transitions"][0]["days"],
-                    "StorageClass": AWS_STORAGE_CLASS_MAP.get(
-                        config["transitions"][0]["target"], "GLACIER_IR"
-                    ),
-                }
-            ]
-        rules.append(rule)
+def generate_s3_lifecycle_rule(
+    rule_id: str,
+    prefix: str,
+    retention_days: int,
+    glacier_transition_days: int = 90,
+    deep_archive_days: int = 365,
+) -> dict:
+    """Generate an AWS S3 lifecycle rule configuration."""
+    rule = {
+        "ID": rule_id,
+        "Filter": {"Prefix": prefix},
+        "Status": "Enabled",
+        "Transitions": [],
+        "Expiration": {"Days": retention_days},
+        "NoncurrentVersionTransitions": [
+            {"NoncurrentDays": 30, "StorageClass": "GLACIER_IR"}
+        ],
+        "NoncurrentVersionExpiration": {"NoncurrentDays": retention_days},
+    }
 
-    return {"Rules": rules}
+    if retention_days > glacier_transition_days:
+        rule["Transitions"].append({
+            "Days": glacier_transition_days,
+            "StorageClass": "GLACIER_IR",
+        })
+    if retention_days > deep_archive_days:
+        rule["Transitions"].append({
+            "Days": deep_archive_days,
+            "StorageClass": "DEEP_ARCHIVE",
+        })
+
+    return rule
 
 
-def generate_s3_object_lock_config(mode: str = "GOVERNANCE", days: int = 2190) -> dict:
+def generate_s3_object_lock_config(
+    mode: str = "GOVERNANCE",
+    retention_days: int = 2190,
+) -> dict:
     """Generate S3 Object Lock configuration."""
     if mode not in ("GOVERNANCE", "COMPLIANCE"):
         raise ValueError("Mode must be GOVERNANCE or COMPLIANCE")
@@ -113,49 +69,41 @@ def generate_s3_object_lock_config(mode: str = "GOVERNANCE", days: int = 2190) -
             "Rule": {
                 "DefaultRetention": {
                     "Mode": mode,
-                    "Days": days,
+                    "Days": retention_days,
                 }
             },
         }
     }
 
 
-def generate_azure_lifecycle_rules() -> dict:
-    """Generate Azure Blob Storage lifecycle management rules."""
-    rules = []
-    for prefix, config in RETENTION_TIERS.items():
-        rule = {
-            "enabled": True,
-            "name": f"{prefix}-retention",
-            "type": "Lifecycle",
-            "definition": {
-                "filters": {
-                    "blobTypes": ["blockBlob"],
-                    "prefixMatch": [f"{prefix}/"],
-                },
-                "actions": {
-                    "baseBlob": {
-                        "delete": {
-                            "daysAfterModificationGreaterThan": config["retention_days"],
-                        }
-                    },
-                    "snapshot": {
-                        "delete": {
-                            "daysAfterCreationGreaterThan": config["retention_days"],
-                        }
-                    },
-                },
-            },
-        }
-        for transition in config["transitions"]:
-            azure_action = AZURE_TIER_MAP.get(transition["target"])
-            if azure_action:
-                rule["definition"]["actions"]["baseBlob"][azure_action] = {
-                    "daysAfterModificationGreaterThan": transition["days"],
-                }
-        rules.append(rule)
+def generate_azure_lifecycle_rule(
+    rule_name: str,
+    prefix: str,
+    retention_days: int,
+    cool_transition_days: int = 90,
+    archive_transition_days: int = 365,
+) -> dict:
+    """Generate Azure Blob Storage lifecycle management rule."""
+    actions = {"baseBlob": {}, "snapshot": {"delete": {"daysAfterCreationGreaterThan": retention_days}}}
 
-    return {"rules": rules}
+    if retention_days > cool_transition_days:
+        actions["baseBlob"]["tierToCool"] = {"daysAfterModificationGreaterThan": cool_transition_days}
+    if retention_days > archive_transition_days:
+        actions["baseBlob"]["tierToArchive"] = {"daysAfterModificationGreaterThan": archive_transition_days}
+    actions["baseBlob"]["delete"] = {"daysAfterModificationGreaterThan": retention_days}
+
+    return {
+        "enabled": True,
+        "name": rule_name,
+        "type": "Lifecycle",
+        "definition": {
+            "filters": {
+                "blobTypes": ["blockBlob"],
+                "prefixMatch": [prefix],
+            },
+            "actions": actions,
+        },
+    }
 
 
 def generate_azure_immutability_policy(retention_days: int, allow_append: bool = True) -> dict:
@@ -169,97 +117,108 @@ def generate_azure_immutability_policy(retention_days: int, allow_append: bool =
     }
 
 
-def generate_gcp_retention_policy(retention_days: int, locked: bool = False) -> dict:
-    """Generate GCP GCS bucket retention policy."""
-    retention_seconds = retention_days * 86400
+def generate_gcp_retention_policy(retention_seconds: int, lock: bool = False) -> dict:
+    """Generate GCP Cloud Storage bucket retention policy."""
     return {
         "retentionPolicy": {
             "retentionPeriod": str(retention_seconds),
-            "isLocked": locked,
+            "isLocked": lock,
         }
     }
 
 
-def generate_gcp_lifecycle_rules() -> dict:
-    """Generate GCP GCS lifecycle rules."""
+def generate_gcp_lifecycle_rules(
+    prefix: str,
+    retention_days: int,
+    nearline_days: int = 90,
+    archive_days: int = 365,
+) -> dict:
+    """Generate GCP Cloud Storage lifecycle rules."""
     rules = []
-    for prefix, config in RETENTION_TIERS.items():
-        for transition in config["transitions"]:
-            rules.append({
-                "action": {
-                    "type": "SetStorageClass",
-                    "storageClass": GCP_CLASS_MAP.get(transition["target"], "NEARLINE"),
-                },
-                "condition": {
-                    "age": transition["days"],
-                    "matchesPrefix": [f"{prefix}/"],
-                },
-            })
+
+    if retention_days > nearline_days:
         rules.append({
-            "action": {"type": "Delete"},
-            "condition": {
-                "age": config["retention_days"],
-                "matchesPrefix": [f"{prefix}/"],
-            },
+            "action": {"type": "SetStorageClass", "storageClass": "NEARLINE"},
+            "condition": {"age": nearline_days, "matchesPrefix": [prefix]},
         })
+    if retention_days > archive_days:
+        rules.append({
+            "action": {"type": "SetStorageClass", "storageClass": "ARCHIVE"},
+            "condition": {"age": archive_days, "matchesPrefix": [prefix]},
+        })
+    rules.append({
+        "action": {"type": "Delete"},
+        "condition": {"age": retention_days, "matchesPrefix": [prefix]},
+    })
 
     return {"lifecycle": {"rule": rules}}
 
 
-def audit_cross_region_alignment(source_config: dict, destination_config: dict) -> dict:
-    """Audit cross-region replication retention alignment."""
-    findings = []
-    compliant = True
+def days_to_seconds(days: int) -> int:
+    """Convert days to seconds for GCP retention policy."""
+    return days * 86400
 
-    source_rules = {r.get("ID") or r.get("name"): r for r in source_config.get("Rules", source_config.get("rules", []))}
-    dest_rules = {r.get("ID") or r.get("name"): r for r in destination_config.get("Rules", destination_config.get("rules", []))}
 
-    for rule_id, source_rule in source_rules.items():
-        if rule_id not in dest_rules:
-            findings.append({
-                "rule": rule_id,
-                "finding": "MISSING — rule exists in source but not destination",
-                "severity": "critical",
-            })
-            compliant = False
-        else:
-            dest_rule = dest_rules[rule_id]
-            source_exp = source_rule.get("Expiration", {}).get("Days")
-            dest_exp = dest_rule.get("Expiration", {}).get("Days")
-            if source_exp != dest_exp:
-                findings.append({
-                    "rule": rule_id,
-                    "finding": f"MISMATCH — source expiration {source_exp}d vs destination {dest_exp}d",
-                    "severity": "high",
-                })
-                compliant = False
+def generate_full_cloud_config(data_category: str) -> dict:
+    """Generate retention configuration for all three cloud platforms."""
+    if data_category not in RETENTION_PERIODS:
+        raise ValueError(f"Unknown data category: {data_category}")
+
+    period = RETENTION_PERIODS[data_category]
+    days = period["days"]
+    prefix = f"{data_category}/"
 
     return {
-        "audit_date": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "compliant": compliant,
-        "findings": findings,
-        "total_rules_checked": len(source_rules),
+        "data_category": data_category,
+        "retention_period": period,
+        "generated_at": datetime.utcnow().isoformat(),
+        "aws_s3": {
+            "lifecycle_rule": generate_s3_lifecycle_rule(
+                f"{data_category}-lifecycle", prefix, days
+            ),
+            "object_lock": generate_s3_object_lock_config("GOVERNANCE", days),
+        },
+        "azure_blob": {
+            "lifecycle_rule": generate_azure_lifecycle_rule(
+                f"{data_category}-retention", prefix, days
+            ),
+            "immutability_policy": generate_azure_immutability_policy(days),
+        },
+        "gcp_gcs": {
+            "retention_policy": generate_gcp_retention_policy(days_to_seconds(days)),
+            "lifecycle_rules": generate_gcp_lifecycle_rules(prefix, days),
+        },
     }
 
 
+def audit_cross_region_alignment(
+    source_config: dict, destination_config: dict
+) -> list[dict]:
+    """Audit cross-region replication retention alignment."""
+    findings = []
+
+    for platform in ["aws_s3", "azure_blob", "gcp_gcs"]:
+        if platform in source_config and platform in destination_config:
+            source_str = json.dumps(source_config[platform], sort_keys=True)
+            dest_str = json.dumps(destination_config[platform], sort_keys=True)
+            if source_str != dest_str:
+                findings.append({
+                    "platform": platform,
+                    "finding": "MISALIGNMENT",
+                    "severity": "HIGH",
+                    "description": f"Source and destination {platform} retention configs differ",
+                })
+            else:
+                findings.append({
+                    "platform": platform,
+                    "finding": "ALIGNED",
+                    "severity": "INFO",
+                    "description": f"{platform} retention configs match",
+                })
+
+    return findings
+
+
 if __name__ == "__main__":
-    print("=== AWS S3 Lifecycle Rules ===")
-    s3_config = generate_s3_lifecycle_rules()
-    print(json.dumps(s3_config, indent=2)[:500] + "...\n")
-
-    print("=== Azure Blob Lifecycle Rules ===")
-    azure_config = generate_azure_lifecycle_rules()
-    print(json.dumps(azure_config, indent=2)[:500] + "...\n")
-
-    print("=== GCP GCS Lifecycle Rules ===")
-    gcp_config = generate_gcp_lifecycle_rules()
-    print(json.dumps(gcp_config, indent=2)[:500] + "...\n")
-
-    print("=== S3 Object Lock (Governance Mode) ===")
-    lock_config = generate_s3_object_lock_config("GOVERNANCE", 2190)
-    print(json.dumps(lock_config, indent=2))
-
-    print("\n=== Cross-Region Alignment Audit ===")
-    audit = audit_cross_region_alignment(s3_config, s3_config)
-    print(f"Compliant: {audit['compliant']}")
-    print(f"Rules Checked: {audit['total_rules_checked']}")
+    config = generate_full_cloud_config("customer-data")
+    print(json.dumps(config, indent=2))

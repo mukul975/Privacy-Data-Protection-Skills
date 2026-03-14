@@ -1,14 +1,12 @@
-#!/usr/bin/env python3
 """
 Secure Data Destruction Process
-Manages destruction workflow, certificate generation, and vendor audit tracking
-per NIST SP 800-88 Rev. 1 for Orion Data Vault Corp.
+Manages destruction workflows, certificate generation, and vendor tracking per NIST SP 800-88.
 """
 
 import json
-import hashlib
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
+from typing import Optional
 
 
 class SanitizationLevel(Enum):
@@ -18,229 +16,212 @@ class SanitizationLevel(Enum):
 
 
 class MediaType(Enum):
-    HDD = "HDD (Magnetic)"
+    HDD = "HDD (magnetic)"
     SSD = "SSD / Flash"
-    TAPE = "Magnetic Tape"
-    OPTICAL = "Optical Media"
-    USB = "USB Flash Drive"
-    MOBILE = "Mobile Device"
-    PAPER = "Paper Documents"
-    VM = "Virtual Machine"
+    TAPE = "Magnetic tape"
+    OPTICAL = "Optical media (CD/DVD/Blu-ray)"
+    USB = "USB flash drive"
+    MOBILE = "Mobile device"
+    PAPER = "Paper documents"
+    VIRTUAL = "Virtual machine / cloud instance"
 
 
 class DataClassification(Enum):
-    STANDARD = "Standard Personal Data"
-    SPECIAL_CATEGORY = "Special Category Data (Art. 9)"
-    HIGHLY_SENSITIVE = "Highly Sensitive (financial, security, legal)"
+    STANDARD_PD = "Standard personal data"
+    SPECIAL_CATEGORY = "Special category data (Art. 9)"
+    HIGHLY_SENSITIVE = "Highly sensitive (financial, security, legal)"
+    NON_PERSONAL = "Non-personal data"
 
 
+class MediaDisposition(Enum):
+    REUSE_INTERNAL = "Reuse within organization"
+    REUSE_EXTERNAL = "Reuse external (sale, donation)"
+    DISPOSAL = "Disposal / recycling"
+
+
+# NIST SP 800-88 sanitization method recommendations
+SANITIZATION_METHODS = {
+    (MediaType.HDD, SanitizationLevel.CLEAR): "ATA Secure Erase (single pass overwrite with fixed pattern)",
+    (MediaType.HDD, SanitizationLevel.PURGE): "ATA Secure Erase Enhanced (multiple pass) or degaussing with NSA-approved degausser",
+    (MediaType.HDD, SanitizationLevel.DESTROY): "Physical destruction: shredding (particle size <= 2mm), disintegration, or incineration",
+    (MediaType.SSD, SanitizationLevel.CLEAR): "ATA Secure Erase (vendor implementation)",
+    (MediaType.SSD, SanitizationLevel.PURGE): "ATA Sanitize Block Erase or Crypto Erase (if SED)",
+    (MediaType.SSD, SanitizationLevel.DESTROY): "Physical destruction: shredding (particle size <= 2mm), disintegration",
+    (MediaType.TAPE, SanitizationLevel.CLEAR): "Overwrite entire tape with fixed pattern (single pass)",
+    (MediaType.TAPE, SanitizationLevel.PURGE): "Degaussing with NSA-approved degausser rated for tape coercivity",
+    (MediaType.TAPE, SanitizationLevel.DESTROY): "Physical destruction: shredding or incineration",
+    (MediaType.OPTICAL, SanitizationLevel.DESTROY): "Physical destruction: shredding (particle size <= 0.5mm) or incineration",
+    (MediaType.USB, SanitizationLevel.CLEAR): "ATA Secure Erase (if supported)",
+    (MediaType.USB, SanitizationLevel.PURGE): "Crypto Erase (if SED); vendor sanitize command",
+    (MediaType.USB, SanitizationLevel.DESTROY): "Physical destruction: shredding or disintegration",
+    (MediaType.MOBILE, SanitizationLevel.CLEAR): "Factory reset + encryption verification",
+    (MediaType.MOBILE, SanitizationLevel.PURGE): "Crypto Erase (full-device encryption key destruction)",
+    (MediaType.MOBILE, SanitizationLevel.DESTROY): "Physical destruction: shredding",
+    (MediaType.PAPER, SanitizationLevel.DESTROY): "Cross-cut shredding (DIN 66399 P-4 minimum; P-5 for special category)",
+}
+
+# DIN 66399 paper shredding security levels
 DIN_66399_LEVELS = {
-    "P-1": {"particle_size": "12mm strips", "use_case": "General non-personal"},
-    "P-2": {"particle_size": "6mm strips", "use_case": "Internal, low sensitivity"},
-    "P-3": {"particle_size": "2mm strips or 320mm² particles", "use_case": "Personal data (standard)"},
-    "P-4": {"particle_size": "160mm² (max 6mm width)", "use_case": "GDPR personal data minimum"},
-    "P-5": {"particle_size": "30mm² (max 2mm width)", "use_case": "Special category, financial"},
-    "P-6": {"particle_size": "10mm² (max 1mm width)", "use_case": "Classified, intelligence"},
-    "P-7": {"particle_size": "5mm² (max 1mm width)", "use_case": "Top secret, maximum security"},
+    "P-1": {"max_particle": "12mm strips", "use_case": "General, non-personal"},
+    "P-2": {"max_particle": "6mm strips", "use_case": "Internal, low sensitivity"},
+    "P-3": {"max_particle": "2mm strips or 320mm2 particles", "use_case": "Personal data (standard)"},
+    "P-4": {"max_particle": "160mm2 particles (max 6mm width)", "use_case": "GDPR personal data minimum"},
+    "P-5": {"max_particle": "30mm2 particles (max 2mm width)", "use_case": "Special category, financial"},
+    "P-6": {"max_particle": "10mm2 particles (max 1mm width)", "use_case": "Classified, intelligence-grade"},
+    "P-7": {"max_particle": "5mm2 particles (max 1mm width)", "use_case": "Top secret, maximum security"},
 }
 
 
 def determine_sanitization_level(
-    classification: DataClassification, disposition: str
+    classification: DataClassification,
+    disposition: MediaDisposition,
 ) -> SanitizationLevel:
-    """Determine the appropriate NIST SP 800-88 sanitization level."""
-    matrix = {
-        DataClassification.STANDARD: {
-            "reuse_internal": SanitizationLevel.CLEAR,
-            "reuse_external": SanitizationLevel.PURGE,
-            "disposal": SanitizationLevel.DESTROY,
-        },
-        DataClassification.SPECIAL_CATEGORY: {
-            "reuse_internal": SanitizationLevel.PURGE,
-            "reuse_external": SanitizationLevel.DESTROY,
-            "disposal": SanitizationLevel.DESTROY,
-        },
-        DataClassification.HIGHLY_SENSITIVE: {
-            "reuse_internal": SanitizationLevel.DESTROY,
-            "reuse_external": SanitizationLevel.DESTROY,
-            "disposal": SanitizationLevel.DESTROY,
-        },
-    }
-    return matrix.get(classification, {}).get(disposition, SanitizationLevel.DESTROY)
+    """Determine the appropriate sanitization level based on data classification and media disposition."""
+    if classification == DataClassification.NON_PERSONAL:
+        return SanitizationLevel.CLEAR
+
+    if classification == DataClassification.HIGHLY_SENSITIVE:
+        return SanitizationLevel.DESTROY
+
+    if classification == DataClassification.SPECIAL_CATEGORY:
+        if disposition == MediaDisposition.REUSE_INTERNAL:
+            return SanitizationLevel.PURGE
+        return SanitizationLevel.DESTROY
+
+    # Standard personal data
+    if disposition == MediaDisposition.REUSE_INTERNAL:
+        return SanitizationLevel.CLEAR
+    if disposition == MediaDisposition.REUSE_EXTERNAL:
+        return SanitizationLevel.PURGE
+    return SanitizationLevel.DESTROY
 
 
-def determine_din_level(classification: DataClassification) -> str:
-    """Determine the minimum DIN 66399 shredding level for paper documents."""
-    levels = {
-        DataClassification.STANDARD: "P-4",
-        DataClassification.SPECIAL_CATEGORY: "P-5",
-        DataClassification.HIGHLY_SENSITIVE: "P-6",
-    }
-    return levels.get(classification, "P-4")
+def get_sanitization_method(
+    media_type: MediaType,
+    level: SanitizationLevel,
+) -> str:
+    """Get the recommended sanitization method for a given media type and level."""
+    key = (media_type, level)
+    return SANITIZATION_METHODS.get(key, "No standard method — consult NIST SP 800-88 directly")
 
 
-def generate_destruction_reference() -> str:
-    """Generate a unique certificate of destruction reference."""
-    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    year = datetime.utcnow().strftime("%Y")
-    seq = hashlib.md5(timestamp.encode()).hexdigest()[:4].upper()
-    return f"COD-{year}-{seq}"
+def get_din_paper_level(classification: DataClassification) -> str:
+    """Get the minimum DIN 66399 paper shredding level for a data classification."""
+    if classification == DataClassification.STANDARD_PD:
+        return "P-4"
+    if classification == DataClassification.SPECIAL_CATEGORY:
+        return "P-5"
+    if classification == DataClassification.HIGHLY_SENSITIVE:
+        return "P-5"
+    return "P-1"
 
 
-def generate_certificate_of_destruction(
-    assets: list[dict],
-    destruction_method: str,
-    particle_size: str,
-    location: str,
-    destruction_operator: str,
-    verification_officer: str,
-    org_name: str = "Orion Data Vault Corp",
-) -> dict:
-    """Generate a Certificate of Destruction."""
-    reference = generate_destruction_reference()
+class DestructionCertificate:
+    """Generates a Certificate of Destruction."""
 
-    certificate = {
-        "certificate_number": reference,
-        "organization": org_name,
-        "date_of_destruction": datetime.utcnow().strftime("%Y-%m-%d"),
-        "location": location,
-        "assets": [],
-        "sanitization_details": {
-            "method": destruction_method,
-            "particle_size": particle_size,
-            "standard": "NIST SP 800-88 Rev. 1",
-        },
-        "verification": {
-            "officer": verification_officer,
-            "result": "PASS",
-            "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        },
-        "destruction_operator": destruction_operator,
-        "chain_of_custody": [],
-        "waste_disposal": {
-            "recycler": "Licensed WEEE Recycler",
-            "transfer_note_ref": f"WTN-{datetime.utcnow().strftime('%Y')}-{reference[-4:]}",
-        },
-        "retention_of_certificate": {
-            "period": "7 years",
-            "expiry_date": (datetime.utcnow() + timedelta(days=2555)).strftime("%Y-%m-%d"),
-        },
-    }
+    def __init__(
+        self,
+        certificate_number: str,
+        destruction_date: str,
+        location: str,
+        requesting_department: str,
+        authorized_by: str,
+        dpo_name: str,
+    ):
+        self.certificate_number = certificate_number
+        self.destruction_date = destruction_date
+        self.location = location
+        self.requesting_department = requesting_department
+        self.authorized_by = authorized_by
+        self.dpo_name = dpo_name
+        self.assets: list[dict] = []
+        self.sanitization_details: Optional[dict] = None
+        self.verification: Optional[dict] = None
+        self.waste_disposal: Optional[dict] = None
 
-    for asset in assets:
-        level = determine_sanitization_level(
-            DataClassification(asset.get("classification", "Standard Personal Data")),
-            asset.get("disposition", "disposal"),
-        )
-        certificate["assets"].append({
-            "asset_tag": asset.get("asset_tag", "N/A"),
-            "serial_number": asset.get("serial_number", "N/A"),
-            "media_type": asset.get("media_type", "Unknown"),
-            "capacity": asset.get("capacity", "N/A"),
-            "classification": asset.get("classification", "Standard Personal Data"),
-            "sanitization_level": level.value,
+    def add_asset(
+        self,
+        asset_tag: str,
+        serial_number: str,
+        media_type: str,
+        capacity: str,
+        classification: str,
+        method: str,
+    ) -> None:
+        self.assets.append({
+            "asset_tag": asset_tag,
+            "serial_number": serial_number,
+            "media_type": media_type,
+            "capacity": capacity,
+            "data_classification": classification,
+            "destruction_method": method,
         })
 
-    cert_json = json.dumps(certificate, sort_keys=True)
-    certificate["integrity_hash"] = hashlib.sha256(cert_json.encode()).hexdigest()
+    def set_sanitization_details(
+        self,
+        method: str,
+        equipment_model: str,
+        particle_size: Optional[str] = None,
+        degausser_model: Optional[str] = None,
+        field_strength: Optional[str] = None,
+    ) -> None:
+        self.sanitization_details = {
+            "method": method,
+            "equipment_model": equipment_model,
+            "particle_size": particle_size,
+            "degausser_model": degausser_model,
+            "field_strength": field_strength,
+        }
 
-    return certificate
+    def set_verification(
+        self, result: str, verified_by: str, evidence_file: Optional[str] = None
+    ) -> None:
+        self.verification = {
+            "result": result,
+            "verified_by": verified_by,
+            "evidence_file": evidence_file,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
 
-
-def vendor_compliance_checklist() -> dict:
-    """Generate the vendor qualification compliance checklist."""
-    return {
-        "checklist_date": datetime.utcnow().strftime("%Y-%m-%d"),
-        "requirements": [
-            {"requirement": "ISO/IEC 27001:2022 certification", "category": "Information Security", "status": "pending"},
-            {"requirement": "EN 15713:2009 certification", "category": "Secure Destruction", "status": "pending"},
-            {"requirement": "ADISA certification", "category": "Asset Disposal", "status": "pending"},
-            {"requirement": "GDPR Art. 28 DPA signed", "category": "Data Protection", "status": "pending"},
-            {"requirement": "DBS checks on all personnel", "category": "Personnel Security", "status": "pending"},
-            {"requirement": "Professional indemnity insurance (min 5M GBP)", "category": "Insurance", "status": "pending"},
-            {"requirement": "WEEE compliance / waste carrier license", "category": "Environmental", "status": "pending"},
-            {"requirement": "Business continuity plan", "category": "Resilience", "status": "pending"},
-            {"requirement": "Incident response procedure (24h notification)", "category": "Incident Management", "status": "pending"},
-            {"requirement": "GPS-tracked, locked vehicles", "category": "Transport Security", "status": "pending"},
-        ],
-    }
-
-
-def generate_vendor_audit_report(
-    vendor_name: str, audit_date: str, findings: list[dict]
-) -> dict:
-    """Generate a vendor annual audit report."""
-    critical = sum(1 for f in findings if f.get("severity") == "critical")
-    major = sum(1 for f in findings if f.get("severity") == "major")
-    minor = sum(1 for f in findings if f.get("severity") == "minor")
-
-    if critical > 0:
-        recommendation = "SUSPEND engagement"
-    elif major > 0:
-        recommendation = "REMEDIATE within 14 days; increased monitoring"
-    elif minor > 0:
-        recommendation = "REMEDIATE within 30 days"
-    else:
-        recommendation = "CONTINUE engagement — no findings"
-
-    return {
-        "vendor": vendor_name,
-        "audit_date": audit_date,
-        "findings_summary": {
-            "critical": critical,
-            "major": major,
-            "minor": minor,
-            "total": len(findings),
-        },
-        "findings": findings,
-        "recommendation": recommendation,
-        "next_audit_date": (
-            datetime.strptime(audit_date, "%Y-%m-%d") + timedelta(days=365)
-        ).strftime("%Y-%m-%d"),
-    }
+    def generate(self) -> dict:
+        return {
+            "certificate_number": self.certificate_number,
+            "organization": "Orion Data Vault Corp",
+            "destruction_date": self.destruction_date,
+            "location": self.location,
+            "requesting_department": self.requesting_department,
+            "authorized_by": self.authorized_by,
+            "dpo_approval": self.dpo_name,
+            "assets_destroyed": self.assets,
+            "sanitization_details": self.sanitization_details,
+            "verification": self.verification,
+            "waste_disposal": self.waste_disposal,
+            "retention_period": "7 years from destruction date",
+            "generated_at": datetime.utcnow().isoformat(),
+        }
 
 
 if __name__ == "__main__":
-    level = determine_sanitization_level(DataClassification.SPECIAL_CATEGORY, "disposal")
-    print(f"Special Category + Disposal → {level.value}")
+    level = determine_sanitization_level(
+        DataClassification.SPECIAL_CATEGORY,
+        MediaDisposition.DISPOSAL,
+    )
+    method = get_sanitization_method(MediaType.HDD, level)
+    print(f"Level: {level.value}, Method: {method}")
 
-    din = determine_din_level(DataClassification.SPECIAL_CATEGORY)
-    print(f"DIN 66399 Level: {din} ({DIN_66399_LEVELS[din]['particle_size']})")
-
-    sample_assets = [
-        {
-            "asset_tag": "OD-SRV-441",
-            "serial_number": "WD-2TB-A8F21",
-            "media_type": "HDD 3.5\"",
-            "capacity": "2 TB",
-            "classification": "Special Category Data (Art. 9)",
-            "disposition": "disposal",
-        },
-        {
-            "asset_tag": "OD-LAP-219",
-            "serial_number": "SM-512-C3E01",
-            "media_type": "SSD M.2",
-            "capacity": "512 GB",
-            "classification": "Standard Personal Data",
-            "disposition": "disposal",
-        },
-    ]
-
-    cert = generate_certificate_of_destruction(
-        assets=sample_assets,
-        destruction_method="Industrial shredder (HSM Powerline FA 500.3)",
-        particle_size="2mm (DIN 66399 E-4 / H-5)",
+    cert = DestructionCertificate(
+        certificate_number="COD-2026-0087",
+        destruction_date="2026-03-14",
         location="Orion Data Vault Corp — Secure Destruction Room B2",
-        destruction_operator="IT Security Technician",
-        verification_officer="Security Officer",
+        requesting_department="IT Operations",
+        authorized_by="Information Security Manager",
+        dpo_name="DPO",
     )
-    print(f"\nCertificate: {cert['certificate_number']}")
-    print(f"Assets Destroyed: {len(cert['assets'])}")
-    print(f"Integrity Hash: {cert['integrity_hash'][:32]}...")
-
-    vendor_audit = generate_vendor_audit_report(
-        vendor_name="SecureShred Ltd",
-        audit_date="2026-03-14",
-        findings=[],
+    cert.add_asset("OD-SRV-441", "WD-2TB-A8F21", "HDD 3.5\"", "2 TB", "Special Category", "DESTROY")
+    cert.set_sanitization_details(
+        "Physical destruction via industrial shredder",
+        "HSM Powerline FA 500.3",
+        particle_size="2mm",
     )
-    print(f"\nVendor Audit: {vendor_audit['recommendation']}")
+    cert.set_verification("PASS", "Security Officer")
+    print(json.dumps(cert.generate(), indent=2))

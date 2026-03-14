@@ -1,51 +1,53 @@
 # Regulatory Standards — Multi-State Compliance
 
-## Comprehensive State Privacy Laws (as of 2026)
+## All Applicable State Privacy Laws
 
-| # | State | Law | Effective | Citation |
-|---|-------|-----|-----------|----------|
-| 1 | California | CCPA/CPRA | Jan 1, 2020/2023 | Cal. Civ. Code §1798.100-199 |
-| 2 | Virginia | VCDPA | Jan 1, 2023 | Va. Code §59.1-575-585 |
-| 3 | Colorado | CPA | Jul 1, 2023 | C.R.S. §6-1-1301-1313 |
-| 4 | Connecticut | CTDPA | Jul 1, 2023 | Conn. Gen. Stat. §42-515-525 |
-| 5 | Utah | UCPA | Dec 31, 2023 | Utah Code §13-61-101 et seq. |
-| 6 | Iowa | ICDPA | Jan 1, 2025 | Iowa Code §715D.1 et seq. |
-| 7 | Indiana | INCDPA | Jan 1, 2026 | IC §24-15-1-1 et seq. |
-| 8 | Tennessee | TIPA | Jul 1, 2025 | Tenn. Code §47-18-3201 et seq. |
-| 9 | Montana | MTDPA | Oct 1, 2024 | MCA §30-14-2801-2817 |
-| 10 | Texas | TDPSA | Jul 1, 2024 | Tex. Bus. & Com. Code §541 |
-| 11 | Oregon | OCPA | Jul 1, 2024 | ORS §646A.570-604 |
-| 12 | Delaware | DPDPA | Jan 1, 2025 | 6 Del. C. §12D-101 et seq. |
-| 13 | New Hampshire | NHPA | Jan 1, 2025 | RSA 507-H:1 et seq. |
-| 14 | New Jersey | NJDPA | Jan 15, 2025 | N.J.S.A. §56:8-166 et seq. |
-| 15 | Nebraska | NDPA | Jan 1, 2025 | Neb. Rev. Stat. §87-1101 et seq. |
-| 16 | Kentucky | KPPA | Jan 1, 2026 | KRS §367.401-445 |
-| 17 | Maryland | MODPA | Oct 1, 2025 | Md. Code Com. Law §14-4601 et seq. |
-| 18 | Minnesota | MCDPA | Jul 31, 2025 | Minn. Stat. §325O.01 et seq. |
-| 19 | Rhode Island | RIDPA | Jan 1, 2026 | R.I. Gen. Laws §6-48.1-1 et seq. |
+| State | Law | Citation | Effective |
+|-------|-----|----------|-----------|
+| California | CCPA/CPRA | Cal. Civ. Code §1798.100-199 | Jan 1, 2020/2023 |
+| Virginia | VCDPA | Va. Code §59.1-575-585 | Jan 1, 2023 |
+| Colorado | CPA | C.R.S. §6-1-1301-1313 | Jul 1, 2023 |
+| Connecticut | CTDPA | Conn. Gen. Stat. §42-515-525 | Jul 1, 2023 |
+| Texas | TDPSA | Tex. Bus. & Com. Code §541.001-203 | Jul 1, 2024 |
+| Oregon | OCPA | ORS §646A.570-604 | Jul 1, 2024 |
+| Montana | MTDPA | MCA §30-14-2801-2817 | Oct 1, 2024 |
+| Kentucky | KPPA | KRS §367.401-445 | Jan 1, 2026 |
 
-## Harmonization Framework
+## Harmonized Applicability Thresholds
 
-### NIST Privacy Framework v1.0
+| State | Threshold 1 | Threshold 2 | Revenue Alt |
+|-------|------------|-------------|-------------|
+| California | 100,000 consumers/households | 50% revenue from sale | $25M revenue |
+| Virginia | 100,000 consumers | 25,000 + 50% revenue | None |
+| Colorado | 100,000 consumers | 25,000 + any revenue from sale | None |
+| Connecticut | 100,000 consumers | 25,000 + 25% revenue | None |
+| Texas | Non-SBA small business | N/A | None |
+| Oregon | 100,000 consumers | 25,000 + 25% revenue | None |
+| Montana | 50,000 consumers | 25,000 + 25% revenue | None |
+| Kentucky | 100,000 consumers | 25,000 + 50% revenue | None |
 
-The National Institute of Standards and Technology Privacy Framework provides a baseline architecture:
-- **Identify**: Data processing ecosystem mapping
-- **Govern**: Privacy governance structure
-- **Control**: Data management policies
-- **Communicate**: Transparency mechanisms
-- **Protect**: Data protection safeguards
+## Cure Period Comparison
 
-### ISO/IEC 27701:2019
+| State | Cure Period | Status |
+|-------|-----------|--------|
+| California | None | Eliminated by CPRA (Jan 2023) |
+| Virginia | 30 days | Permanent |
+| Colorado | 60 days | Expired Jan 1, 2025; AG discretion |
+| Connecticut | 60 days | Expired Jan 1, 2025; AG discretion |
+| Texas | 30 days | Permanent |
+| Oregon | 14 days | Permanent |
+| Montana | 60 days | Permanent |
+| Kentucky | 30 days | Permanent |
 
-Privacy Information Management System standard that extends ISO 27001 and ISO 27002, providing a framework for multi-jurisdiction compliance.
+## Enforcement Comparison
 
-### IAPP CIPM (Certified Information Privacy Manager) Framework
-
-Operational privacy program management framework covering:
-- Privacy program governance
-- Applicable laws and requirements
-- Data assessments
-- Policies and procedures
-- Vendor management
-- Training and awareness
-- Monitoring and response
+| State | Enforcement Body | Private Right of Action | Max Penalty/Violation |
+|-------|-----------------|------------------------|----------------------|
+| California | CPPA + AG | Yes (data breach only) | $7,500 |
+| Virginia | AG only | No | $7,500 |
+| Colorado | AG only | No | $20,000 |
+| Connecticut | AG only | No | $5,000 |
+| Texas | AG only | No | $7,500 |
+| Oregon | AG only | No | $25,000 |
+| Montana | AG only | No | Per Consumer Protection Act |
+| Kentucky | AG only | No | $7,500 |

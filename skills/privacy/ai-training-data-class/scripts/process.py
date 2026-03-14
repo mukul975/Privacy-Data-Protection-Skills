@@ -1,6 +1,6 @@
 """
-AI/ML Training Data Classification Engine
-Classifies training datasets for privacy compliance, bias risk, and provenance.
+AI Training Data Classifier
+Classifies ML training datasets for GDPR and AI Act compliance.
 """
 
 import json
@@ -8,376 +8,344 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 from datetime import date
-from collections import Counter
 
 
-class PrivacyClassification(Enum):
-    PERSONAL_DIRECT = "personal_direct"
-    PERSONAL_INDIRECT = "personal_indirect"
-    SPECIAL_CATEGORY = "special_category"
-    CRIMINAL_DATA = "criminal_data"
-    PSEUDONYMISED = "pseudonymised"
-    ANONYMISED = "anonymised"
-    NON_PERSONAL = "non_personal"
+class TrainingDataClass(Enum):
+    PII_DIRECT = "TRAINING_PII_DIRECT"
+    PII_INDIRECT = "TRAINING_PII_INDIRECT"
+    SPECIAL_CATEGORY = "TRAINING_SPECIAL_CAT"
+    CRIMINAL = "TRAINING_CRIMINAL"
+    PSEUDONYMISED = "TRAINING_PSEUDONYMISED"
+    ANONYMISED = "TRAINING_ANONYMISED"
+    SYNTHETIC = "TRAINING_SYNTHETIC"
+    NON_PERSONAL = "TRAINING_NON_PERSONAL"
+
+
+class ConsentScope(Enum):
+    COVERS_TRAINING = "consent_covers_training"
+    DOES_NOT_COVER = "consent_does_not_cover"
+    LEGITIMATE_INTEREST = "legitimate_interest"
+    CONTRACT = "contract_performance"
+    PUBLIC_DATA = "public_data"
+    RESEARCH = "research_exemption"
+    NOT_ASSESSED = "not_assessed"
 
 
 class BiasRiskLevel(Enum):
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
-    NONE = "none"
-
-
-class ProvenanceType(Enum):
-    FIRST_PARTY = "first_party_collected"
-    THIRD_PARTY = "third_party_sourced"
-    PUBLIC_DATA = "public_data"
-    SYNTHETIC = "synthetic_data"
-    MIXED = "mixed_sources"
-
-
-class ConsentStatus(Enum):
-    CONSENT_OBTAINED = "explicit_consent_for_training"
-    COMPATIBLE_PURPOSE = "compatible_with_original_purpose"
-    LEGITIMATE_INTEREST = "legitimate_interest_assessed"
-    NOT_REQUIRED = "no_personal_data"
-    UNKNOWN = "consent_status_unknown"
-    NOT_OBTAINED = "consent_not_obtained"
+    NONE_DETECTED = "none_detected"
 
 
 @dataclass
-class FeatureClassification:
-    """Privacy classification for a single training feature."""
+class ProxyVariable:
+    """A feature that may serve as a proxy for a protected characteristic."""
     feature_name: str
-    data_type: str
-    privacy_class: PrivacyClassification
-    is_art9_direct: bool = False
-    is_art9_proxy: bool = False
-    proxy_for: str = ""
-    proxy_correlation: float = 0.0
-    necessary_for_model: bool = True
-    can_be_pseudonymised: bool = False
-    can_be_removed: bool = False
+    correlated_characteristic: str
+    correlation_strength: float
+    detection_method: str
+    mitigation_recommendation: str
+
+
+@dataclass
+class DemographicRepresentation:
+    """Representation statistics for a demographic group."""
+    group_name: str
+    dataset_percentage: float
+    population_percentage: float
+    representation_ratio: float
+    under_represented: bool
+
+
+@dataclass
+class BiasAssessment:
+    """Bias assessment results for a training dataset."""
+    proxy_variables: list[ProxyVariable] = field(default_factory=list)
+    demographic_stats: list[DemographicRepresentation] = field(default_factory=list)
+    disparate_impact_ratio: float = 0.0
+    overall_risk: BiasRiskLevel = BiasRiskLevel.NOT_ASSESSED
+    four_fifths_rule_pass: bool = True
     notes: str = ""
 
 
 @dataclass
-class FairnessMetric:
-    """A fairness metric measurement for a protected group."""
-    metric_name: str
-    group_a: str
-    group_b: str
-    group_a_value: float
-    group_b_value: float
-    ratio: float
-    passes_threshold: bool
-    threshold: str
-
-
-@dataclass
 class DataCard:
-    """Data card documentation for an ML training dataset."""
+    """GDPR-compliant data card for an ML training dataset."""
     dataset_name: str
     version: str
-    created_date: str
+    creation_date: str
     owner: str
     purpose: str
+    data_classification: TrainingDataClass
+    data_elements: list[str]
+    data_subjects: str
     record_count: int
-    feature_count: int
-    temporal_coverage: str
-    feature_classifications: list[FeatureClassification]
-    provenance: ProvenanceType
-    provenance_details: str
-    consent_status: ConsentStatus
+    geographic_scope: str
+    original_collection_purpose: str
+    source_systems: list[str]
+    consent_scope: ConsentScope
     lawful_basis: str
     art9_condition: str
-    bias_risk: BiasRiskLevel
-    fairness_metrics: list[FairnessMetric]
-    quality_score: float
-    known_limitations: list[str]
-    dpia_reference: str
+    de_identification_technique: str
+    de_identification_assessment_ref: str
+    bias_assessment: BiasAssessment
     retention_period: str
-    review_date: str
-
-    @property
-    def contains_personal_data(self) -> bool:
-        return any(
-            fc.privacy_class not in (PrivacyClassification.NON_PERSONAL, PrivacyClassification.ANONYMISED)
-            for fc in self.feature_classifications
-        )
-
-    @property
-    def contains_special_category(self) -> bool:
-        return any(
-            fc.is_art9_direct or fc.is_art9_proxy
-            for fc in self.feature_classifications
-        )
-
-    @property
-    def removable_features(self) -> list[str]:
-        return [fc.feature_name for fc in self.feature_classifications if fc.can_be_removed]
+    access_controls: str
+    dpia_reference: str
+    limitations: list[str]
+    ai_act_high_risk: bool = False
 
 
 class TrainingDataClassifier:
     """
-    Classifies ML training dataset features for privacy compliance.
+    Classifies AI/ML training datasets for GDPR and AI Act compliance.
     """
 
-    PROTECTED_ATTRIBUTE_PATTERNS = {
-        "racial_ethnic": ["ethnicity", "race", "nationality", "country_of_origin", "skin_color"],
-        "gender": ["gender", "sex", "male_female"],
-        "age": ["age", "date_of_birth", "birth_year", "birth_date"],
-        "religion": ["religion", "faith", "denomination"],
-        "disability": ["disability", "handicap", "impairment"],
-        "sexual_orientation": ["sexual_orientation", "partner_gender"],
-        "political": ["political_party", "political_affiliation", "voting"],
+    SPECIAL_CATEGORY_FEATURES = {
+        "ethnicity", "race", "racial_origin", "ethnic_origin",
+        "political_opinion", "political_affiliation", "party_membership",
+        "religion", "religious_belief", "faith",
+        "trade_union", "union_membership",
+        "genetic_marker", "dna", "genotype",
+        "biometric", "fingerprint", "facial_embedding",
+        "health_status", "diagnosis", "medical_condition", "disability",
+        "sexual_orientation", "gender_identity",
     }
 
-    KNOWN_PROXIES = {
-        "postcode": {"proxy_for": "racial_ethnic", "typical_correlation": 0.65},
-        "zip_code": {"proxy_for": "racial_ethnic", "typical_correlation": 0.65},
-        "surname": {"proxy_for": "racial_ethnic", "typical_correlation": 0.55},
-        "language_preference": {"proxy_for": "racial_ethnic", "typical_correlation": 0.60},
-        "graduation_year": {"proxy_for": "age", "typical_correlation": 0.90},
-        "years_experience": {"proxy_for": "age", "typical_correlation": 0.85},
-        "dietary_preference": {"proxy_for": "religion", "typical_correlation": 0.40},
-        "household_size": {"proxy_for": "racial_ethnic", "typical_correlation": 0.35},
-        "insurance_claims": {"proxy_for": "disability", "typical_correlation": 0.50},
+    PROXY_INDICATORS = {
+        "postcode": ("racial_ethnic_origin", "Geographic demographics correlate with ethnic composition"),
+        "zip_code": ("racial_ethnic_origin", "Geographic demographics correlate with ethnic composition"),
+        "first_name": ("gender_ethnic_origin", "Names correlate with gender and ethnic background"),
+        "language": ("ethnic_origin", "Language preference correlates with ethnic background"),
+        "credit_score": ("racial_ethnic_origin", "Credit scores show documented racial disparities"),
+        "employment_gap": ("gender_disability", "Employment gaps correlate with maternity and disability"),
+        "marital_status": ("sexual_orientation", "Marital status may indicate sexual orientation"),
     }
-
-    def classify_feature(self, feature_name: str, data_type: str, description: str = "") -> FeatureClassification:
-        """Classify a single training feature for privacy risk."""
-        feature_lower = feature_name.lower()
-        desc_lower = description.lower()
-        combined = f"{feature_lower} {desc_lower}"
-
-        # Check for direct Art. 9 attributes
-        for category, patterns in self.PROTECTED_ATTRIBUTE_PATTERNS.items():
-            if any(p in combined for p in patterns):
-                return FeatureClassification(
-                    feature_name=feature_name,
-                    data_type=data_type,
-                    privacy_class=PrivacyClassification.SPECIAL_CATEGORY,
-                    is_art9_direct=True,
-                    proxy_for=category,
-                    can_be_removed=True,
-                    notes=f"Direct Art. 9 attribute: {category}",
-                )
-
-        # Check for known proxies
-        if feature_lower in self.KNOWN_PROXIES:
-            proxy_info = self.KNOWN_PROXIES[feature_lower]
-            return FeatureClassification(
-                feature_name=feature_name,
-                data_type=data_type,
-                privacy_class=PrivacyClassification.PERSONAL_INDIRECT,
-                is_art9_proxy=True,
-                proxy_for=proxy_info["proxy_for"],
-                proxy_correlation=proxy_info["typical_correlation"],
-                can_be_pseudonymised=True,
-                notes=f"Known proxy for {proxy_info['proxy_for']} "
-                      f"(typical correlation: {proxy_info['typical_correlation']:.0%})",
-            )
-
-        # Check for direct identifiers
-        direct_id_patterns = ["name", "email", "phone", "ssn", "nino", "passport", "address"]
-        if any(p in combined for p in direct_id_patterns):
-            return FeatureClassification(
-                feature_name=feature_name,
-                data_type=data_type,
-                privacy_class=PrivacyClassification.PERSONAL_DIRECT,
-                can_be_removed=True,
-                can_be_pseudonymised=True,
-                notes="Direct identifier — should be removed or pseudonymised for training",
-            )
-
-        # Check for indirect identifiers
-        indirect_patterns = ["customer_id", "account_id", "employee_id", "user_id", "ip_address"]
-        if any(p in combined for p in indirect_patterns):
-            return FeatureClassification(
-                feature_name=feature_name,
-                data_type=data_type,
-                privacy_class=PrivacyClassification.PERSONAL_INDIRECT,
-                can_be_pseudonymised=True,
-                notes="Indirect identifier — consider pseudonymisation",
-            )
-
-        return FeatureClassification(
-            feature_name=feature_name,
-            data_type=data_type,
-            privacy_class=PrivacyClassification.NON_PERSONAL,
-            notes="No personal data indicators detected",
-        )
-
-    def assess_demographic_parity(
-        self,
-        group_a_positive_rate: float,
-        group_b_positive_rate: float,
-        group_a_name: str = "Group A",
-        group_b_name: str = "Group B",
-    ) -> FairnessMetric:
-        """Calculate demographic parity (80% rule)."""
-        ratio = (
-            group_a_positive_rate / group_b_positive_rate
-            if group_b_positive_rate > 0
-            else 0.0
-        )
-        passes = 0.8 <= ratio <= 1.25
-
-        return FairnessMetric(
-            metric_name="Demographic Parity",
-            group_a=group_a_name,
-            group_b=group_b_name,
-            group_a_value=round(group_a_positive_rate, 4),
-            group_b_value=round(group_b_positive_rate, 4),
-            ratio=round(ratio, 4),
-            passes_threshold=passes,
-            threshold="Ratio within 0.8-1.25 (80% rule)",
-        )
 
     def classify_dataset(
         self,
-        dataset_name: str,
-        features: list[dict],
-        record_count: int,
-        provenance: ProvenanceType,
-        purpose: str,
-    ) -> DataCard:
-        """
-        Classify an entire training dataset and generate a data card.
+        features: list[str],
+        contains_direct_identifiers: bool,
+        contains_indirect_identifiers: bool,
+        re_identification_key_exists: bool,
+        is_synthetic: bool,
+        is_anonymised_verified: bool,
+    ) -> TrainingDataClass:
+        """Classify a training dataset based on its personal data content."""
+        if is_synthetic:
+            return TrainingDataClass.SYNTHETIC
 
-        Args:
-            dataset_name: Name of the dataset
-            features: List of dicts with keys: name, data_type, description
-            record_count: Number of records
-            provenance: Data provenance type
-            purpose: Purpose of the training
-        """
-        classifications = []
-        for f in features:
-            fc = self.classify_feature(f["name"], f.get("data_type", ""), f.get("description", ""))
-            classifications.append(fc)
+        if is_anonymised_verified:
+            return TrainingDataClass.ANONYMISED
 
-        has_personal = any(
-            fc.privacy_class not in (PrivacyClassification.NON_PERSONAL, PrivacyClassification.ANONYMISED)
-            for fc in classifications
+        has_special = any(
+            f.lower() in self.SPECIAL_CATEGORY_FEATURES for f in features
         )
-        has_art9 = any(fc.is_art9_direct or fc.is_art9_proxy for fc in classifications)
 
-        if has_art9:
-            bias_risk = BiasRiskLevel.HIGH
-        elif has_personal:
-            bias_risk = BiasRiskLevel.MEDIUM
+        if has_special:
+            return TrainingDataClass.SPECIAL_CATEGORY
+
+        if contains_direct_identifiers:
+            return TrainingDataClass.PII_DIRECT
+
+        if contains_indirect_identifiers:
+            if re_identification_key_exists:
+                return TrainingDataClass.PSEUDONYMISED
+            return TrainingDataClass.PII_INDIRECT
+
+        return TrainingDataClass.NON_PERSONAL
+
+    def detect_proxy_variables(self, features: list[str]) -> list[ProxyVariable]:
+        """Detect features that may serve as proxies for protected characteristics."""
+        proxies = []
+        for feature in features:
+            feature_lower = feature.lower()
+            for proxy_key, (characteristic, description) in self.PROXY_INDICATORS.items():
+                if proxy_key in feature_lower:
+                    proxies.append(ProxyVariable(
+                        feature_name=feature,
+                        correlated_characteristic=characteristic,
+                        correlation_strength=0.35,
+                        detection_method="keyword_matching",
+                        mitigation_recommendation=(
+                            f"Consider removing '{feature}' or applying fairness "
+                            f"constraints during training to mitigate {characteristic} proxy effect"
+                        ),
+                    ))
+        return proxies
+
+    def assess_demographic_representation(
+        self, dataset_demographics: dict[str, float], population_demographics: dict[str, float]
+    ) -> list[DemographicRepresentation]:
+        """Compare dataset demographics to target population."""
+        stats = []
+        for group, pop_pct in population_demographics.items():
+            ds_pct = dataset_demographics.get(group, 0.0)
+            ratio = ds_pct / pop_pct if pop_pct > 0 else 0.0
+            stats.append(DemographicRepresentation(
+                group_name=group,
+                dataset_percentage=ds_pct,
+                population_percentage=pop_pct,
+                representation_ratio=round(ratio, 2),
+                under_represented=ratio < 0.8,
+            ))
+        return stats
+
+    def assess_bias(
+        self,
+        features: list[str],
+        dataset_demographics: dict[str, float] | None = None,
+        population_demographics: dict[str, float] | None = None,
+        selection_rates: dict[str, float] | None = None,
+    ) -> BiasAssessment:
+        """Run comprehensive bias assessment on training dataset."""
+        proxy_vars = self.detect_proxy_variables(features)
+
+        demo_stats = []
+        if dataset_demographics and population_demographics:
+            demo_stats = self.assess_demographic_representation(
+                dataset_demographics, population_demographics
+            )
+
+        four_fifths_pass = True
+        di_ratio = 1.0
+        if selection_rates and len(selection_rates) >= 2:
+            max_rate = max(selection_rates.values())
+            min_rate = min(selection_rates.values())
+            di_ratio = min_rate / max_rate if max_rate > 0 else 0
+            four_fifths_pass = di_ratio >= 0.8
+
+        if not four_fifths_pass:
+            risk = BiasRiskLevel.HIGH
+        elif proxy_vars or any(d.under_represented for d in demo_stats):
+            risk = BiasRiskLevel.MEDIUM
         else:
-            bias_risk = BiasRiskLevel.LOW
+            risk = BiasRiskLevel.LOW
 
-        consent = ConsentStatus.NOT_REQUIRED if not has_personal else ConsentStatus.UNKNOWN
-        lawful_basis = "" if not has_personal else "Art. 6(1)(f) — Legitimate interests (assessment required)"
-        art9_cond = "" if not has_art9 else "Art. 10(5) EU AI Act (bias monitoring) or Art. 9(2)(j) (research)"
+        return BiasAssessment(
+            proxy_variables=proxy_vars,
+            demographic_stats=demo_stats,
+            disparate_impact_ratio=round(di_ratio, 2),
+            overall_risk=risk,
+            four_fifths_rule_pass=four_fifths_pass,
+        )
 
-        limitations = []
-        if has_art9:
-            limitations.append("Contains features correlated with Art. 9 protected categories — bias risk")
-        removable = [fc.feature_name for fc in classifications if fc.can_be_removed]
-        if removable:
-            limitations.append(f"Features recommended for removal: {', '.join(removable)}")
-
-        today = date.today()
+    def generate_data_card(
+        self,
+        dataset_name: str,
+        features: list[str],
+        classification: TrainingDataClass,
+        bias_assessment: BiasAssessment,
+        record_count: int,
+        purpose: str,
+        source_systems: list[str],
+        consent_scope: ConsentScope,
+        lawful_basis: str,
+    ) -> DataCard:
+        """Generate a GDPR-compliant data card."""
         return DataCard(
             dataset_name=dataset_name,
             version="1.0",
-            created_date=today.isoformat(),
-            owner="Data Science Team",
+            creation_date=date.today().isoformat(),
+            owner="ML Engineering Team",
             purpose=purpose,
+            data_classification=classification,
+            data_elements=features,
+            data_subjects="Vanguard customers",
             record_count=record_count,
-            feature_count=len(features),
-            temporal_coverage="",
-            feature_classifications=classifications,
-            provenance=provenance,
-            provenance_details="",
-            consent_status=consent,
+            geographic_scope="United Kingdom",
+            original_collection_purpose="Financial services delivery",
+            source_systems=source_systems,
+            consent_scope=consent_scope,
             lawful_basis=lawful_basis,
-            art9_condition=art9_cond,
-            bias_risk=bias_risk,
-            fairness_metrics=[],
-            quality_score=0.0,
-            known_limitations=limitations,
-            dpia_reference="",
+            art9_condition="N/A" if classification != TrainingDataClass.SPECIAL_CATEGORY else "Art. 9(2)(j) Research",
+            de_identification_technique="Pseudonymisation (tokenisation of customer IDs)",
+            de_identification_assessment_ref="ANON-2026-ML-001",
+            bias_assessment=bias_assessment,
             retention_period="Duration of model lifecycle + 1 year",
-            review_date=today.replace(year=today.year + 1).isoformat(),
+            access_controls="ML team (5 persons) via Vanguard ML Platform with audit logging",
+            dpia_reference="DPIA-ML-2026-001",
+            limitations=[
+                "Dataset covers UK customers only — model should not be applied to non-UK populations",
+                "Temporal coverage: 2023-2025 — may not reflect post-2025 market conditions",
+                "Proxy variable 'postcode' present — fairness constraints required during training",
+            ],
         )
 
 
 def run_vanguard_example():
-    """Demonstrate training data classification for Vanguard credit risk model."""
+    """Demonstrate training data classification for Vanguard Financial Services."""
     classifier = TrainingDataClassifier()
 
     features = [
-        {"name": "customer_name", "data_type": "string", "description": "Customer full name"},
-        {"name": "customer_id", "data_type": "string", "description": "Unique customer identifier"},
-        {"name": "age", "data_type": "integer", "description": "Customer age in years"},
-        {"name": "postcode", "data_type": "string", "description": "Customer residential postcode"},
-        {"name": "annual_income", "data_type": "float", "description": "Annual gross income in GBP"},
-        {"name": "employment_years", "data_type": "float", "description": "Years in current employment"},
-        {"name": "credit_utilisation", "data_type": "float", "description": "Percentage of credit limit used"},
-        {"name": "payment_history_score", "data_type": "integer", "description": "Score based on payment history"},
-        {"name": "num_credit_accounts", "data_type": "integer", "description": "Number of active credit accounts"},
-        {"name": "loan_amount", "data_type": "float", "description": "Requested loan amount in GBP"},
-        {"name": "default_flag", "data_type": "boolean", "description": "Whether the customer defaulted (label)"},
+        "customer_token", "age_band", "postcode", "account_tenure_months",
+        "transaction_count_30d", "avg_transaction_amount", "product_holdings",
+        "channel_preference", "complaint_flag", "credit_score",
+        "churn_label",
     ]
 
-    data_card = classifier.classify_dataset(
-        dataset_name="Credit Risk Training Dataset v2.1",
+    classification = classifier.classify_dataset(
         features=features,
-        record_count=450000,
-        provenance=ProvenanceType.FIRST_PARTY,
-        purpose="Train credit risk scoring model for loan approval decisions",
+        contains_direct_identifiers=False,
+        contains_indirect_identifiers=True,
+        re_identification_key_exists=True,
+        is_synthetic=False,
+        is_anonymised_verified=False,
+    )
+
+    bias = classifier.assess_bias(
+        features=features,
+        dataset_demographics={
+            "White British": 72.0, "Asian": 10.5, "Black": 5.2,
+            "Mixed": 3.8, "Other": 8.5,
+        },
+        population_demographics={
+            "White British": 81.7, "Asian": 7.5, "Black": 3.3,
+            "Mixed": 2.2, "Other": 5.3,
+        },
+        selection_rates={
+            "White British": 0.85, "Asian": 0.78, "Black": 0.71,
+            "Mixed": 0.82, "Other": 0.76,
+        },
+    )
+
+    data_card = classifier.generate_data_card(
+        dataset_name="Customer Churn Prediction Training Set v2.1",
+        features=features,
+        classification=classification,
+        bias_assessment=bias,
+        record_count=1_500_000,
+        purpose="Train churn prediction model to identify customers at risk of leaving",
+        source_systems=["Salesforce CRM", "Oracle Data Warehouse"],
+        consent_scope=ConsentScope.LEGITIMATE_INTEREST,
+        lawful_basis="Art. 6(1)(f) — Legitimate interests (improving customer retention)",
     )
 
     print("=" * 70)
-    print("VANGUARD FINANCIAL SERVICES — TRAINING DATA CLASSIFICATION")
-    print(f"Dataset: {data_card.dataset_name}")
+    print("VANGUARD FINANCIAL SERVICES — AI TRAINING DATA CLASSIFICATION")
     print("=" * 70)
+    print(f"\nDataset: {data_card.dataset_name}")
+    print(f"Classification: {classification.value}")
+    print(f"Records: {data_card.record_count:,}")
+    print(f"Lawful Basis: {data_card.lawful_basis}")
+    print(f"Consent Scope: {data_card.consent_scope.value}")
 
-    print(f"\nRecords: {data_card.record_count:,}")
-    print(f"Features: {data_card.feature_count}")
-    print(f"Contains personal data: {data_card.contains_personal_data}")
-    print(f"Contains Art. 9 risk: {data_card.contains_special_category}")
-    print(f"Bias risk: {data_card.bias_risk.value}")
+    print(f"\nBIAS ASSESSMENT:")
+    print(f"  Overall Risk: {bias.overall_risk.value}")
+    print(f"  Four-Fifths Rule: {'PASS' if bias.four_fifths_rule_pass else 'FAIL'}")
+    print(f"  Disparate Impact Ratio: {bias.disparate_impact_ratio}")
+    print(f"  Proxy Variables: {len(bias.proxy_variables)}")
+    for pv in bias.proxy_variables:
+        print(f"    - {pv.feature_name} → {pv.correlated_characteristic}")
+    print(f"  Under-represented Groups:")
+    for ds in bias.demographic_stats:
+        if ds.under_represented:
+            print(f"    - {ds.group_name}: {ds.dataset_percentage}% vs {ds.population_percentage}% population")
 
-    print("\nFeature Classifications:")
-    for fc in data_card.feature_classifications:
-        status = fc.privacy_class.value
-        flags = []
-        if fc.is_art9_direct:
-            flags.append("ART9-DIRECT")
-        if fc.is_art9_proxy:
-            flags.append(f"ART9-PROXY({fc.proxy_for})")
-        if fc.can_be_removed:
-            flags.append("REMOVE")
-        if fc.can_be_pseudonymised:
-            flags.append("PSEUDONYMISE")
-        flag_str = f" [{', '.join(flags)}]" if flags else ""
-        print(f"  {fc.feature_name:30s} {status:20s}{flag_str}")
-
-    if data_card.known_limitations:
-        print("\nKnown Limitations:")
-        for lim in data_card.known_limitations:
-            print(f"  - {lim}")
-
-    # Fairness assessment
-    print(f"\n{'='*70}")
-    print("FAIRNESS ASSESSMENT (Demographic Parity)")
-    metric = classifier.assess_demographic_parity(
-        group_a_positive_rate=0.12,
-        group_b_positive_rate=0.15,
-        group_a_name="Postcode Group A (urban)",
-        group_b_name="Postcode Group B (rural)",
-    )
-    print(f"  {metric.group_a}: {metric.group_a_value:.1%} positive rate")
-    print(f"  {metric.group_b}: {metric.group_b_value:.1%} positive rate")
-    print(f"  Ratio: {metric.ratio:.2f} (threshold: {metric.threshold})")
-    print(f"  Passes: {metric.passes_threshold}")
+    print(f"\nLIMITATIONS:")
+    for lim in data_card.limitations:
+        print(f"  - {lim}")
 
 
 if __name__ == "__main__":

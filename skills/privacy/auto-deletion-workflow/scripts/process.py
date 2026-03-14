@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
 """
 Automated Data Deletion Workflow Process
-Orchestrates deletion across systems with cascading dependency resolution,
-confirmation logging, and audit trail generation for Orion Data Vault Corp.
+Implements deletion orchestration for retention expiry and Art. 17 erasure requests.
 """
 
 import json
@@ -14,254 +12,236 @@ from typing import Optional
 
 class DeletionTrigger(Enum):
     RETENTION_EXPIRY = "retention_expiry"
-    ART17_ERASURE = "art17_erasure_request"
+    ART17_ERASURE = "art17_erasure"
     CONSENT_WITHDRAWAL = "consent_withdrawal"
     ACCOUNT_CLOSURE = "account_closure"
     PURPOSE_COMPLETION = "purpose_completion"
     LEGAL_HOLD_RELEASE = "legal_hold_release"
 
 
-class DeletionAction(Enum):
-    HARD_DELETE = "hard_delete"
-    ANONYMIZE = "anonymize"
-    NULLIFY_FK = "nullify_fk"
-    FLAG_BACKUP = "flag_backup"
-    SKIP_HELD = "skip_held"
+class DeletionPriority(Enum):
+    STANDARD = "standard"
+    HIGH = "high"
+    URGENT = "urgent"
 
 
 class DeletionStatus(Enum):
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
+    PARTIAL = "partial"
     FAILED = "failed"
-    SKIPPED = "skipped"
+    HELD = "held"
 
 
-DEPENDENCY_MAP = {
-    "customer": {
-        "dependents": [
-            {"entity": "orders", "relationship": "1:N", "action": "cascade", "retention_override": "6 years (HMRC)"},
-            {"entity": "support_tickets", "relationship": "1:N", "action": "cascade", "retention_override": "3 years"},
-            {"entity": "consent_records", "relationship": "1:N", "action": "cascade", "retention_override": None},
-            {"entity": "marketing_preferences", "relationship": "1:1", "action": "cascade", "retention_override": None},
-            {"entity": "audit_log", "relationship": "1:N", "action": "anonymize", "retention_override": "7 years"},
-        ]
-    },
-    "orders": {
-        "dependents": [
-            {"entity": "order_lines", "relationship": "1:N", "action": "cascade", "retention_override": None},
-            {"entity": "payment_records", "relationship": "1:N", "action": "anonymize", "retention_override": "6 years"},
-            {"entity": "shipping_records", "relationship": "1:N", "action": "cascade", "retention_override": None},
-            {"entity": "invoices", "relationship": "1:N", "action": "anonymize", "retention_override": "6 years"},
-        ]
-    },
-    "employee": {
-        "dependents": [
-            {"entity": "payroll_records", "relationship": "1:N", "action": "cascade", "retention_override": "6 years (PAYE)"},
-            {"entity": "performance_reviews", "relationship": "1:N", "action": "cascade", "retention_override": None},
-            {"entity": "access_logs", "relationship": "1:N", "action": "anonymize", "retention_override": "2 years"},
-        ]
-    },
-}
+class SystemDeletionResult:
+    """Result of deletion from a single system."""
 
-SYSTEM_REGISTRY = [
-    {"name": "CRM (Salesforce)", "type": "primary_database", "supports_granular_delete": True},
-    {"name": "ERP (SAP)", "type": "primary_database", "supports_granular_delete": True},
-    {"name": "Data Warehouse (BigQuery)", "type": "analytics", "supports_granular_delete": True},
-    {"name": "Email (Exchange)", "type": "communication", "supports_granular_delete": True},
-    {"name": "File Storage (S3)", "type": "file_storage", "supports_granular_delete": True},
-    {"name": "Backup (Veeam)", "type": "backup", "supports_granular_delete": False},
-    {"name": "Analytics (Mixpanel)", "type": "analytics", "supports_granular_delete": True},
-    {"name": "Support (Zendesk)", "type": "primary_database", "supports_granular_delete": True},
-    {"name": "Audit Log", "type": "audit", "supports_granular_delete": False},
-    {"name": "Payment (Stripe)", "type": "payment", "supports_granular_delete": True},
-]
+    def __init__(
+        self,
+        system_name: str,
+        records_deleted: int,
+        action: str,
+        status: DeletionStatus,
+        timestamp: Optional[datetime] = None,
+        error_message: Optional[str] = None,
+    ):
+        self.system_name = system_name
+        self.records_deleted = records_deleted
+        self.action = action
+        self.status = status
+        self.timestamp = timestamp or datetime.utcnow()
+        self.error_message = error_message
+
+    def to_dict(self) -> dict:
+        result = {
+            "system_name": self.system_name,
+            "records_deleted": self.records_deleted,
+            "action": self.action,
+            "status": self.status.value,
+            "timestamp": self.timestamp.isoformat(),
+        }
+        if self.error_message:
+            result["error_message"] = self.error_message
+        return result
 
 
-def generate_deletion_reference() -> str:
-    """Generate a unique deletion job reference."""
-    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    hash_suffix = hashlib.md5(timestamp.encode()).hexdigest()[:6]
-    year = datetime.utcnow().strftime("%Y")
-    return f"DEL-{year}-{hash_suffix.upper()}"
+class DeletionJob:
+    """Represents a single deletion job for one data subject or data batch."""
 
+    def __init__(
+        self,
+        trigger: DeletionTrigger,
+        data_subject_hash: str,
+        data_categories: list[str],
+        priority: DeletionPriority = DeletionPriority.STANDARD,
+    ):
+        self.reference = f"DEL-{datetime.utcnow().strftime('%Y')}-{hash(data_subject_hash) % 10000:04d}"
+        self.trigger = trigger
+        self.data_subject_hash = data_subject_hash
+        self.data_categories = data_categories
+        self.priority = priority
+        self.status = DeletionStatus.PENDING
+        self.created_at = datetime.utcnow()
+        self.completed_at: Optional[datetime] = None
+        self.system_results: list[SystemDeletionResult] = []
+        self.exceptions_applied: list[dict] = []
+        self.third_party_notifications: list[dict] = []
 
-def generate_data_subject_hash(identifier: str) -> str:
-    """Generate a pseudonymized data subject reference."""
-    return f"DS-HASH-{hashlib.sha256(identifier.encode()).hexdigest()[:8]}"
+    def add_system_result(self, result: SystemDeletionResult) -> None:
+        self.system_results.append(result)
 
-
-def resolve_dependencies(entity_type: str, check_retention_override: bool = True) -> list[dict]:
-    """
-    Resolve cascading deletion dependencies for an entity type.
-    Returns ordered list of deletion actions (deepest first).
-    """
-    actions = []
-
-    def _resolve(entity: str, depth: int = 0):
-        if entity not in DEPENDENCY_MAP:
-            return
-        for dep in DEPENDENCY_MAP[entity]["dependents"]:
-            _resolve(dep["entity"], depth + 1)
-
-            if check_retention_override and dep["retention_override"]:
-                action = DeletionAction.ANONYMIZE
-            elif dep["action"] == "anonymize":
-                action = DeletionAction.ANONYMIZE
-            else:
-                action = DeletionAction.HARD_DELETE
-
-            actions.append({
-                "entity": dep["entity"],
-                "depth": depth + 1,
-                "action": action.value,
-                "retention_override": dep["retention_override"],
-                "relationship": dep["relationship"],
-            })
-
-    _resolve(entity_type)
-    actions.append({
-        "entity": entity_type,
-        "depth": 0,
-        "action": DeletionAction.HARD_DELETE.value,
-        "retention_override": None,
-        "relationship": "primary",
-    })
-
-    return sorted(actions, key=lambda x: -x["depth"])
-
-
-def pre_deletion_checks(
-    data_subject_ref: str,
-    litigation_holds: list[str],
-    retention_exceptions: list[str],
-    pending_dsars: list[str],
-) -> dict:
-    """Run pre-deletion checks before executing deletion."""
-    checks = {
-        "data_subject_ref": data_subject_ref,
-        "check_timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "litigation_hold": data_subject_ref in litigation_holds,
-        "retention_exception": data_subject_ref in retention_exceptions,
-        "pending_dsar": data_subject_ref in pending_dsars,
-        "can_proceed": True,
-        "blockers": [],
-    }
-
-    if checks["litigation_hold"]:
-        checks["can_proceed"] = False
-        checks["blockers"].append("Active litigation hold — Art. 17(3)(e) exception applies")
-    if checks["retention_exception"]:
-        checks["can_proceed"] = False
-        checks["blockers"].append("Active retention exception — review exception before deletion")
-    if checks["pending_dsar"]:
-        checks["blockers"].append("Pending DSAR — coordinate with DSAR workflow (non-blocking)")
-
-    return checks
-
-
-def generate_deletion_manifest(
-    reference: str,
-    trigger: DeletionTrigger,
-    data_subject_hash: str,
-    entity_type: str,
-    systems: list[dict],
-    exceptions: list[dict],
-) -> dict:
-    """Generate a deletion manifest documenting all systems and actions."""
-    dependency_actions = resolve_dependencies(entity_type)
-
-    manifest = {
-        "reference": reference,
-        "trigger": trigger.value,
-        "data_subject_ref": data_subject_hash,
-        "created": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "status": DeletionStatus.PENDING.value,
-        "dependency_resolution": dependency_actions,
-        "systems": [],
-        "exceptions": exceptions,
-        "third_party_notifications": [],
-        "backup_flagging": {
-            "required": True,
-            "suppression_list_updated": False,
-            "expected_backup_deletion": (datetime.utcnow() + timedelta(days=90)).strftime("%Y-%m-%d"),
-        },
-    }
-
-    for system in systems:
-        action = DeletionAction.HARD_DELETE if system["supports_granular_delete"] else DeletionAction.FLAG_BACKUP
-        if system["type"] == "audit":
-            action = DeletionAction.ANONYMIZE
-
-        manifest["systems"].append({
-            "name": system["name"],
-            "type": system["type"],
-            "action": action.value,
-            "status": DeletionStatus.PENDING.value,
-            "records_affected": 0,
-            "execution_timestamp": None,
+    def add_exception(self, category: str, exception_basis: str, retention_until: str) -> None:
+        self.exceptions_applied.append({
+            "category": category,
+            "exception_basis": exception_basis,
+            "retention_until": retention_until,
         })
 
-    return manifest
+    def add_third_party_notification(
+        self, processor_name: str, notified_date: str, confirmed_date: Optional[str] = None
+    ) -> None:
+        self.third_party_notifications.append({
+            "processor_name": processor_name,
+            "notified_date": notified_date,
+            "confirmed_date": confirmed_date,
+            "status": "confirmed" if confirmed_date else "pending",
+        })
+
+    def complete(self) -> None:
+        self.completed_at = datetime.utcnow()
+        failed = [r for r in self.system_results if r.status == DeletionStatus.FAILED]
+        if failed:
+            self.status = DeletionStatus.PARTIAL
+        else:
+            self.status = DeletionStatus.COMPLETED
+
+    def generate_confirmation_record(self) -> dict:
+        """Generate an immutable deletion confirmation record."""
+        record = {
+            "reference": self.reference,
+            "trigger": self.trigger.value,
+            "data_subject_reference": self.data_subject_hash,
+            "created_at": self.created_at.isoformat(),
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "status": self.status.value,
+            "systems_processed": [r.to_dict() for r in self.system_results],
+            "exceptions_applied": self.exceptions_applied,
+            "third_party_notifications": self.third_party_notifications,
+            "verification_hash": self._compute_verification_hash(),
+        }
+        return record
+
+    def _compute_verification_hash(self) -> str:
+        """Compute a SHA-256 hash of the confirmation record for integrity verification."""
+        data = json.dumps({
+            "reference": self.reference,
+            "data_subject_reference": self.data_subject_hash,
+            "systems": [r.to_dict() for r in self.system_results],
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+        }, sort_keys=True)
+        return hashlib.sha256(data.encode()).hexdigest()
 
 
-def generate_confirmation_record(manifest: dict) -> dict:
-    """Generate an immutable deletion confirmation record from a completed manifest."""
-    confirmation = {
-        "reference": manifest["reference"],
-        "trigger": manifest["trigger"],
-        "data_subject_ref": manifest["data_subject_ref"],
-        "execution_date": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "systems_processed": manifest["systems"],
-        "exceptions_applied": manifest["exceptions"],
-        "third_party_notifications": manifest["third_party_notifications"],
-        "backup_status": manifest["backup_flagging"],
-        "verification": {
-            "post_deletion_scan": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "residual_data_found": False,
-            "verification_hash": hashlib.sha256(
-                json.dumps(manifest, sort_keys=True).encode()
-            ).hexdigest(),
-        },
-        "overall_status": DeletionStatus.COMPLETED.value,
+def check_litigation_hold(data_subject_hash: str, hold_register: list[dict]) -> Optional[dict]:
+    """Check if a data subject's data is under litigation hold."""
+    for hold in hold_register:
+        if hold.get("status") == "active":
+            if data_subject_hash in hold.get("affected_data_subjects", []):
+                return hold
+    return None
+
+
+def check_retention_exception(data_category: str, exception_register: list[dict]) -> Optional[dict]:
+    """Check if a data category has an active retention exception."""
+    for exception in exception_register:
+        if exception.get("status") == "active" and exception.get("data_category") == data_category:
+            expiry = datetime.fromisoformat(exception["extended_deletion_date"])
+            if datetime.utcnow() < expiry:
+                return exception
+    return None
+
+
+def resolve_dependencies(
+    primary_entity: str,
+    dependency_map: list[dict],
+) -> list[dict]:
+    """
+    Resolve cascading deletion dependencies using depth-first traversal.
+    Returns an ordered list of entities to delete (deepest first).
+    """
+    deletion_order = []
+    visited = set()
+
+    def _traverse(entity: str, depth: int) -> None:
+        if entity in visited:
+            return
+        visited.add(entity)
+        dependents = [
+            dep for dep in dependency_map if dep["primary_entity"] == entity
+        ]
+        for dep in dependents:
+            _traverse(dep["dependent_entity"], depth + 1)
+        deletion_order.append({"entity": entity, "depth": depth})
+
+    _traverse(primary_entity, 0)
+    deletion_order.sort(key=lambda x: x["depth"], reverse=True)
+    return deletion_order
+
+
+def build_dependency_map() -> list[dict]:
+    """Build the default dependency map for Orion Data Vault Corp."""
+    return [
+        {"primary_entity": "Customer", "dependent_entity": "Orders", "relationship": "1:N", "action": "cascade_delete", "retention_override": "6 years — HMRC"},
+        {"primary_entity": "Customer", "dependent_entity": "Support Tickets", "relationship": "1:N", "action": "cascade_delete", "retention_override": "3 years"},
+        {"primary_entity": "Customer", "dependent_entity": "Consent Records", "relationship": "1:N", "action": "cascade_delete", "retention_override": None},
+        {"primary_entity": "Customer", "dependent_entity": "Marketing Preferences", "relationship": "1:1", "action": "cascade_delete", "retention_override": None},
+        {"primary_entity": "Customer", "dependent_entity": "Account Audit Log", "relationship": "1:N", "action": "anonymize", "retention_override": "7 years"},
+        {"primary_entity": "Orders", "dependent_entity": "Order Lines", "relationship": "1:N", "action": "cascade_delete", "retention_override": None},
+        {"primary_entity": "Orders", "dependent_entity": "Payment Records", "relationship": "1:N", "action": "anonymize", "retention_override": "6 years"},
+        {"primary_entity": "Orders", "dependent_entity": "Invoices", "relationship": "1:N", "action": "anonymize", "retention_override": "6 years"},
+    ]
+
+
+def generate_deletion_metrics(jobs: list[DeletionJob]) -> dict:
+    """Generate deletion metrics for quarterly compliance reporting."""
+    total = len(jobs)
+    completed = sum(1 for j in jobs if j.status == DeletionStatus.COMPLETED)
+    partial = sum(1 for j in jobs if j.status == DeletionStatus.PARTIAL)
+    failed = sum(1 for j in jobs if j.status == DeletionStatus.FAILED)
+    held = sum(1 for j in jobs if j.status == DeletionStatus.HELD)
+
+    trigger_breakdown = {}
+    for job in jobs:
+        trigger = job.trigger.value
+        trigger_breakdown[trigger] = trigger_breakdown.get(trigger, 0) + 1
+
+    return {
+        "report_date": datetime.utcnow().isoformat(),
+        "organization": "Orion Data Vault Corp",
+        "total_jobs": total,
+        "completed": completed,
+        "partial": partial,
+        "failed": failed,
+        "held": held,
+        "completion_rate": f"{(completed / total * 100):.1f}%" if total > 0 else "N/A",
+        "trigger_breakdown": trigger_breakdown,
     }
-    return confirmation
 
 
 if __name__ == "__main__":
-    ref = generate_deletion_reference()
-    ds_hash = generate_data_subject_hash("customer-12345@example.com")
-    print(f"Deletion Reference: {ref}")
-    print(f"Data Subject Hash: {ds_hash}")
-
-    print("\nDependency Resolution (customer):")
-    deps = resolve_dependencies("customer")
-    for dep in deps:
-        indent = "  " * dep["depth"]
-        print(f"  {indent}[Depth {dep['depth']}] {dep['entity']}: {dep['action']}")
-        if dep["retention_override"]:
-            print(f"  {indent}  Retention override: {dep['retention_override']}")
-
-    checks = pre_deletion_checks(
-        ds_hash,
-        litigation_holds=[],
-        retention_exceptions=[],
-        pending_dsars=[],
+    ds_hash = hashlib.sha256(b"test-data-subject@example.com").hexdigest()[:16]
+    job = DeletionJob(
+        trigger=DeletionTrigger.RETENTION_EXPIRY,
+        data_subject_hash=f"DS-HASH-{ds_hash}",
+        data_categories=["CAT-002", "CAT-003", "CAT-009"],
     )
-    print(f"\nPre-Deletion Checks: {'PASS' if checks['can_proceed'] else 'BLOCKED'}")
+    job.add_system_result(SystemDeletionResult("CRM", 1, "hard_delete", DeletionStatus.COMPLETED))
+    job.add_system_result(SystemDeletionResult("ERP", 47, "hard_delete", DeletionStatus.COMPLETED))
+    job.add_system_result(SystemDeletionResult("Data Warehouse", 312, "hard_delete", DeletionStatus.COMPLETED))
+    job.add_exception("Invoices", "Art. 17(3)(b) — HMRC statutory retention", "2032-03-14")
+    job.add_third_party_notification("Analytics SaaS", "2026-03-14", "2026-03-16")
+    job.complete()
 
-    manifest = generate_deletion_manifest(
-        reference=ref,
-        trigger=DeletionTrigger.ART17_ERASURE,
-        data_subject_hash=ds_hash,
-        entity_type="customer",
-        systems=SYSTEM_REGISTRY,
-        exceptions=[],
-    )
-    print(f"\nDeletion Manifest: {manifest['reference']}")
-    print(f"Systems: {len(manifest['systems'])}")
-    print(f"Dependency Actions: {len(manifest['dependency_resolution'])}")
-
-    confirmation = generate_confirmation_record(manifest)
-    print(f"\nConfirmation Record Generated")
-    print(f"Verification Hash: {confirmation['verification']['verification_hash'][:32]}...")
+    record = job.generate_confirmation_record()
+    print(json.dumps(record, indent=2))

@@ -2,36 +2,35 @@
 
 ## Regulatory Basis
 
-### GDPR Article 32(1)(d) — Testing and Evaluation
-- Controllers and processors must implement "a process for regularly testing, assessing and evaluating the effectiveness of technical and organisational measures for ensuring the security of the processing."
-- Tabletop exercises are a recognized method for fulfilling this testing obligation.
+### GDPR Article 32(1)(d) — Testing Obligation
+- "A process for regularly testing, assessing and evaluating the effectiveness of technical and organisational measures for ensuring the security of the processing."
+- Breach simulation exercises directly fulfil this obligation by testing breach response measures.
 
 ### EDPB Guidelines 9/2022 — Preparedness
-- Section 2.1: Controllers should "have in place processes to be able to detect and promptly address a personal data breach."
-- Section 5: Recommends regular testing of breach notification procedures to ensure they function as designed.
+- Section 6: Controllers should prepare for breaches in advance through "regular testing of breach handling procedures."
+- Tabletop exercises are explicitly mentioned as an appropriate testing mechanism.
 
-### ISO/IEC 27001:2022 — Annex A Control 5.25
-- Information security incident management procedures shall be tested regularly.
+### NIST SP 800-84 — Guide to Test, Training, and Exercise Programs for IT Plans and Capabilities (2006)
+- Provides the foundational framework for designing tabletop, functional, and full-scale exercises.
+- Section 3: Tabletop exercises — discussion-based sessions where participants walk through a scenario.
+- Section 4: Functional exercises — test specific operational functions with simulated scenario inputs.
 
-### ISO/IEC 27035-2:2023 — Section 8
-- Guidelines for testing incident response plans through exercises including tabletop, functional, and full-scale simulations.
+### NIST CSF 2.0 — RS.IM (Respond — Improvements)
+- "Response plans incorporate lessons learned" — exercises generate lessons learned for plan improvement.
 
-### NIST SP 800-84 — Guide to Test, Training, and Exercise Programs (2006)
-- Provides a comprehensive framework for designing and conducting exercises across increasing complexity levels (tabletop, functional, full-scale).
+### ISO/IEC 27001:2022 — Annex A Control 5.29 (ICT Continuity)
+- Requires testing of ICT continuity plans, which includes breach response procedures.
 
-### NIST Cybersecurity Framework 2.0 (2024)
-- RC.IM (Recover — Improvement): Recovery plans incorporate lessons learned and are updated accordingly.
-- PR.IP (Protect — Protective Processes): Response and recovery plans are tested.
+### ISO 22398:2013 — Guidelines for Exercises
+- Provides comprehensive guidance on designing, planning, conducting, and improving exercises for societal security.
+- Applicable to breach simulation exercise design.
 
-## Industry Guidance
+## Industry Standards
 
-### CISA Tabletop Exercise Packages (CTEP)
-- US Cybersecurity and Infrastructure Security Agency provides free tabletop exercise scenarios and facilitator guides applicable to data breach scenarios.
+### SANS Incident Response Exercise Framework
+- Recommends quarterly tabletop exercises rotating through different breach scenarios.
+- Provides scenario templates covering ransomware, insider threat, supply chain, and social engineering.
 
-### ENISA — Good Practice Guide for Incident Management (2023)
-- Section 6: Recommends conducting tabletop exercises at least semi-annually and functional exercises annually.
-
-## Enforcement Context
-
-- **ICO (UK) — Marriott (2020)**: The ICO noted that Marriott's incident response preparedness was insufficient. Regular tabletop exercises would have identified the detection and response gaps that allowed the breach to persist for four years.
-- **CNIL (France) — Various**: CNIL audits frequently assess whether organizations have tested their incident response procedures. Absence of testing evidence is treated as a compliance gap.
+### Verizon DBIR Exercise Recommendations (2024)
+- Recommends exercises based on the most prevalent breach types identified in the annual Data Breach Investigations Report.
+- 2024 report: 68% of breaches involved a human element — exercises should heavily feature social engineering scenarios.
