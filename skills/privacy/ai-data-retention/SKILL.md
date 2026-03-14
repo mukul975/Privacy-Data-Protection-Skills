@@ -1,124 +1,161 @@
 ---
 name: ai-data-retention
 description: >-
-  Managing data retention and deletion for AI/ML systems including training datasets,
-  model weights, inference logs, and derived data. Covers GDPR storage limitation,
-  right to erasure impact on trained models, and machine unlearning approaches.
-  Keywords: AI data retention, model deletion, machine unlearning, storage limitation.
+  Manages AI model retention and machine unlearning requirements. Covers
+  training data deletion verification, model versioning for compliance,
+  machine unlearning techniques (SISA, gradient-based), and retraining
+  triggers. Keywords: AI retention, machine unlearning, model versioning,
+  training data deletion, retraining, storage limitation.
 license: Apache-2.0
 metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
   subdomain: ai-privacy-governance
-  tags: "ai-data-retention, machine-unlearning, storage-limitation, model-deletion, training-data"
+  tags: "ai-retention, machine-unlearning, model-versioning, training-data-deletion, retraining, storage-limitation"
 ---
 
-# AI/ML Data Retention and Deletion
+# AI Model Retention and Unlearning
 
 ## Overview
 
-AI systems create unique data retention challenges. Training data, model weights, inference logs, embeddings, and derived features all contain or reflect personal data, but their lifecycle and deletion requirements differ significantly from traditional database records. GDPR Article 5(1)(e) requires that personal data be kept no longer than necessary for the purposes of processing, and Article 17 grants data subjects the right to erasure. For AI systems, satisfying these requirements requires addressing whether personal data can be extracted from trained models (memorization risk), how to handle erasure requests when data is embedded in model weights, and what retention periods apply to different AI data categories. Cerebrum AI Labs must establish clear retention policies for each category of AI-related data.
+GDPR Art. 5(1)(e) storage limitation requires that personal data be kept no longer than necessary for the processing purpose. For AI systems, this creates complex retention challenges: training data used to build a model may no longer be needed once training is complete, but the model itself encodes information about the training data. Machine unlearning — the process of removing the influence of specific data from a trained model — is an emerging field that addresses the gap between deleting training data and eliminating its influence from model parameters. This skill provides retention policies, deletion verification methods, and machine unlearning techniques for AI compliance.
 
-## AI Data Categories and Retention
+## AI Data Retention Categories
 
-### Data Lifecycle in ML Systems
+| Data Category | Description | Retention Consideration |
+|---------------|-------------|----------------------|
+| Raw training data | Original personal data used for model training | Delete after training unless retraining justifies retention |
+| Processed training data | Cleaned, augmented, feature-engineered data | Same as raw — delete when training purpose exhausted |
+| Validation/test data | Data used for model evaluation | Retain for model audit and comparison; pseudonymise |
+| Model weights/parameters | Trained model artefacts encoding training data information | Retain while model is deployed; delete on decommission |
+| Inference logs | Inputs and outputs of model predictions | Retention based on purpose (audit, debugging, rights exercise) |
+| Model metadata | Training configuration, hyperparameters, provenance | Retain for compliance documentation; low privacy risk |
+| Embedding vectors | Dense representations derived from personal data | May contain personal data — apply retention policy |
+
+## Retention Policy Framework
+
+### Training Data Retention Decision Tree
 
 ```
-Raw Data → Preprocessed Data → Training Data → Model Weights → Inference Logs → Derived Insights
-  │              │                    │               │               │                │
-  │              │                    │               │               │                │
-  ▼              ▼                    ▼               ▼               ▼                ▼
-Retention    Retention           Retention      Retention       Retention         Retention
-Policy A     Policy B            Policy C       Policy D        Policy E          Policy F
+Training data category identified
+│
+├─ Is the data still needed for model retraining?
+│  ├─ YES → Retain with documented justification and review date
+│  └─ NO → Continue
+│
+├─ Is the data needed for model validation or audit?
+│  ├─ YES → Retain in pseudonymised form with access controls
+│  └─ NO → Continue
+│
+├─ Is the data needed for data subject rights exercise?
+│  ├─ YES → Retain for rights exercise period, then delete
+│  └─ NO → Continue
+│
+├─ Is there a legal obligation to retain?
+│  ├─ YES → Retain per legal requirement
+│  └─ NO → DELETE the training data
+│
+└─ After deletion: assess model for residual data encoding
 ```
 
-### Retention Schedule for Cerebrum AI Labs
+### Model Lifecycle Retention
 
-| Data Category | Description | Retention Period | Legal Basis | Deletion Method |
-|--------------|-------------|-----------------|-------------|-----------------|
-| Raw training data | Original customer support transcripts, application forms | 24 months from collection | Art. 6(1)(f) legitimate interest | Secure deletion from storage |
-| Preprocessed training data | Cleaned, tokenized, feature-engineered datasets | Until model retraining + 6 months | Art. 6(1)(f) legitimate interest | Secure deletion |
-| Training data labels | Human-annotated labels for supervised learning | Same as preprocessed data | Art. 6(1)(f) legitimate interest | Secure deletion |
-| Model weights | Trained neural network parameters | Duration of model deployment + 12 months archive | Art. 6(1)(f) legitimate interest | Model deletion or retraining without subject data |
-| Model evaluation data | Test sets, validation sets, benchmark results | Same as model weights | Art. 6(1)(f) legitimate interest | Secure deletion |
-| Inference logs | Individual predictions, input/output pairs | 90 days (operational) or 6 months (audit) | Art. 6(1)(f) legitimate interest | Automated purge |
-| Embeddings/vectors | Vector representations of personal data | Same as source data or 12 months | Art. 6(1)(f) legitimate interest | Delete from vector database |
-| Aggregated metrics | Model performance statistics (no individual data) | Indefinite | Art. 6(1)(f) legitimate interest | N/A — not personal data |
-| Feature importance logs | Which features influenced predictions | 12 months | Art. 6(1)(f) legitimate interest | Secure deletion |
-| Data subject consent records | Consent for AI processing | Duration of processing + statute of limitations (6 years) | Art. 7(1) demonstrating consent | Archive then delete |
+| Phase | Retention Rule |
+|-------|---------------|
+| Development | Training data retained during active development |
+| Deployment | Training data deleted unless retraining is planned within defined period |
+| Operation | Inference logs retained per purpose (30 days debug, 1 year audit) |
+| Retraining | New training data collected; old data deleted post-training |
+| Decommission | All model artefacts, training data, and logs deleted; retain only compliance documentation |
 
-## Right to Erasure and Trained Models
+## Machine Unlearning Techniques
 
-### The Machine Unlearning Challenge
+### Exact Unlearning
 
-When a data subject exercises their right to erasure under GDPR Article 17, Cerebrum AI Labs must consider whether the individual's personal data persists in:
+**Full retraining**: Retrain the model from scratch on the dataset minus deleted records.
 
-1. **Training datasets** — Can be deleted directly
-2. **Model weights** — Data is not stored explicitly but may be memorized by the model
-3. **Inference logs** — Can be deleted directly
-4. **Embeddings** — Can be deleted from vector databases
-5. **Derived features** — May need recalculation without the subject's data
+| Property | Value |
+|----------|-------|
+| Guarantee | Complete — model has no knowledge of deleted data |
+| Cost | Very high — full training cost for each deletion request |
+| Feasibility | Impractical for large models or frequent deletion requests |
+| When to use | Small models, infrequent requests, high-sensitivity data |
 
-### Memorization Risk Assessment
+### SISA (Sharded, Isolated, Sliced, Aggregated) Training
 
-| Model Type | Memorization Risk | Mitigation |
-|-----------|-------------------|------------|
-| Large language models (LLMs) | High — can reproduce training data verbatim | Differential privacy, deduplication, canary testing |
-| Classification models | Low — learn decision boundaries, not individual records | Standard deletion of training data sufficient |
-| Recommendation models | Medium — collaborative filtering can reveal preferences | Remove user vectors, retrain periodically |
-| Embedding models | Medium — vector representations encode personal characteristics | Delete user embeddings, regenerate if needed |
-| Generative models (images, text) | High — can generate content resembling specific individuals | Differential privacy, output filtering, periodic retraining |
+Train model on sharded data partitions. To unlearn, retrain only the affected shard.
 
-### Erasure Response Process for Cerebrum AI Labs
+| Property | Value |
+|----------|-------|
+| Guarantee | Exact within the affected shard |
+| Cost | 1/k of full retraining (k = number of shards) |
+| Feasibility | Requires SISA architecture from the start |
+| Trade-off | Model accuracy may decrease with fewer shards contributing |
 
-| Step | Action | Timeline |
-|------|--------|----------|
-| 1 | Receive and validate erasure request | Day 0 |
-| 2 | Search all AI data stores for subject's data | Days 1-3 |
-| 3 | Delete from raw and preprocessed training datasets | Days 3-5 |
-| 4 | Delete from inference logs and embeddings | Days 3-5 |
-| 5 | Assess memorization risk for affected models | Days 5-10 |
-| 6 | If memorization risk is low: document assessment, no model change needed | Day 10 |
-| 7 | If memorization risk is high: schedule model retraining without subject's data | Within 30 days |
-| 8 | Confirm deletion to data subject | Within 30 days (Art. 12(3)) |
+### Approximate Unlearning
 
-### Machine Unlearning Approaches
+#### Gradient-Based Unlearning
+Apply gradient ascent on the data to be forgotten, then fine-tune on remaining data.
 
-| Approach | Description | Effectiveness | Cost |
-|----------|-------------|---------------|------|
-| Full retraining | Retrain model from scratch without the subject's data | Complete removal | Very high (GPU cost, time) |
-| SISA (Sharded, Isolated, Sliced, Aggregated) training | Train on data shards; retrain only affected shard | Good — equivalent to full retraining for shard | Medium |
-| Gradient-based unlearning | Apply gradient ascent on the subject's data to reverse learning | Approximate — may not fully remove influence | Low |
-| Fine-tuning with forget set | Fine-tune model to reduce memorization of specific data | Approximate | Low-medium |
-| Model replacement | Replace with newer model trained without the data | Complete removal | Scheduled with retraining cycle |
+| Property | Value |
+|----------|-------|
+| Guarantee | Approximate — statistically similar to retrained model |
+| Cost | Low — few gradient steps |
+| Feasibility | Works for most differentiable models |
+| Verification | Requires membership inference testing to verify |
 
-**Cerebrum AI Labs Policy:**
-- For classification models: delete training data; schedule model retraining in next quarterly cycle
-- For LLMs and generative models: delete training data; assess memorization with extraction attacks; retrain if memorization detected
-- For recommendation models: delete user vectors and interactions; incremental model update
+#### Influence Function-Based Unlearning
+Use influence functions to estimate the effect of removing data and adjust model accordingly.
 
-## Automated Retention Enforcement
+| Property | Value |
+|----------|-------|
+| Guarantee | Approximate — first-order approximation |
+| Cost | Medium — requires Hessian computation |
+| Feasibility | Best for smaller models or linear models |
 
-### Retention Automation for Cerebrum AI Labs
+### Unlearning Verification
 
-| Data Store | Technology | Automated Retention |
-|-----------|------------|-------------------|
-| Training data (S3/GCS) | Object lifecycle policies | Auto-delete after 24 months |
-| Preprocessed data (data lake) | Apache Iceberg time-travel expiry | Auto-expire snapshots after retention period |
-| Model registry (MLflow) | Custom retention script | Archive models 12 months after decommission |
-| Inference logs (Elasticsearch) | Index Lifecycle Management (ILM) | Hot: 7 days → Warm: 83 days → Delete: 90 days |
-| Vector database (Pinecone/Weaviate) | TTL on vectors | Auto-expire after 12 months |
-| Consent records (PostgreSQL) | pg_cron scheduled deletion | Delete 6 years after consent withdrawal |
+After applying unlearning, verify effectiveness:
 
-## Key Legal References
+1. **Membership inference test**: Run MI attack on unlearned records — should classify as non-members
+2. **Output comparison**: Compare model outputs with and without the unlearned data
+3. **Canary test**: If canary records were included, verify they are no longer extractable
+4. **Statistical test**: Compare model to one retrained from scratch on the same data minus deleted records
 
-- **GDPR Article 5(1)(e)** — Storage limitation: personal data kept no longer than necessary
-- **GDPR Article 17** — Right to erasure ("right to be forgotten")
-- **GDPR Article 17(3)** — Exceptions to erasure (archiving in public interest, legal claims)
-- **GDPR Recital 39** — Storage periods should be limited to a strict minimum
-- **EU AI Act Article 10(5)** — Training data retention for high-risk AI systems
-- **EDPB Guidelines 05/2020 on Consent** — Consent records retention requirements
-- **ICO Guidance on AI and Data Protection (2023)** — Practical approach to AI data retention
-- **Bourtoule et al., "Machine Unlearning" (2021)** — SISA training approach for efficient unlearning
-- **Cao and Yang, "Towards Making Systems Forget with Machine Unlearning" (IEEE S&P 2015)** — Foundational machine unlearning paper
+## Model Versioning for Compliance
+
+### Version Control Requirements
+
+| Element | Documentation |
+|---------|---------------|
+| Model version ID | Unique identifier (e.g., model-v2.3.1-20260314) |
+| Training data snapshot | Hash of training dataset used for this version |
+| Training date | When training was executed |
+| Data deletions applied | Which data subject deletions are reflected in this version |
+| Unlearning applied | Any approximate unlearning applied since last full retraining |
+| Privacy properties | DP epsilon, MI test results for this version |
+| Deployment dates | When deployed and when retired |
+
+### Retraining Triggers
+
+| Trigger | Action |
+|---------|--------|
+| Accumulated deletion requests exceed threshold | Full retraining on updated dataset |
+| Scheduled periodic retraining | Incorporate all pending deletions |
+| Privacy audit reveals unacceptable leakage | Retrain with enhanced privacy measures |
+| Model performance degradation | Retrain with current data (post-deletions) |
+| Regulatory change | Assess if retraining needed for compliance |
+
+## Enforcement Relevance
+
+- **EDPB Guidelines 04/2025**: Training data retention must be justified; deletion of training data does not automatically eliminate GDPR obligations for the model if it encodes personal data.
+- **Garante v. OpenAI (2023)**: Required mechanism for data deletion from training data; acknowledged technical challenges but expected good faith effort.
+- **EDPB ChatGPT Taskforce (2024)**: Controllers must demonstrate capability to address erasure requests affecting training data.
+
+## Integration Points
+
+- **ai-data-subject-rights**: Erasure rights implementation requires unlearning
+- **ai-dpia**: Retention and deletion capability assessed in DPIA
+- **ai-model-privacy-audit**: Audit verifies deletion effectiveness
+- **ai-training-lawfulness**: Retention justification part of lawful basis assessment
