@@ -198,6 +198,37 @@ We welcome contributions from both developers and privacy professionals.
 
 ---
 
+## Cite This Repository
+
+If you use this skills database in your research or work, please cite it:
+
+```bibtex
+@misc{mahipal2026privacyskills,
+  author       = {Mahipal},
+  title        = {Privacy \& Data Protection Skills for AI Agents},
+  year         = {2026},
+  publisher    = {GitHub},
+  url          = {https://github.com/mukul975/Privacy-Data-Protection-Skills},
+  version      = {1.0.0},
+  note         = {282+ structured privacy skills following the agentskills.io open standard}
+}
+```
+
+GitHub also provides a citation button — click **"Cite this repository"** in the sidebar.
+
+---
+
+## Sponsor
+
+If this project helps your privacy compliance work, consider supporting its development:
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-mukul975-ea4aaa?logo=github-sponsors)](https://github.com/sponsors/mukul975)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-mukul975-FFDD00?logo=buy-me-a-coffee)](https://buymeacoffee.com/mukul975)
+
+Your support helps maintain 282+ skills, track regulatory changes, and expand coverage to new jurisdictions and frameworks.
+
+---
+
 ## License
 
 Apache 2.0. See [LICENSE](LICENSE) for details.

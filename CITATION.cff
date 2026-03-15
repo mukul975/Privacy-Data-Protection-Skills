@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+title: "Privacy & Data Protection Skills for AI Agents"
+message: "If you use this skills database in your research or work, please cite it as below."
+type: dataset
+authors:
+  - given-names: Mahipal
+    alias: mukul975
+    affiliation: "SRH Berlin University of Applied Sciences"
+repository-code: "https://github.com/mukul975/Privacy-Data-Protection-Skills"
+url: "https://agentskills.io"
+license: Apache-2.0
+version: "1.0.0"
+date-released: "2026-03-15"
+keywords:
+  - privacy
+  - data-protection
+  - gdpr
+  - ccpa
+  - ai-agents
+  - agentskills
+  - privacy-engineering
+  - compliance
+  - hipaa
+  - lgpd
+  - pipl
+  - dpdp-act
+  - eu-ai-act
+  - privacy-by-design
+  - nist-privacy-framework
+  - iso-27701
+abstract: >-
+  A structured, machine-readable database of 282+ privacy and data protection
+  skills for AI agents following the agentskills.io open standard. Covers GDPR,
+  CCPA/CPRA, LGPD, PIPL, India DPDP Act, HIPAA, EU AI Act, and 10+ additional
+  jurisdictions across 20 compliance domains. Each skill includes YAML frontmatter
+  for relevance matching, step-by-step workflows, regulatory citations with
+  enforcement precedents, Python automation scripts, and filled real-world
+  templates. Compatible with Claude Code, GitHub Copilot, OpenAI Codex CLI,
+  Cursor, Gemini CLI, and 26+ AI platforms.
