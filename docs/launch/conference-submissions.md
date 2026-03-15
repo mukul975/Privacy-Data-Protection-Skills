@@ -2,7 +2,7 @@
 
 > **Primary Title:** "Structured Privacy Skills for AI Agents: An Open Standard Approach to Automated Compliance"
 >
-> **Lead Author/Speaker:** Mahipal Jangra
+> **Lead Author/Speaker:** Mahipal
 >
 > **Last Updated:** 2026-03-15
 
@@ -23,13 +23,13 @@
 
 ### Short Bio (75 words)
 
-Mahipal Jangra is a cybersecurity and AI researcher pursuing an M.Sc. in Cybersecurity and Artificial Intelligence at SRH Berlin University of Applied Sciences. He has published four papers at IS&T Electronic Imaging 2026, including two sole-authored works on AI agent protocol security. His open-source Privacy & Data Protection Skills repository provides 988+ structured, machine-readable compliance skills spanning GDPR, CCPA, LGPD, HIPAA, and cross-border transfer frameworks, bridging the gap between regulatory requirements and automated enforcement.
+Mahipal is a cybersecurity and AI researcher pursuing an M.Sc. in Cybersecurity and Artificial Intelligence at SRH Berlin University of Applied Sciences. He has published four papers at IS&T Electronic Imaging 2026, including two sole-authored works on AI agent protocol security. His open-source Privacy & Data Protection Skills repository provides 988+ structured, machine-readable compliance skills spanning GDPR, CCPA, LGPD, HIPAA, and cross-border transfer frameworks, bridging the gap between regulatory requirements and automated enforcement.
 
 *Word count: 75*
 
 ### Extended Bio (150 words)
 
-Mahipal Jangra is a cybersecurity and AI researcher pursuing an M.Sc. in Cybersecurity and Artificial Intelligence at SRH Berlin University of Applied Sciences. His research focuses on the intersection of AI agent security, privacy engineering, and regulatory compliance automation. He has published four papers at IS&T Electronic Imaging 2026, including two sole-authored works addressing security vulnerabilities in AI agent communication protocols, specifically examining trust boundaries and prompt injection risks in multi-agent systems.
+Mahipal is a cybersecurity and AI researcher pursuing an M.Sc. in Cybersecurity and Artificial Intelligence at SRH Berlin University of Applied Sciences. His research focuses on the intersection of AI agent security, privacy engineering, and regulatory compliance automation. He has published four papers at IS&T Electronic Imaging 2026, including two sole-authored works addressing security vulnerabilities in AI agent communication protocols, specifically examining trust boundaries and prompt injection risks in multi-agent systems.
 
 Mahipal is the creator and lead maintainer of the Privacy & Data Protection Skills repository, an open-source project providing 988+ structured, machine-readable compliance skills that cover GDPR, CCPA/CPRA, LGPD, HIPAA, PIPEDA, and cross-border data transfer frameworks including Standard Contractual Clauses and Binding Corporate Rules. The repository translates complex regulatory obligations into executable task definitions, enabling AI agents to perform privacy impact assessments, data subject access requests, and compliance audits with verifiable accuracy and full audit trails.
 
@@ -196,7 +196,7 @@ The discussion directly addresses the conference theme of digital sovereignty an
 
 ### Panelist Roles (Proposed)
 
-1. **Mahipal Jangra** (Moderator/Presenter) -- Creator of Privacy & Data Protection Skills repository; M.Sc. Cybersecurity and AI, SRH Berlin.
+1. **Mahipal** (Moderator/Presenter) -- Creator of Privacy & Data Protection Skills repository; M.Sc. Cybersecurity and AI, SRH Berlin.
 2. **Privacy Law Scholar** (Invited) -- Latin American data protection law expert; LGPD, PDPA, and regional harmonization.
 3. **Industry Practitioner** (Invited) -- DPO or privacy engineer at a multinational operating across Latin America.
 4. **Civil Society Representative** (Invited) -- Digital rights organization focused on data sovereignty in the Global South.

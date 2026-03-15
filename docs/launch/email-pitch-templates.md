@@ -2,7 +2,7 @@
 
 Ready-to-send outreach templates for media, newsletters, partnerships, and awesome-list PRs. Personalized per outlet, based on their editorial focus and submission guidelines.
 
-**Author:** Mahipal Jangra, M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences. 4 papers at IS&T Electronic Imaging 2026. Repository: 258+ privacy & data protection skills, 730+ cybersecurity skills for AI agents.
+**Author:** Mahipal, M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences. 4 papers at IS&T Electronic Imaging 2026. Repository: 258+ privacy & data protection skills, 730+ cybersecurity skills for AI agents.
 
 **Repository:** [github.com/mukul975/Privacy-Data-Protection-Skills](https://github.com/mukul975/Privacy-Data-Protection-Skills)
 
@@ -46,7 +46,7 @@ The project is fully open-source with no commercial component. I am a cybersecur
 I would be happy to provide additional details, screenshots, or a walkthrough for a product review or news piece.
 
 Best regards,
-Mahipal Jangra
+Mahipal
 M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences
 GitHub: github.com/mukul975
 
@@ -78,7 +78,7 @@ I would like to pitch an article for CPO Magazine on how AI coding agents are be
 Happy to discuss the angle or adjust the scope to fit your editorial calendar.
 
 Best regards,
-Mahipal Jangra
+Mahipal
 M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences
 GitHub: github.com/mukul975
 
@@ -106,7 +106,7 @@ The project follows the agentskills.io open standard, so skills are portable acr
 
 Coverage spans 16 jurisdictions: GDPR, CCPA/CPRA, HIPAA, 13 US state privacy laws, LGPD, PIPL, DPDP Act, APPI, PIPA, PDPA (Singapore and Thailand), POPIA, Privacy Act 1988, and PIPEDA.
 
-**About the author:** Mahipal Jangra, M.Sc. Cybersecurity and AI, SRH Berlin. 4 papers at Electronic Imaging 2026. Also maintains 730+ cybersecurity skills at github.com/mukul975/cybersecurity-skills.
+**About the author:** Mahipal, M.Sc. Cybersecurity and AI, SRH Berlin. 4 papers at Electronic Imaging 2026. Also maintains 730+ cybersecurity skills at github.com/mukul975/cybersecurity-skills.
 
 ---
 
@@ -129,7 +129,7 @@ The project covers 16 jurisdictions (GDPR, CCPA/CPRA, HIPAA, EU AI Act, LGPD, PI
 
 What sets this apart from privacy documentation: skills are structured for machine consumption. AI agents can discover relevant skills via YAML frontmatter, follow step-by-step workflows, and produce outputs that cite specific articles and regulatory guidance. The agentskills.io standard ensures portability across 26+ AI platforms.
 
-Built by Mahipal Jangra (M.Sc. Cybersecurity and AI, SRH Berlin, 4 papers at Electronic Imaging 2026), who also maintains 730+ cybersecurity skills in a companion repository.
+Built by Mahipal (M.Sc. Cybersecurity and AI, SRH Berlin, 4 papers at Electronic Imaging 2026), who also maintains 730+ cybersecurity skills in a companion repository.
 
 ---
 
@@ -179,12 +179,12 @@ I would like to propose a practitioner-focused article for the IAPP Privacy Advi
 
 **Proposed format:** A 1,500-word practitioner article structured as: (1) the problem of unstructured AI privacy knowledge, (2) how structured skills change privacy workflows with concrete examples, (3) implications for the profession as AI assistants become standard tooling.
 
-**About me:** I am Mahipal Jangra, M.Sc. Cybersecurity and AI at SRH Berlin University of Applied Sciences. I have 4 published papers at IS&T Electronic Imaging 2026. I maintain this privacy skills repository (258+ skills) and a companion cybersecurity skills repository (730+ skills) as open-source projects.
+**About me:** I am Mahipal, M.Sc. Cybersecurity and AI at SRH Berlin University of Applied Sciences. I have 4 published papers at IS&T Electronic Imaging 2026. I maintain this privacy skills repository (258+ skills) and a companion cybersecurity skills repository (730+ skills) as open-source projects.
 
 I am an IAPP member and would welcome the opportunity to contribute to Privacy Advisor. Happy to discuss the angle or provide a draft.
 
 Best regards,
-Mahipal Jangra
+Mahipal
 M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences
 GitHub: github.com/mukul975
 
@@ -212,12 +212,12 @@ I am reaching out to share an open-source project at the intersection of AI deve
 
 **Why this matters:** As organizations adopt AI coding assistants, these tools need domain-specific privacy expertise. This project provides that expertise as structured, open-source data that any AI platform can consume.
 
-**About the author:** Mahipal Jangra, M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences. 4 papers at IS&T Electronic Imaging 2026. Also maintains 730+ cybersecurity skills at github.com/mukul975/cybersecurity-skills.
+**About the author:** Mahipal, M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences. 4 papers at IS&T Electronic Imaging 2026. Also maintains 730+ cybersecurity skills at github.com/mukul975/cybersecurity-skills.
 
 Happy to provide additional details, demo walkthrough, or an interview.
 
 Best regards,
-Mahipal Jangra
+Mahipal
 GitHub: github.com/mukul975
 
 ---
@@ -231,7 +231,7 @@ GitHub: github.com/mukul975
 
 Dear Privado.ai team,
 
-I am Mahipal Jangra, creator of Privacy & Data Protection Skills -- an open-source repository (Apache-2.0) with 258+ structured privacy skills for AI coding agents. I am reaching out because I see a strong alignment between Privado's code-level privacy scanning and this project's structured compliance knowledge.
+I am Mahipal, creator of Privacy & Data Protection Skills -- an open-source repository (Apache-2.0) with 258+ structured privacy skills for AI coding agents. I am reaching out because I see a strong alignment between Privado's code-level privacy scanning and this project's structured compliance knowledge.
 
 **The synergy:** Privado detects personal data flows in code. This repository provides the regulatory knowledge layer -- what to do once data flows are identified. Together, they could enable AI agents to not only detect privacy-relevant code patterns but also recommend specific compliance actions grounded in GDPR, CCPA/CPRA, HIPAA, and 13 additional frameworks.
 
@@ -251,7 +251,7 @@ I am Mahipal Jangra, creator of Privacy & Data Protection Skills -- an open-sour
 I would welcome a call to discuss how our projects could work together. What does your calendar look like in the next two weeks?
 
 Best regards,
-Mahipal Jangra
+Mahipal
 GitHub: github.com/mukul975
 
 ---
@@ -265,7 +265,7 @@ GitHub: github.com/mukul975
 
 Dear OneTrust team,
 
-I am Mahipal Jangra, creator of Privacy & Data Protection Skills -- an open-source repository (Apache-2.0) with 258+ structured privacy compliance skills for AI coding agents. I am reaching out because this project could complement OneTrust's platform in the rapidly growing AI agent ecosystem.
+I am Mahipal, creator of Privacy & Data Protection Skills -- an open-source repository (Apache-2.0) with 258+ structured privacy compliance skills for AI coding agents. I am reaching out because this project could complement OneTrust's platform in the rapidly growing AI agent ecosystem.
 
 **The opportunity:** OneTrust is the leading privacy management platform, but the emerging AI agent ecosystem (Claude Code, GitHub Copilot, Cursor, Gemini CLI) operates outside traditional GRC platforms. This repository brings structured privacy knowledge into those AI workflows, and there is a natural integration path with OneTrust.
 
@@ -286,7 +286,7 @@ I am Mahipal Jangra, creator of Privacy & Data Protection Skills -- an open-sour
 I would appreciate the opportunity to discuss a potential collaboration. Happy to provide a demo or technical walkthrough.
 
 Best regards,
-Mahipal Jangra
+Mahipal
 GitHub: github.com/mukul975
 
 ---
@@ -300,7 +300,7 @@ GitHub: github.com/mukul975
 
 Dear BigID team,
 
-I am Mahipal Jangra, creator of Privacy & Data Protection Skills -- an open-source repository (Apache-2.0) with 258+ structured privacy skills for AI coding agents. I see a compelling integration path between BigID's data intelligence capabilities and this project's regulatory knowledge layer.
+I am Mahipal, creator of Privacy & Data Protection Skills -- an open-source repository (Apache-2.0) with 258+ structured privacy skills for AI coding agents. I see a compelling integration path between BigID's data intelligence capabilities and this project's regulatory knowledge layer.
 
 **The alignment:** BigID excels at data discovery, classification, and intelligence. This repository provides the "what to do next" layer -- structured compliance workflows that AI agents can execute once data is discovered and classified. Together, BigID's data intelligence and these privacy skills could create end-to-end AI-assisted compliance workflows.
 
@@ -321,7 +321,7 @@ I am Mahipal Jangra, creator of Privacy & Data Protection Skills -- an open-sour
 Would you be open to a conversation about how our projects could complement each other? I am flexible on timing.
 
 Best regards,
-Mahipal Jangra
+Mahipal
 GitHub: github.com/mukul975
 
 ---
@@ -469,7 +469,7 @@ This is relevant to the awesome-gdpr list because it provides the most comprehen
 
 **Platforms:** Claude Code, GitHub Copilot, Cursor, Gemini CLI, OpenAI Codex CLI, and 26+ AI platforms.
 **License:** Apache-2.0
-**Author:** [Mahipal Jangra](https://github.com/mukul975) -- M.Sc. Cybersecurity and AI, SRH Berlin. 4 papers at Electronic Imaging 2026. Also maintains [730+ cybersecurity skills](https://github.com/mukul975/cybersecurity-skills).
+**Author:** [Mahipal](https://github.com/mukul975) -- M.Sc. Cybersecurity and AI, SRH Berlin. 4 papers at Electronic Imaging 2026. Also maintains [730+ cybersecurity skills](https://github.com/mukul975/cybersecurity-skills).
 
 This is the privacy/compliance counterpart to cybersecurity agent skills, and is one of the largest domain-specific skill collections in the agentskills.io ecosystem.
 ```

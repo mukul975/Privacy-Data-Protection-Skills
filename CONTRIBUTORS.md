@@ -10,7 +10,7 @@ This project credits every person who helps build the world's most comprehensive
 
 | Avatar | Name | Role | Contributions |
 |:------:|:-----|:-----|:-------------|
-| <img src="https://github.com/mukul975.png" width="80" alt="Mahipal Jangra"> | **Mahipal Jangra** [@mukul975](https://github.com/mukul975) | Creator & Maintainer | [💻](#code) [📖](#content) [🔬](#research) [📋](#review) [💡](#ideas) [🚀](#maintenance) |
+| <img src="https://github.com/mukul975.png" width="80" alt="Mahipal"> | **Mahipal** [@mukul975](https://github.com/mukul975) | Creator & Maintainer | [💻](#code) [📖](#content) [🔬](#research) [📋](#review) [💡](#ideas) [🚀](#maintenance) |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 

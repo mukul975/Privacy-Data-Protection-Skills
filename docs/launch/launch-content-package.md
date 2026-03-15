@@ -1,7 +1,7 @@
 # Launch Content Package — Privacy & Data Protection Skills
 
 > **Repository**: [github.com/mukul975/Privacy-Data-Protection-Skills](https://github.com/mukul975/Privacy-Data-Protection-Skills)
-> **Author**: Mahipal Jangra ([@mukul975](https://github.com/mukul975))
+> **Author**: Mahipal ([@mukul975](https://github.com/mukul975))
 > **Credentials**: M.Sc. Cybersecurity and AI, SRH Berlin University of Applied Sciences. 4 papers at Electronic Imaging 2026 (2 sole-authored on AI agent protocol security). Maintainer of [Anthropic-Cybersecurity-Skills](https://github.com/mukul975/Anthropic-Cybersecurity-Skills) (730+ skills).
 > **Date prepared**: 2026-03-15
 > **Repo stats**: 282 skills | 21 plugin bundles | 6 LobeHub agents | MIT licensed

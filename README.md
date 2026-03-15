@@ -179,7 +179,7 @@ See `.claude-plugin/marketplace.json` for the full plugin catalog.
 | Privacy and Data Protection | 282+ | This repository |
 | More domains coming | -- | Star this repo for updates |
 
-Built by [Mahipal Jangra](https://github.com/mukul975) -- M.Sc. Cybersecurity and AI, SRH Berlin.
+Built by [Mahipal](https://github.com/mukul975) -- M.Sc. Cybersecurity and AI, SRH Berlin.
 
 ---
 
@@ -202,4 +202,4 @@ We welcome contributions from both developers and privacy professionals.
 
 Apache 2.0. See [LICENSE](LICENSE) for details.
 
-Copyright 2025-2026 Mahipal Jangra
+Copyright 2025-2026 Mahipal

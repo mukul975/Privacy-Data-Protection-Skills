@@ -49,4 +49,4 @@ Security researchers who responsibly disclose vulnerabilities will be credited i
 
 - GitHub Security Advisories: [Report here](../../security/advisories/new)
 - Email: security@privacy-skills.dev
-- Maintainer: [Mahipal Jangra](https://github.com/mukul975)
+- Maintainer: [Mahipal](https://github.com/mukul975)
