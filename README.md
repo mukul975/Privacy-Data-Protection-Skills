@@ -1,135 +1,205 @@
-# Privacy-Engineering-Skills
+# 🔒 Privacy & Data Protection Skills for AI Agents
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Skills: 253+](https://img.shields.io/badge/Skills-253%2B-brightgreen.svg)](#skill-categories)
-[![Platforms: 32+](https://img.shields.io/badge/Platforms-32%2B-orange.svg)](#platform-compatibility)
-[![Standard: agentskills.io](https://img.shields.io/badge/Standard-agentskills.io-purple.svg)](https://agentskills.io)
+> 282+ structured privacy and data protection skills following the [agentskills.io](https://agentskills.io) open standard. Works with Claude Code, GitHub Copilot, OpenAI Codex CLI, Cursor, Gemini CLI, and 26+ AI platforms.
 
-An open-source database of **253+ privacy and data protection skills** for AI agents, following the [agentskills.io](https://agentskills.io) open standard. Every skill contains real regulatory citations (exact GDPR articles, CCPA/CPRA sections, LGPD articles, HIPAA rules, DPDP Act sections, NIST Privacy Framework subcategories), working Python scripts, procedural workflows, and filled-in practitioner templates.
-
-Built for privacy engineers, DPOs, compliance teams, and AI agents that need to execute privacy tasks with precision.
-
-## Quick Start
-
-### Method 1: Claude Code
-
-```bash
-claude /install-skills https://github.com/mukul975/Privacy-Data-Protection-Skills
-```
-
-### Method 2: Git Clone
-
-```bash
-git clone https://github.com/mukul975/Privacy-Data-Protection-Skills.git
-cd Privacy-Data-Protection-Skills
-```
-
-### Method 3: Browse Online
-
-Browse the [`skills/privacy/`](skills/privacy/) directory on GitHub to explore individual skills.
-
-## Skill Categories
-
-| # | Domain | Skills | Description |
-|---|--------|--------|-------------|
-| 1 | **GDPR Compliance** | 18 | Arts. 5-84 compliance, accountability, DPA cooperation, certification |
-| 2 | **Data Subject Rights** | 15 | DSAR processing, erasure, portability, objection, CCPA/CPRA rights |
-| 3 | **Consent Management** | 14 | Valid consent, preference centers, GPC, withdrawal, CMPs |
-| 4 | **Privacy Impact Assessment** | 14 | DPIAs, TIAs, AI assessments, NIST PF, PIA methodologies |
-| 5 | **Data Breach Response** | 13 | 72-hour notification, risk assessment, forensics, multi-jurisdiction |
-| 6 | **Cross-Border Transfers** | 12 | SCCs 2021, BCRs, EU-US DPF, Schrems II TIAs, Art. 49 derogations |
-| 7 | **Privacy-by-Design** | 13 | Data minimization, PETs, differential privacy, LINDDUN, ISO 31700 |
-| 8 | **Data Classification** | 12 | Personal data identification, Art. 9 special categories, PII detection |
-| 9 | **Records of Processing** | 10 | Art. 30 RoPA creation, maintenance, automation, audit |
-| 10 | **Cookie Consent Compliance** | 12 | CNIL banners, TCF v2.2, Google Consent Mode v2, ePrivacy |
-| 11 | **AI Privacy Governance** | 15 | AI DPIAs, EU AI Act, training data lawfulness, model auditing |
-| 12 | **Employee Data Privacy** | 11 | Monitoring DPIAs, biometrics, BYOD, whistleblower protection |
-| 13 | **Children's Data Protection** | 10 | GDPR Art. 8, COPPA, UK AADC, age verification, EdTech |
-| 14 | **Data Retention & Deletion** | 12 | Retention schedules, secure destruction, litigation holds, NIST 800-88 |
-| 15 | **Vendor Privacy Management** | 11 | DPAs, sub-processor management, vendor audits, cloud assessment |
-| 16 | **Privacy Engineering** | 14 | NIST PF functions, LINDDUN, differential privacy, PII pipelines |
-| 17 | **US State Privacy Laws** | 13 | CCPA/CPRA, VCDPA, CPA, CTDPA, TDPSA, multi-state compliance |
-| 18 | **Healthcare Privacy** | 11 | HIPAA Privacy/Security Rules, HITECH, 42 CFR Part 2, telehealth |
-| 19 | **Global Privacy Regulations** | 12 | LGPD, PIPL, PIPA, DPDP Act, PDPA, APPI, multi-jurisdiction |
-| 20 | **Privacy Audit & Certification** | 11 | ISO 27701, SOC 2 Privacy, APEC CBPR, maturity models |
-
-## How It Works
-
-Skills use a **three-level progressive disclosure** system designed for efficient context management:
-
-1. **Metadata** (~100 tokens) — The `name` and `description` fields in YAML frontmatter are always loaded, enabling agents to discover relevant skills by keyword matching.
-
-2. **Instructions** (< 5,000 tokens) — The full `SKILL.md` body loads when a skill activates. Contains workflow steps, prerequisites, and verification criteria.
-
-3. **Resources** (on demand) — Files in `references/`, `scripts/`, and `assets/` load only when needed. Includes regulatory citations, Python automation scripts, and filled-in practitioner templates.
-
-### Skill Anatomy
-
-```
-skill-name/
-├── SKILL.md                 # YAML frontmatter + workflow instructions
-├── references/
-│   ├── standards.md         # Exact regulation citations
-│   └── workflows.md         # Deep procedural reference
-├── scripts/
-│   └── process.py           # Working Python automation
-└── assets/
-    └── template.md          # Filled-in checklist or report
-```
-
-## Platform Compatibility
-
-Skills follow the [agentskills.io](https://agentskills.io) open standard and are compatible with **32+ AI agent platforms**:
-
-| Platform | Platform | Platform |
-|----------|----------|----------|
-| Claude Code | Cursor | VS Code (Copilot) |
-| GitHub Copilot | OpenAI Codex | Gemini CLI |
-| Roo Code | Goose | Amp |
-| Letta | OpenHands | Junie (JetBrains) |
-| Mux (Coder) | Firebender | OpenCode |
-| Factory | Piebald | TRAE (ByteDance) |
-| Spring AI | Mistral Vibe | Command Code |
-| Databricks | Snowflake | Qodo |
-| Laravel Boost | Emdash | Ona |
-| VT Code | Agentman | Autohand |
-| Claude (claude.ai) | — | — |
-
-## Regulatory Coverage
-
-Skills reference **15+ privacy frameworks** with exact article and section citations:
-
-- **GDPR** — Arts. 4-88, Recitals 26-171
-- **CCPA/CPRA** — Cal. Civ. Code §1798.100-199
-- **LGPD** — Lei 13.709/2018, Arts. 1-65
-- **PIPL** — Personal Information Protection Law (China)
-- **DPDP Act** — Digital Personal Data Protection Act 2023 (India)
-- **HIPAA** — 45 CFR §160-164, HITECH Act
-- **ePrivacy Directive** — Art. 5(3), PECR (UK)
-- **EU AI Act** — Arts. 6-15, Annex III
-- **NIST Privacy Framework** — ID, GV, CT, CM, PR functions
-- **ISO 27701** — PIMS extending ISO 27001
-- **COPPA** — 16 CFR §312
-- **UK AADC** — Age Appropriate Design Code
-- **APPI** — Act on Protection of Personal Information (Japan)
-- **PIPA** — Personal Information Protection Act (South Korea)
-- **PDPA** — Personal Data Protection Act (Thailand, Singapore)
-
-## Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
-
-- Skill submission guidelines
-- YAML frontmatter requirements
-- Quality checklist
-- PR naming conventions
-
-## License
-
-This project is licensed under the **Apache License 2.0** — see the [LICENSE](LICENSE) file for details.
-
-Copyright 2025 Mahipal
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Skills](https://img.shields.io/badge/Skills-282+-green.svg)](#-skill-categories)
+[![agentskills.io](https://img.shields.io/badge/agentskills.io-compatible-purple.svg)](https://agentskills.io)
+[![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin_Marketplace-orange.svg)](#-claude-code-plugin-marketplace)
 
 ---
 
-Built with the [agentskills.io](https://agentskills.io) open standard.
+## Quick Start
+
+```bash
+git clone https://github.com/mukul975/Privacy-Data-Protection-Skills.git
+cd Privacy-Data-Protection-Skills/skills/privacy/conducting-gdpr-dpia
+cat SKILL.md
+```
+
+Or install via Claude Code Plugin Marketplace:
+```bash
+/plugin marketplace add mukul975/Privacy-Data-Protection-Skills
+/plugin install privacy-skills-complete@privacy-data-protection-skills
+```
+
+---
+
+## Regulation Coverage
+
+| Jurisdiction | Regulation | Skills | Status |
+|:---|:---|:---:|:---:|
+| EU | GDPR (Regulation 2016/679) | 50+ | Full |
+| EU | EU AI Act (Regulation 2024/1689) | 15+ | Full |
+| EU | ePrivacy Directive | 12+ | Full |
+| US | CCPA/CPRA | 13+ | Full |
+| US | HIPAA Privacy and Security Rules | 11+ | Full |
+| US | 13 State Privacy Laws | 13+ | Full |
+| Brazil | LGPD | 3+ | Yes |
+| China | PIPL | 3+ | Yes |
+| India | DPDP Act 2023 | 3+ | Yes |
+| Japan | APPI | 3+ | Yes |
+| South Korea | PIPA | 3+ | Yes |
+| Singapore | PDPA | 3+ | Yes |
+| Thailand | PDPA | 3+ | Yes |
+| South Africa | POPIA | 3+ | Yes |
+| Australia | Privacy Act 1988 | 3+ | Yes |
+| Canada | PIPEDA | 3+ | Yes |
+| Cross-border | APEC CBPR, SCCs, BCRs, EU-US DPF | 12+ | Full |
+
+---
+
+## Why This Exists
+
+AI agents are increasingly used for privacy compliance tasks but operate with zero structured knowledge of privacy regulations, leading to:
+
+- Hallucinated regulation citations (invented GDPR articles, wrong CFR sections)
+- Missed jurisdiction-specific requirements (PIPL data localization, LGPD 10 lawful bases)
+- Incorrect breach notification timelines (72h GDPR vs 60d HIPAA vs 3d Singapore)
+- Dangerous oversimplification of cross-border transfer mechanisms
+
+Each skill provides structured, verified regulatory knowledge that AI agents load on demand, replacing hallucination with precision.
+
+**Disclaimer:** These skills are educational reference materials, not legal advice. Consult qualified legal counsel for compliance decisions.
+
+---
+
+## Skill Categories
+
+| Category | Skills | Example |
+|:---|:---:|:---|
+| GDPR Compliance | 18 | `gdpr-compliance-audit` |
+| Privacy Impact Assessment | 18 | `conducting-gdpr-dpia` |
+| Data Subject Rights | 15 | `dsar-processing` |
+| AI Privacy Governance | 15 | `ai-dpia` |
+| Consent Management | 14 | `gdpr-valid-consent` |
+| Privacy Engineering | 14 | `differential-privacy-prod` |
+| Privacy by Design | 13 | `implementing-homomorphic-encryption` |
+| Data Breach Response | 13 | `breach-72h-notification` |
+| US State Privacy Laws | 13 | `ccpa-cpra-compliance` |
+| Cross-Border Transfers | 12 | `scc-implementation` |
+| Cookie and Consent | 12 | `tcf-v2-implementation` |
+| Data Classification | 12 | `pii-detection-pipeline` |
+| Data Retention | 12 | `retention-schedule` |
+| Global Regulations | 12 | `china-pipl` |
+| Vendor Management | 11 | `vendor-risk-scoring` |
+| Healthcare Privacy | 11 | `hipaa-risk-analysis` |
+| Employee Privacy | 11 | `employee-monitoring-dpia` |
+| Privacy Audit | 11 | `iso-27701-pims` |
+| Records of Processing | 10 | `controller-ropa-creation` |
+| Children's Privacy | 10 | `coppa-compliance` |
+
+---
+
+## How Skills Work
+
+Every skill follows the [agentskills.io](https://agentskills.io) open standard:
+
+```
+skills/privacy/conducting-gdpr-dpia/
+  SKILL.md              # YAML frontmatter + workflow
+  references/
+    standards.md        # Regulatory citations, enforcement precedents
+    workflows.md        # Step-by-step procedures with timelines
+  scripts/
+    process.py          # Working Python 3 automation (stdlib only)
+  assets/
+    template.md         # Filled real-world example
+```
+
+SKILL.md format:
+```yaml
+---
+name: conducting-gdpr-dpia
+description: >-
+  Conducts GDPR Data Protection Impact Assessments under Article 35
+  following EDPB WP248rev.01 nine-criteria methodology.
+license: Apache-2.0
+metadata:
+  author: mukul975
+  version: "1.0"
+  domain: privacy
+  subdomain: privacy-impact-assessment
+  tags: "dpia, gdpr, article-35, risk-assessment, edpb"
+---
+```
+
+Progressive disclosure: agents load only YAML frontmatter (~30-50 tokens) for relevance matching. Full skill content loads only when needed. References, scripts, and templates load on demand.
+
+---
+
+## Claude Code Plugin Marketplace
+
+This repository is a Claude Code Plugin Marketplace with 21 installable plugins:
+
+```bash
+/plugin marketplace add mukul975/Privacy-Data-Protection-Skills
+/plugin install privacy-skills-complete@privacy-data-protection-skills
+/plugin install gdpr-compliance-skills@privacy-data-protection-skills
+/plugin install healthcare-privacy-skills@privacy-data-protection-skills
+/plugin install ai-privacy-governance-skills@privacy-data-protection-skills
+```
+
+See `.claude-plugin/marketplace.json` for the full plugin catalog.
+
+---
+
+## How This Differs from Awesome-Privacy Lists
+
+| Feature | This Repository | Awesome-Privacy Lists |
+|:---|:---|:---|
+| Format | Structured YAML + markdown workflows | Curated link directories |
+| Machine-readable | Yes, agents load directly | No, human-only browsing |
+| Workflows | Step-by-step with verification | Links to external resources |
+| Automation | Python scripts per skill | None |
+| Templates | Filled real-world examples | None |
+| Regulatory citations | Exact article/section references | General descriptions |
+| Platform support | 26+ AI platforms | GitHub only |
+| Enforcement precedents | Named cases with fine amounts | Rarely included |
+
+---
+
+## Roadmap
+
+- [x] v1.0.0 282 skills across 20 privacy domains
+- [x] Claude Code Plugin Marketplace with 21 plugins
+- [ ] EU AI Act deep skills ahead of August 2026 enforcement
+- [ ] India DPDP Act implementation rules
+- [ ] Framework mappings: NIST Privacy Framework 1.1, ISO 27701:2025, OWASP Privacy Risks
+- [ ] Privacy automation workflows for DSAR, DPIA, breach pipelines
+- [ ] Multi-language support
+
+---
+
+## Part of the AI Agent Skills Ecosystem
+
+| Domain | Skills | Repository |
+|:---|:---:|:---|
+| Cybersecurity | 730+ | [Anthropic-Cybersecurity-Skills](https://github.com/mukul975/Anthropic-Cybersecurity-Skills) |
+| Privacy and Data Protection | 282+ | This repository |
+| More domains coming | -- | Star this repo for updates |
+
+Built by [Mahipal Jangra](https://github.com/mukul975) -- M.Sc. Cybersecurity and AI, SRH Berlin. Published at Springer and Electronic Imaging 2026.
+
+---
+
+## Contributing
+
+We welcome contributions from both developers and privacy professionals.
+
+**Privacy professionals (no code required):**
+- [Request a new skill](../../issues/new?template=new-skill-request.md) via GitHub Issues
+- [Suggest improvements](../../issues/new?template=skill-improvement.md) to existing skills
+- Describe a workflow in plain language and maintainers will format it
+
+**Developers:**
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide
+- Fork, branch (`feat/skill-name`), PR following the agentskills.io format
+
+---
+
+## License
+
+Apache 2.0. See [LICENSE](LICENSE) for details.
+
+Copyright 2025-2026 Mahipal Jangra

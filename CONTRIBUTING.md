@@ -1,6 +1,23 @@
-# Contributing to Privacy-Engineering-Skills
+# Contributing to Privacy & Data Protection Skills
 
 Thank you for your interest in contributing to this open-source privacy and data protection skills database. This guide explains how to submit new skills, improve existing ones, and maintain quality standards.
+
+## Contributing Without Code
+
+You do not need to be a developer to contribute. DPOs, privacy lawyers, GRC analysts, and compliance professionals are the domain experts this project needs most.
+
+**Option 1: GitHub Issue Templates**
+- [Request a new skill](../../issues/new?template=new-skill-request.md) — describe the privacy workflow and regulatory basis
+- [Suggest improvements](../../issues/new?template=skill-improvement.md) — flag inaccuracies or missing coverage
+
+**Option 2: Plain Language Description**
+Open a GitHub Issue with the title "[Skill Suggestion] Your Skill Name" and describe:
+1. What privacy task this skill should help AI agents perform
+2. Which regulation(s) it relates to (article/section numbers if known)
+3. The step-by-step workflow a privacy professional would follow
+4. Any enforcement precedents or regulatory guidance
+
+Maintainers will convert your description into the agentskills.io format. You will be credited as a contributor.
 
 ## How to Contribute
 

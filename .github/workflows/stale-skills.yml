@@ -1,0 +1,193 @@
+name: Stale Skills Review
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-stale-skills:
+    name: Check Skills for Staleness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Identify skills needing review
+        id: stale-check
+        run: |
+          python3 << 'PYEOF'
+          import os
+          import sys
+          import yaml
+          from datetime import datetime
+
+          skills_root = os.path.join(os.environ.get("GITHUB_WORKSPACE", "."), "skills")
+          today = datetime.now().strftime("%Y-%m-%d")
+          stale_skills = []
+          total = 0
+
+          for domain_dir in sorted(os.listdir(skills_root)):
+              domain_path = os.path.join(skills_root, domain_dir)
+              if not os.path.isdir(domain_path):
+                  continue
+              for skill_dir in sorted(os.listdir(domain_path)):
+                  skill_path = os.path.join(domain_path, skill_dir)
+                  if not os.path.isdir(skill_path):
+                      continue
+                  skill_md = os.path.join(skill_path, "SKILL.md")
+                  if not os.path.isfile(skill_md):
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": "Missing SKILL.md file",
+                      })
+                      continue
+
+                  total += 1
+
+                  with open(skill_md, "r", encoding="utf-8") as f:
+                      content = f.read()
+
+                  if not content.startswith("---"):
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": "No YAML frontmatter found",
+                      })
+                      continue
+
+                  parts = content.split("---", 2)
+                  if len(parts) < 3:
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": "Malformed frontmatter",
+                      })
+                      continue
+
+                  try:
+                      fm = yaml.safe_load(parts[1])
+                  except yaml.YAMLError:
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": "Invalid YAML in frontmatter",
+                      })
+                      continue
+
+                  if not isinstance(fm, dict):
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": "Frontmatter is not a valid mapping",
+                      })
+                      continue
+
+                  meta = fm.get("metadata", {})
+                  if not isinstance(meta, dict):
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": "Missing or invalid metadata section",
+                      })
+                      continue
+
+                  version = meta.get("version")
+                  if not version:
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": "Missing metadata.version field",
+                      })
+                      continue
+
+                  # Check for required metadata completeness
+                  missing_fields = []
+                  for field in ["author", "version", "domain", "subdomain", "tags"]:
+                      if field not in meta:
+                          missing_fields.append(field)
+
+                  if missing_fields:
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": f"Missing metadata fields: {', '.join(missing_fields)}",
+                      })
+
+                  # Check required file structure
+                  required_files = [
+                      "references/standards.md",
+                      "references/workflows.md",
+                      "scripts/process.py",
+                      "assets/template.md",
+                  ]
+                  missing_files = []
+                  for rf in required_files:
+                      if not os.path.isfile(os.path.join(skill_path, rf)):
+                          missing_files.append(rf)
+
+                  if missing_files:
+                      stale_skills.append({
+                          "skill": f"{domain_dir}/{skill_dir}",
+                          "reason": f"Missing files: {', '.join(missing_files)}",
+                      })
+
+          # Build the issue body
+          body_lines = []
+          body_lines.append(f"## Monthly Skills Review Report")
+          body_lines.append(f"")
+          body_lines.append(f"**Date:** {today}")
+          body_lines.append(f"**Total skills scanned:** {total}")
+          body_lines.append(f"**Skills needing review:** {len(stale_skills)}")
+          body_lines.append(f"")
+
+          if stale_skills:
+              body_lines.append(f"### Skills Requiring Attention")
+              body_lines.append(f"")
+              body_lines.append(f"| Skill | Issue |")
+              body_lines.append(f"|-------|-------|")
+              for entry in stale_skills:
+                  body_lines.append(f"| `{entry['skill']}` | {entry['reason']} |")
+              body_lines.append(f"")
+              body_lines.append(f"### Recommended Actions")
+              body_lines.append(f"")
+              body_lines.append(f"- Review each listed skill and update metadata as needed")
+              body_lines.append(f"- Ensure all required files are present and complete")
+              body_lines.append(f"- Bump `metadata.version` after updates")
+          else:
+              body_lines.append(f"All {total} skills passed the review check. No action needed.")
+
+          body = "\n".join(body_lines)
+
+          # Write outputs for the next step
+          # Use environment files for multiline output
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"stale_count={len(stale_skills)}\n")
+              out.write(f"total_count={total}\n")
+
+          with open(os.environ["GITHUB_ENV"], "a") as env:
+              env.write(f"ISSUE_BODY<<GHEOF\n{body}\nGHEOF\n")
+
+          print(f"Scanned {total} skills, found {len(stale_skills)} needing review.")
+          PYEOF
+
+      - name: Create GitHub issue if stale skills found
+        if: steps.stale-check.outputs.stale_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Monthly Skills Review: ${{ steps.stale-check.outputs.stale_count }} skill(s) need attention ($(date +%B\ %Y))" \
+            --body "$ISSUE_BODY" \
+            --label "maintenance,skills-review"
+
+      - name: Summary
+        run: |
+          echo "### Stale Skills Check Complete" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Total skills:** ${{ steps.stale-check.outputs.total_count }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Needing review:** ${{ steps.stale-check.outputs.stale_count }}" >> "$GITHUB_STEP_SUMMARY"

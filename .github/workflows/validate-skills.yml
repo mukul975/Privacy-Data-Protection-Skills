@@ -1,0 +1,257 @@
+name: Validate Privacy Skills
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'skills/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-frontmatter:
+    name: Validate SKILL.md Frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Validate frontmatter in all SKILL.md files
+        run: |
+          python3 << 'PYEOF'
+          import os
+          import sys
+          import yaml
+
+          VALID_SUBDOMAINS = {
+              "gdpr-compliance",
+              "data-subject-rights",
+              "consent-management",
+              "privacy-impact-assessment",
+              "data-breach-response",
+              "cross-border-transfers",
+              "privacy-by-design",
+              "data-classification",
+              "records-of-processing",
+              "cookie-consent-compliance",
+              "ai-privacy-governance",
+              "employee-data-privacy",
+              "children-data-protection",
+              "data-retention-deletion",
+              "vendor-privacy-management",
+              "privacy-engineering",
+              "us-state-privacy-laws",
+              "healthcare-privacy",
+              "global-privacy-regulations",
+              "privacy-audit-certification",
+          }
+
+          REQUIRED_TOP = ["name", "description", "license"]
+          REQUIRED_META = ["author", "version", "domain", "subdomain", "tags"]
+
+          errors = []
+          skill_count = 0
+
+          skills_root = os.path.join(os.environ.get("GITHUB_WORKSPACE", "."), "skills")
+
+          for domain_dir in sorted(os.listdir(skills_root)):
+              domain_path = os.path.join(skills_root, domain_dir)
+              if not os.path.isdir(domain_path):
+                  continue
+              for skill_dir in sorted(os.listdir(domain_path)):
+                  skill_path = os.path.join(domain_path, skill_dir)
+                  if not os.path.isdir(skill_path):
+                      continue
+                  skill_md = os.path.join(skill_path, "SKILL.md")
+                  if not os.path.isfile(skill_md):
+                      continue
+
+                  skill_count += 1
+                  rel_path = os.path.relpath(skill_md, os.environ.get("GITHUB_WORKSPACE", "."))
+
+                  with open(skill_md, "r", encoding="utf-8") as f:
+                      content = f.read()
+
+                  if not content.startswith("---"):
+                      errors.append(f"{rel_path}: Missing YAML frontmatter (must start with ---)")
+                      continue
+
+                  parts = content.split("---", 2)
+                  if len(parts) < 3:
+                      errors.append(f"{rel_path}: Malformed frontmatter (missing closing ---)")
+                      continue
+
+                  try:
+                      fm = yaml.safe_load(parts[1])
+                  except yaml.YAMLError as e:
+                      errors.append(f"{rel_path}: Invalid YAML in frontmatter: {e}")
+                      continue
+
+                  if not isinstance(fm, dict):
+                      errors.append(f"{rel_path}: Frontmatter is not a YAML mapping")
+                      continue
+
+                  for field in REQUIRED_TOP:
+                      if field not in fm:
+                          errors.append(f"{rel_path}: Missing required field '{field}'")
+
+                  if "metadata" not in fm or not isinstance(fm.get("metadata"), dict):
+                      errors.append(f"{rel_path}: Missing or invalid 'metadata' section")
+                      continue
+
+                  meta = fm["metadata"]
+                  for field in REQUIRED_META:
+                      if field not in meta:
+                          errors.append(f"{rel_path}: Missing required metadata field '{field}'")
+
+                  # Verify name matches directory name
+                  if "name" in fm and fm["name"] != skill_dir:
+                      errors.append(
+                          f"{rel_path}: name '{fm['name']}' does not match directory name '{skill_dir}'"
+                      )
+
+                  # Verify description length
+                  if "description" in fm:
+                      desc = str(fm["description"])
+                      if len(desc) > 1024:
+                          errors.append(
+                              f"{rel_path}: description is {len(desc)} chars (max 1024)"
+                          )
+
+                  # Verify subdomain is valid
+                  if "subdomain" in meta:
+                      sd = str(meta["subdomain"])
+                      if sd not in VALID_SUBDOMAINS:
+                          errors.append(
+                              f"{rel_path}: invalid subdomain '{sd}'. "
+                              f"Must be one of: {', '.join(sorted(VALID_SUBDOMAINS))}"
+                          )
+
+          print(f"Checked {skill_count} SKILL.md files")
+
+          if errors:
+              print(f"\n{len(errors)} validation error(s) found:\n")
+              for err in errors:
+                  print(f"  ERROR: {err}")
+              sys.exit(1)
+          else:
+              print("All frontmatter validations passed.")
+          PYEOF
+
+  validate-python:
+    name: Validate Python Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile-check all process.py scripts
+        run: |
+          error_count=0
+          total=0
+          while IFS= read -r -d '' pyfile; do
+            total=$((total + 1))
+            if ! python3 -m py_compile "$pyfile" 2>&1; then
+              echo "ERROR: Failed to compile $pyfile"
+              error_count=$((error_count + 1))
+            fi
+          done < <(find skills -name "process.py" -path "*/scripts/process.py" -print0)
+
+          echo "Checked $total process.py files"
+          if [ "$error_count" -gt 0 ]; then
+            echo "$error_count file(s) failed compilation"
+            exit 1
+          else
+            echo "All Python scripts compile successfully."
+          fi
+
+  check-placeholders:
+    name: Check for Placeholder Content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for placeholder patterns
+        run: |
+          echo "Scanning skills/ for placeholder content..."
+          patterns=(
+            "TODO"
+            "TBD"
+            "\[insert\]"
+            "example\.com"
+            "PLACEHOLDER"
+            "Lorem ipsum"
+          )
+          found=0
+          for pattern in "${patterns[@]}"; do
+            if grep -rn --include="*.md" --include="*.py" "$pattern" skills/; then
+              echo "ERROR: Found placeholder pattern: $pattern"
+              found=1
+            fi
+          done
+
+          if [ "$found" -eq 1 ]; then
+            echo ""
+            echo "Placeholder content detected in skills/. Please replace all placeholders with real content."
+            exit 1
+          else
+            echo "No placeholder content found."
+          fi
+
+  check-structure:
+    name: Verify Skill Directory Structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files in each skill
+        run: |
+          REQUIRED_FILES=(
+            "SKILL.md"
+            "references/standards.md"
+            "references/workflows.md"
+            "scripts/process.py"
+            "assets/template.md"
+          )
+
+          error_count=0
+          skill_count=0
+
+          for domain_dir in skills/*/; do
+            [ -d "$domain_dir" ] || continue
+            for skill_dir in "$domain_dir"*/; do
+              [ -d "$skill_dir" ] || continue
+              skill_count=$((skill_count + 1))
+              for req_file in "${REQUIRED_FILES[@]}"; do
+                filepath="${skill_dir}${req_file}"
+                if [ ! -f "$filepath" ]; then
+                  echo "ERROR: Missing $filepath"
+                  error_count=$((error_count + 1))
+                fi
+              done
+            done
+          done
+
+          echo "Checked $skill_count skill directories"
+          if [ "$error_count" -gt 0 ]; then
+            echo "$error_count missing file(s) detected"
+            exit 1
+          else
+            echo "All skill directories have the required structure."
+          fi

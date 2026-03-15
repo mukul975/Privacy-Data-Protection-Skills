@@ -1,0 +1,20 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+  categories:
+    - title: New Skills
+      labels:
+        - new-skill
+    - title: Skill Improvements
+      labels:
+        - improvement
+    - title: Bug Fixes
+      labels:
+        - bug-fix
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Infrastructure
+      labels:
+        - infrastructure
