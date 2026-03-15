@@ -55,7 +55,13 @@ htmlcov/
 *.tmp
 *.bak
 *.orig
-_gen_*.py
+
+# Generated scripts (root-level only, not inside skills/)
+/*.bat
+/*.ps1
+/*.cmd
+/*.sh
+/_*.py
 
 # Non-essential
 mappings/launch/
