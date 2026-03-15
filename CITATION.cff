@@ -5,7 +5,7 @@ type: dataset
 authors:
   - given-names: Mahipal
     alias: mukul975
-    affiliation: "SRH Berlin University of Applied Sciences"
+    affiliation: ""
 repository-code: "https://github.com/mukul975/Privacy-Data-Protection-Skills"
 url: "https://agentskills.io"
 license: Apache-2.0
