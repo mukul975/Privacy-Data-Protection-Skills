@@ -1,10 +1,10 @@
 # Data Lineage Documentation Report
 
-**Organization**: Meridian Analytics Ltd
+**Organisation**: Vanguard Financial Services
 **Report Date**: 2026-03-14
-**Prepared By**: Data Governance Team
+**Prepared By**: David Okoro, Data Engineering Lead
 **Review Period**: Q1 2026
-**DPO Approval**: Elena Vasquez, DPO
+**DPO Approval**: Dr. James Whitfield, DPO
 
 ---
 
@@ -126,7 +126,7 @@
 
 | Role | Name | Date | Signature |
 |------|------|------|-----------|
-| Data Protection Officer | Elena Vasquez | 2026-03-14 | Approved |
-| Chief Data Officer | James Thornton | 2026-03-14 | Approved |
-| Head of Infrastructure | Sarah Chen | 2026-03-14 | Approved |
+| Data Protection Officer | Dr. James Whitfield | 2026-03-14 | Approved |
+| Chief Data Officer | Michael Chen | 2026-03-14 | Approved |
+| Head of Infrastructure | Sarah Mitchell | 2026-03-14 | Approved |
 | Head of Information Security | Robert Okafor | 2026-03-14 | Approved |

@@ -1,0 +1,249 @@
+{
+  "name": "privacy-data-protection-skills",
+  "owner": {
+    "name": "Mahipal",
+    "email": "mahipal@privacy-skills.dev"
+  },
+  "metadata": {
+    "description": "282+ production-grade privacy and data protection skills for AI agents. Covers GDPR, CCPA/CPRA, HIPAA, LGPD, PIPL, and 15+ global privacy regulations across 20 compliance domains.",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "privacy-skills-complete",
+      "source": "./plugins/privacy-skills-complete",
+      "description": "Complete collection of 282+ privacy and data protection skills covering GDPR, CCPA, HIPAA, LGPD, PIPL, and 15+ regulations",
+      "version": "1.0.0",
+      "author": {
+        "name": "Mahipal"
+      },
+      "homepage": "https://github.com/mukul975/Privacy-Data-Protection-Skills",
+      "repository": "https://github.com/mukul975/Privacy-Data-Protection-Skills",
+      "license": "Apache-2.0",
+      "keywords": ["privacy", "data-protection", "gdpr", "ccpa", "hipaa", "lgpd", "pipl", "compliance", "dpia", "dsar", "breach-response"],
+      "category": "compliance",
+      "tags": ["privacy", "gdpr", "ccpa", "hipaa", "compliance"]
+    },
+    {
+      "name": "gdpr-compliance-skills",
+      "source": "./plugins/gdpr-compliance-skills",
+      "description": "18 GDPR compliance skills: audit, gap analysis, accountability, DPO, certification, DPA drafting, supervisory authority cooperation",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["gdpr", "compliance", "audit", "dpo", "certification"],
+      "category": "compliance",
+      "tags": ["gdpr", "eu-privacy", "data-protection"]
+    },
+    {
+      "name": "privacy-impact-assessment-skills",
+      "source": "./plugins/privacy-impact-assessment-skills",
+      "description": "18 DPIA and PIA skills: GDPR Art. 35, risk scoring, stakeholder consultation, threshold screening, mitigation planning",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["dpia", "pia", "risk-assessment", "gdpr-article-35"],
+      "category": "compliance",
+      "tags": ["dpia", "privacy-impact", "risk-assessment"]
+    },
+    {
+      "name": "data-subject-rights-skills",
+      "source": "./plugins/data-subject-rights-skills",
+      "description": "15 DSAR and data subject rights skills: access, erasure, portability, rectification, objection, opt-out signals",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["dsar", "data-subject-rights", "access-request", "erasure", "portability"],
+      "category": "compliance",
+      "tags": ["dsar", "rights", "access-request"]
+    },
+    {
+      "name": "ai-privacy-governance-skills",
+      "source": "./plugins/ai-privacy-governance-skills",
+      "description": "15 AI privacy skills: AI DPIA, training data compliance, bias assessment, transparency, LLM output privacy, federated learning",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["ai-privacy", "ai-governance", "ai-dpia", "llm-privacy", "ai-bias"],
+      "category": "compliance",
+      "tags": ["ai", "privacy", "governance", "llm"]
+    },
+    {
+      "name": "consent-management-skills",
+      "source": "./plugins/consent-management-skills",
+      "description": "14 consent management skills: valid consent, consent withdrawal, preference centers, consent for research, children, mobile apps",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["consent", "consent-management", "gdpr-consent", "withdrawal"],
+      "category": "compliance",
+      "tags": ["consent", "privacy", "gdpr"]
+    },
+    {
+      "name": "privacy-engineering-skills",
+      "source": "./plugins/privacy-engineering-skills",
+      "description": "14 privacy engineering skills: differential privacy, PII detection, NIST Privacy Framework, privacy APIs, data sharing, metrics",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["privacy-engineering", "differential-privacy", "pii-detection", "nist-privacy-framework"],
+      "category": "engineering",
+      "tags": ["engineering", "privacy", "technical"]
+    },
+    {
+      "name": "privacy-by-design-skills",
+      "source": "./plugins/privacy-by-design-skills",
+      "description": "13 privacy-by-design skills: data minimization architecture, federated learning, homomorphic encryption, SMPC, PETs, LINDDUN",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["privacy-by-design", "pets", "anonymization", "federated-learning", "homomorphic-encryption"],
+      "category": "engineering",
+      "tags": ["privacy-by-design", "engineering", "pets"]
+    },
+    {
+      "name": "data-breach-response-skills",
+      "source": "./plugins/data-breach-response-skills",
+      "description": "13 breach response skills: 72h notification, forensics, remediation, simulation, multi-jurisdiction, credit monitoring",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["breach-response", "breach-notification", "incident-response", "forensics"],
+      "category": "compliance",
+      "tags": ["breach", "incident-response", "notification"]
+    },
+    {
+      "name": "us-state-privacy-skills",
+      "source": "./plugins/us-state-privacy-skills",
+      "description": "13 US state privacy law skills: CCPA/CPRA, VCDPA, CPA, CTDPA, TDPSA, multi-state compliance, universal opt-out",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["ccpa", "cpra", "us-privacy", "state-laws", "vcdpa", "cpa"],
+      "category": "compliance",
+      "tags": ["us-privacy", "ccpa", "state-laws"]
+    },
+    {
+      "name": "cross-border-transfers-skills",
+      "source": "./plugins/cross-border-transfers-skills",
+      "description": "12 cross-border transfer skills: SCCs, BCRs, adequacy assessments, TIAs, data localization, Art. 49 derogations",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["cross-border", "sccs", "bcrs", "transfers", "adequacy"],
+      "category": "compliance",
+      "tags": ["transfers", "cross-border", "sccs"]
+    },
+    {
+      "name": "cookie-consent-skills",
+      "source": "./plugins/cookie-consent-skills",
+      "description": "12 cookie consent skills: TCF v2, CNIL compliance, cookie audit, GPC integration, server-side tracking, cookieless alternatives",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["cookies", "tcf", "cnil", "cookie-consent", "gpc"],
+      "category": "compliance",
+      "tags": ["cookies", "consent", "tcf"]
+    },
+    {
+      "name": "data-classification-skills",
+      "source": "./plugins/data-classification-skills",
+      "description": "12 data classification skills: auto-discovery, PII detection, data inventory, labeling, lineage tracking, special category data",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["data-classification", "pii", "data-inventory", "data-lineage"],
+      "category": "engineering",
+      "tags": ["classification", "data-inventory", "pii"]
+    },
+    {
+      "name": "data-retention-skills",
+      "source": "./plugins/data-retention-skills",
+      "description": "12 data retention and deletion skills: retention schedules, auto-deletion, backup erasure, secure destruction, litigation holds",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["retention", "deletion", "data-destruction", "litigation-hold"],
+      "category": "compliance",
+      "tags": ["retention", "deletion", "storage-limitation"]
+    },
+    {
+      "name": "global-privacy-regulations-skills",
+      "source": "./plugins/global-privacy-regulations-skills",
+      "description": "12 global privacy regulation skills: LGPD, PIPL, PDPA, APPI, PIPA, DPDP Act, Australia Privacy Act, multi-jurisdiction",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["lgpd", "pipl", "pdpa", "appi", "global-privacy"],
+      "category": "compliance",
+      "tags": ["global", "international", "privacy-laws"]
+    },
+    {
+      "name": "vendor-privacy-management-skills",
+      "source": "./plugins/vendor-privacy-management-skills",
+      "description": "11 vendor management skills: DPA drafting, sub-processor management, vendor risk scoring, breach cascade, due diligence",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["vendor-management", "dpa", "sub-processor", "due-diligence"],
+      "category": "compliance",
+      "tags": ["vendor", "processor", "dpa"]
+    },
+    {
+      "name": "healthcare-privacy-skills",
+      "source": "./plugins/healthcare-privacy-skills",
+      "description": "11 healthcare privacy skills: HIPAA Privacy/Security Rules, risk analysis, BAA management, de-identification, telehealth",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["hipaa", "healthcare", "phi", "security-rule", "privacy-rule"],
+      "category": "compliance",
+      "tags": ["hipaa", "healthcare", "phi"]
+    },
+    {
+      "name": "employee-privacy-skills",
+      "source": "./plugins/employee-privacy-skills",
+      "description": "11 employee privacy skills: monitoring DPIA, BYOD policy, biometric data, whistleblower, background checks, workplace email",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["employee-privacy", "monitoring", "byod", "workplace"],
+      "category": "compliance",
+      "tags": ["employee", "workplace", "hr-privacy"]
+    },
+    {
+      "name": "privacy-audit-skills",
+      "source": "./plugins/privacy-audit-skills",
+      "description": "11 privacy audit and certification skills: ISO 27701, APEC CBPR, SOC 2, maturity model, continuous compliance, DPA inspection",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["audit", "certification", "iso-27701", "soc2", "apec-cbpr"],
+      "category": "compliance",
+      "tags": ["audit", "certification", "compliance"]
+    },
+    {
+      "name": "records-of-processing-skills",
+      "source": "./plugins/records-of-processing-skills",
+      "description": "10 RoPA skills: controller/processor creation, maintenance workflow, completeness audit, DPIA linkage, executive dashboard",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["ropa", "records-of-processing", "article-30", "gdpr"],
+      "category": "compliance",
+      "tags": ["ropa", "records", "gdpr"]
+    },
+    {
+      "name": "children-privacy-skills",
+      "source": "./plugins/children-privacy-skills",
+      "description": "10 children's privacy skills: COPPA compliance, UK AADC, age verification, parental consent, profiling limits, EdTech assessment",
+      "version": "1.0.0",
+      "author": { "name": "Mahipal" },
+      "license": "Apache-2.0",
+      "keywords": ["coppa", "children-privacy", "aadc", "age-verification", "parental-consent"],
+      "category": "compliance",
+      "tags": ["children", "coppa", "aadc"]
+    }
+  ]
+}

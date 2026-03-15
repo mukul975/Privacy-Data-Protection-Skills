@@ -1,29 +1,62 @@
-# Dependencies
-node_modules/
+# Claude Code
+.claude/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
 .env
 .venv/
 venv/
+env/
+*.egg-info/
+*.egg
+pip-log.txt
 
-# Claude
-.claude/
+# Node
+node_modules/
+package-lock.json
+yarn.lock
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+.project
+.settings/
 
 # OS
 .DS_Store
 Thumbs.db
 desktop.ini
+ehthumbs.db
+Icon?
 
-# Build
+# Build & Distribution
 dist/
 build/
-*.egg-info/
+*.skill
 
 # Logs
 *.log
+npm-debug.log*
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Temp files
+*.tmp
+*.bak
+*.orig
+_gen_*.py
+
+# Non-essential
+mappings/launch/
+lobehub-agents/
