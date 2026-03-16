@@ -12,7 +12,7 @@ metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
-  subdomain: jurisdiction-compliance
+  subdomain: global-privacy-regulations
   tags: "uae-pdp, federal-decree-law-45, uae-data-office, difc, adgm, cross-border"
 ---
 

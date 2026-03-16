@@ -12,7 +12,7 @@ metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
-  subdomain: international-privacy-laws
+  subdomain: global-privacy-regulations
   tags: "ndpr, ndpa, nigeria, nitda, dpco, africa-data-protection"
 ---
 

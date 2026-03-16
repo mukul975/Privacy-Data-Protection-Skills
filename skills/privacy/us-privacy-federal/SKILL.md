@@ -11,7 +11,7 @@ metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
-  subdomain: jurisdiction-compliance
+  subdomain: us-state-privacy-laws
   tags: "federal-privacy, hipaa, glba, ferpa, coppa, fcra, ftc, sectoral-privacy"
 ---
 

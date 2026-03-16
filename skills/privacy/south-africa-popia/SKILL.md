@@ -11,7 +11,7 @@ metadata:
   author: mukul975
   version: "1.0"
   domain: privacy
-  subdomain: jurisdiction-compliance
+  subdomain: global-privacy-regulations
   tags: "popia, south-africa, information-regulator, cross-border-transfer, responsible-party"
 ---
 

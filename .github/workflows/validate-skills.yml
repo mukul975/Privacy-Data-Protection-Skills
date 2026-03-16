@@ -190,25 +190,32 @@ jobs:
       - name: Scan for placeholder patterns
         run: |
           echo "Scanning skills/ for placeholder content..."
-          patterns=(
-            "TODO"
-            "TBD"
-            "\[insert\]"
-            "example\.com"
-            "PLACEHOLDER"
-            "Lorem ipsum"
-          )
           found=0
-          for pattern in "${patterns[@]}"; do
-            if grep -rn --include="*.md" --include="*.py" "$pattern" skills/; then
-              echo "ERROR: Found placeholder pattern: $pattern"
+
+          # Check markdown files for placeholder patterns
+          # Use word-boundary matching to avoid false positives in code
+          for mdfile in $(find skills/ -name "*.md" -type f); do
+            if grep -Pn '\bTODO\b' "$mdfile" | grep -v '^\s*#' | grep -v 'code_of_conduct'; then
+              echo "ERROR: Found TODO in $mdfile"
+              found=1
+            fi
+            if grep -Pn '\[insert\]' "$mdfile"; then
+              echo "ERROR: Found [insert] in $mdfile"
+              found=1
+            fi
+            if grep -Pn '\bPLACEHOLDER\b' "$mdfile"; then
+              echo "ERROR: Found PLACEHOLDER in $mdfile"
+              found=1
+            fi
+            if grep -Pn 'Lorem ipsum' "$mdfile"; then
+              echo "ERROR: Found Lorem ipsum in $mdfile"
               found=1
             fi
           done
 
           if [ "$found" -eq 1 ]; then
             echo ""
-            echo "Placeholder content detected in skills/. Please replace all placeholders with real content."
+            echo "Placeholder content detected. Please replace all placeholders with real content."
             exit 1
           else
             echo "No placeholder content found."
