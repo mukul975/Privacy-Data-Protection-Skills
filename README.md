@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/readme_header.png" alt="Privacy Data Protection Skills" width="100%">
+</p>
+
 # Privacy & Data Protection Skills for AI Agents
 
 > The first structured, machine-readable privacy skills database for AI agents. 282+ open-source privacy compliance procedures covering GDPR, CCPA, EU AI Act, HIPAA, LGPD, PIPL, and India's DPDP Act — following the [agentskills.io](https://agentskills.io) open standard. Works with Claude Code, GitHub Copilot, OpenAI Codex CLI, Cursor, Gemini CLI, and 26+ AI platforms.
