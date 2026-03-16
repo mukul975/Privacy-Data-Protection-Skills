@@ -1,0 +1,103 @@
+<!-- Google Consent Mode v2 Configuration for Pinnacle E-Commerce Ltd -->
+<!-- Generated: 2026-03-16T19:33:13.648666+00:00 -->
+
+<script>
+// Initialize dataLayer
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+
+// === CONSENT DEFAULTS (must load BEFORE Google tag) ===
+
+// EEA: Strict opt-in (all non-essential denied)
+gtag('consent', 'default', {
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'analytics_storage': 'denied',
+  'functionality_storage': 'granted',
+  'personalization_storage': 'denied',
+  'security_storage': 'granted',
+  'wait_for_update': 500,
+  'region': ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO"]
+});
+
+// UK: Same as EEA (PECR requires opt-in)
+gtag('consent', 'default', {
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'analytics_storage': 'denied',
+  'functionality_storage': 'granted',
+  'personalization_storage': 'denied',
+  'security_storage': 'granted',
+  'wait_for_update': 500,
+  'region': ['GB']
+});
+
+// US: Opt-out model (granted by default, user can opt out)
+gtag('consent', 'default', {
+  'ad_storage': 'granted',
+  'ad_user_data': 'granted',
+  'ad_personalization': 'granted',
+  'analytics_storage': 'granted',
+  'functionality_storage': 'granted',
+  'personalization_storage': 'granted',
+  'security_storage': 'granted',
+  'region': ['US']
+});
+
+// Rest of world: Granted by default (adjust per local law)
+gtag('consent', 'default', {
+  'ad_storage': 'granted',
+  'ad_user_data': 'granted',
+  'ad_personalization': 'granted',
+  'analytics_storage': 'granted',
+  'functionality_storage': 'granted',
+  'personalization_storage': 'granted',
+  'security_storage': 'granted'
+});
+
+// Enable URL passthrough for cookieless conversion measurement
+gtag('set', 'url_passthrough', true);
+
+// Redact ad click identifiers when ad_storage is denied
+gtag('set', 'ads_data_redaction', true);
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PINNACLE123"></script>
+<script>
+gtag('js', new Date());
+gtag('config', 'G-PINNACLE123');
+gtag('config', 'AW-PINNACLE456');
+</script>
+
+<!-- Consent Update Function (called by CMP on user interaction) -->
+<script>
+function updateGoogleConsent(consentChoices) {
+  /**
+   * consentChoices object:
+   *   analytics: boolean
+   *   advertising: boolean
+   *   personalization: boolean
+   *   functionality: boolean
+   */
+  gtag('consent', 'update', {
+    'ad_storage': consentChoices.advertising ? 'granted' : 'denied',
+    'ad_user_data': consentChoices.advertising ? 'granted' : 'denied',
+    'ad_personalization': consentChoices.personalization ? 'granted' : 'denied',
+    'analytics_storage': consentChoices.analytics ? 'granted' : 'denied',
+    'functionality_storage': consentChoices.functionality ? 'granted' : 'denied',
+    'personalization_storage': consentChoices.personalization ? 'granted' : 'denied'
+  });
+}
+
+// Handle GPC signal for US users
+if (navigator.globalPrivacyControl === true) {
+  gtag('consent', 'update', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied'
+  });
+}
+</script>

@@ -1,0 +1,34 @@
+<!-- GTM Consent Mode v2 — dataLayer Configuration -->
+<script>
+window.dataLayer = window.dataLayer || [];
+
+// Push consent defaults to dataLayer BEFORE GTM loads
+window.dataLayer.push({
+  'event': 'consent_default',
+  'consent': {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'functionality_storage': 'granted',
+    'personalization_storage': 'denied',
+    'security_storage': 'granted',
+    'wait_for_update': 500
+  }
+});
+
+// Function for CMP to call on consent update
+function pushConsentUpdate(consentState) {
+  window.dataLayer.push({
+    'event': 'consent_update',
+    'consent': {
+      'ad_storage': consentState.advertising ? 'granted' : 'denied',
+      'ad_user_data': consentState.advertising ? 'granted' : 'denied',
+      'ad_personalization': consentState.personalization ? 'granted' : 'denied',
+      'analytics_storage': consentState.analytics ? 'granted' : 'denied',
+      'functionality_storage': consentState.functionality ? 'granted' : 'denied',
+      'personalization_storage': consentState.personalization ? 'granted' : 'denied'
+    }
+  });
+}
+</script>
